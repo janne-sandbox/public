@@ -1,0 +1,6 @@
+20:19:16.355 INFO  Scanner configuration file: /opt/sonar-scanner/conf/sonar-scanner.properties
+20:19:16.363 INFO  Project root configuration file: NONE
+20:19:16.391 INFO  SonarScanner CLI 8.0.1.6346
+20:19:16.422 INFO  Linux 6.12.54-linuxkit amd64
+20:19:16.508 INFO  EXECUTION FAILURE
+20:19:16.509 INFO  Total time: 0.162s

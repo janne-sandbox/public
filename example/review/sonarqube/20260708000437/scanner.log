@@ -1,0 +1,198 @@
+21:04:49.662 WARN  Property 'sonar.working.directory' with value '/tmp/.scannerwork' is overridden with value 'review/sonarqube/20260708000437/.scannerwork'
+21:04:49.682 INFO  Scanner configuration file: /opt/sonar-scanner/conf/sonar-scanner.properties
+21:04:49.684 INFO  Project root configuration file: NONE
+21:04:49.712 INFO  SonarScanner CLI 8.0.1.6346
+21:04:49.738 INFO  Linux 6.12.54-linuxkit amd64
+21:04:52.235 INFO  Communicating with SonarQube Server 9.9.8.100196
+21:04:53.827 INFO  Load global settings
+21:04:53.912 INFO  Load global settings (done) | time=89ms
+21:04:53.916 INFO  Server id: 147B411E-AZ8-N-QvNeEQPfIqUWTf
+21:04:53.935 INFO  User cache: /tmp/sonar-user-home/cache
+21:04:53.947 INFO  Load/download plugins
+21:04:53.947 INFO  Load plugins index
+21:04:53.996 INFO  Load plugins index (done) | time=49ms
+21:04:55.719 INFO  Load/download plugins (done) | time=1772ms
+21:04:56.463 INFO  Process project properties
+21:04:56.472 INFO  Process project properties (done) | time=9ms
+21:04:56.479 INFO  Execute project builders
+21:04:56.481 INFO  Execute project builders (done) | time=2ms
+21:04:56.489 INFO  Project key: clinical-platform
+21:04:56.489 INFO  Base dir: /usr/src
+21:04:56.489 INFO  Working dir: /usr/src/review/sonarqube/20260708000437/.scannerwork
+21:04:56.504 INFO  Load project settings for component key: 'clinical-platform'
+21:04:56.523 INFO  Load project settings for component key: 'clinical-platform' (done) | time=19ms
+21:04:56.923 WARN  SCM provider autodetection failed. Please use "sonar.scm.provider" to define SCM of your project, or disable the SCM Sensor in the project settings.
+21:04:56.946 INFO  Load quality profiles
+21:04:57.035 INFO  Load quality profiles (done) | time=89ms
+21:04:57.061 INFO  Load active rules
+21:04:58.271 INFO  Load active rules (done) | time=1210ms
+21:04:58.288 INFO  Load analysis cache
+21:04:58.382 INFO  Load analysis cache | time=94ms
+21:04:58.499 INFO  Load project repositories
+21:04:58.524 INFO  Load project repositories (done) | time=25ms
+21:04:58.580 INFO  Indexing files...
+21:04:58.581 INFO  Project configuration:
+21:04:58.582 INFO    Excluded sources: **/.git/**, **/.idea/**, **/.vscode/**, **/.angular/**, **/node_modules/**, **/dist/**, **/build/**, **/coverage/**, **/target/**, **/.scannerwork/**, **/tmp/**, **/logs/**, documentation/**, materials/**, helm-charts/**/templates/**, review/results/**, review/sonarqube/**, **/Dockerfile, **/Dockerfile.*, **/docker-compose*.yml, docker/**, terraform/**/.terraform/**, run-reviews.sh/**, purge-data.sh/**, **/src/test/**, **/*.spec.ts, **/*.spec.tsx, **/*.test.ts, **/*.test.tsx, **/*.spec.js, **/*.test.js
+21:04:58.583 INFO    Included tests: **/src/test/**, **/*.spec.ts, **/*.spec.tsx, **/*.test.ts, **/*.test.tsx, **/*.spec.js, **/*.test.js
+21:04:58.584 INFO    Excluded sources for coverage: **/.git/**, **/.idea/**, **/.vscode/**, **/.angular/**, **/node_modules/**, **/dist/**, **/build/**, **/coverage/**, **/target/**, **/.scannerwork/**, **/tmp/**, **/logs/**, documentation/**, materials/**, helm-charts/**/templates/**, review/results/**, review/sonarqube/**, **/Dockerfile, **/Dockerfile.*, **/docker-compose*.yml, docker/**, terraform/**/.terraform/**, run-reviews.sh/**, purge-data.sh/**
+21:04:58.584 INFO    Excluded sources for duplication: documentation/**, materials/**
+21:05:08.584 INFO  64 files indexed...  (last one was configuration-frontend/tsconfig.app.json)
+21:05:18.590 INFO  170 files indexed...  (last one was lightweight-emr-frontend/tsconfig.app.json)
+21:05:28.596 INFO  495 files indexed...  (last one was atna-fhir-frontend/tsconfig.app.json)
+21:05:38.598 INFO  716 files indexed...  (last one was registry-backend/src/main/java/com/nologo/application/register/service/FhirConsentClient.java)
+21:05:48.599 INFO  749 files indexed...  (last one was testing/integration-service/src/test/java/com/nologo/application/it/RemoteControlEndToEndIT.java)
+21:05:57.132 INFO  764 files indexed
+21:05:57.133 INFO  408118 files ignored because of inclusion/exclusion patterns
+21:05:57.143 INFO  Quality profile for css: Sonar way
+21:05:57.143 INFO  Quality profile for java: Sonar way
+21:05:57.143 INFO  Quality profile for js: Sonar way
+21:05:57.143 INFO  Quality profile for json: Sonar way
+21:05:57.143 INFO  Quality profile for ts: Sonar way
+21:05:57.143 INFO  Quality profile for web: Sonar way
+21:05:57.143 INFO  Quality profile for xml: Sonar way
+21:05:57.143 INFO  Quality profile for yaml: Sonar way
+21:05:57.143 INFO  ------------- Run sensors on module Clinical Platform
+21:05:57.330 INFO  Load metrics repository
+21:05:57.390 INFO  Load metrics repository (done) | time=60ms
+21:05:58.983 INFO  Sensor JavaSensor [java]
+21:05:58.996 INFO  Configured Java source version (sonar.java.source): none
+21:05:59.004 INFO  JavaClasspath initialization
+21:05:59.016 INFO  JavaClasspath initialization (done) | time=12ms
+21:05:59.017 INFO  JavaTestClasspath initialization
+21:05:59.019 INFO  JavaTestClasspath initialization (done) | time=2ms
+21:05:59.035 INFO  Server-side caching is enabled. The Java analyzer will not try to leverage data from a previous analysis.
+21:05:59.047 INFO  Using ECJ batch to parse 253 Main java source files with batch size 104 KB.
+21:05:59.260 INFO  Starting batch processing.
+21:05:59.976 INFO  The Java analyzer cannot skip unchanged files in this context. A full analysis is performed for all files.
+21:06:09.265 INFO  8% analyzed
+21:06:40.414 INFO  100% analyzed
+21:06:40.415 INFO  Batch processing: Done.
+21:06:40.415 INFO  Did not optimize analysis for any files, performed a full analysis for all 253 files.
+21:06:40.418 WARN  Dependencies/libraries were not provided for analysis of SOURCE files. The 'sonar.java.libraries' property is empty. Verify your configuration, as you might end up with less precise results.
+21:06:40.418 WARN  Dependencies/libraries were not provided for analysis of TEST files. The 'sonar.java.test.libraries' property is empty. Verify your configuration, as you might end up with less precise results.
+21:06:40.427 WARN  Unresolved imports/types have been detected during analysis. Enable DEBUG mode to see them.
+21:06:40.430 WARN  Use of preview features have been detected during analysis. Enable DEBUG mode to see them.
+21:06:40.432 INFO  Using ECJ batch to parse 22 Test java source files with batch size 104 KB.
+21:06:40.472 INFO  Starting batch processing.
+21:06:41.799 INFO  100% analyzed
+21:06:41.799 INFO  Batch processing: Done.
+21:06:41.800 INFO  Did not optimize analysis for any files, performed a full analysis for all 22 files.
+21:06:41.801 WARN  Unresolved imports/types have been detected during analysis. Enable DEBUG mode to see them.
+21:06:41.802 WARN  Use of preview features have been detected during analysis. Enable DEBUG mode to see them.
+21:06:41.803 INFO  No "Generated" source files to scan.
+21:06:41.804 INFO  Sensor JavaSensor [java] (done) | time=42822ms
+21:06:41.804 INFO  Sensor JaCoCo XML Report Importer [jacoco]
+21:06:41.812 INFO  'sonar.coverage.jacoco.xmlReportPaths' is not defined. Using default locations: target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,build/reports/jacoco/test/jacocoTestReport.xml
+21:06:41.814 INFO  No report imported, no coverage information will be imported by JaCoCo XML Report Importer
+21:06:41.814 INFO  Sensor JaCoCo XML Report Importer [jacoco] (done) | time=10ms
+21:06:41.815 INFO  Sensor IaC CloudFormation Sensor [iac]
+21:06:42.130 INFO  0 source files to be analyzed
+21:06:42.252 INFO  0/0 source files have been analyzed
+21:06:42.252 INFO  Sensor IaC CloudFormation Sensor [iac] (done) | time=438ms
+21:06:42.252 INFO  Sensor IaC Kubernetes Sensor [iac]
+21:06:42.536 INFO  0 source files to be analyzed
+21:06:42.676 INFO  0/0 source files have been analyzed
+21:06:42.678 INFO  Sensor IaC Kubernetes Sensor [iac] (done) | time=425ms
+21:06:42.679 INFO  Sensor JavaScript analysis [javascript]
+21:06:55.958 WARN  Node.js version 22 is not recommended, you might experience issues. Please use a recommended version of Node.js [16, 18]
+21:06:56.046 INFO  6 source files to be analyzed
+21:06:58.913 INFO  6/6 source files have been analyzed
+21:06:58.914 INFO  Hit the cache for 0 out of 6
+21:06:58.917 INFO  Miss the cache for 6 out of 6: ANALYSIS_MODE_INELIGIBLE [6/6]
+21:06:58.918 INFO  Sensor JavaScript analysis [javascript] (done) | time=16239ms
+21:06:58.918 INFO  Sensor TypeScript analysis [javascript]
+21:06:58.944 INFO  Resolving TSConfig files using 'lightweight-emr-frontend/tsconfig.json,atna-fhir-frontend/tsconfig.json,remote-control-frontend/tsconfig.json,configuration-frontend/tsconfig.json' from property sonar.typescript.tsconfigPaths
+21:06:58.945 INFO  Found 4 TSConfig file(s): [/usr/src/lightweight-emr-frontend/tsconfig.json, /usr/src/atna-fhir-frontend/tsconfig.json, /usr/src/remote-control-frontend/tsconfig.json, /usr/src/configuration-frontend/tsconfig.json]
+21:06:58.946 INFO  79 source files to be analyzed
+21:06:58.947 INFO  Creating TypeScript program
+21:06:58.947 INFO  TypeScript configuration file /usr/src/lightweight-emr-frontend/tsconfig.json
+21:07:01.994 INFO  Creating TypeScript program (done) | time=3047ms
+21:07:01.995 INFO  Starting analysis with current program
+21:07:03.966 INFO  Analyzed 27 file(s) with current program
+21:07:03.973 INFO  Creating TypeScript program
+21:07:03.973 INFO  TypeScript configuration file /usr/src/atna-fhir-frontend/tsconfig.json
+21:07:07.133 INFO  Creating TypeScript program (done) | time=3160ms
+21:07:07.133 INFO  Starting analysis with current program
+21:07:08.949 INFO  40/79 files analyzed, current file: /usr/src/atna-fhir-frontend/src/app/features/dashboard/dashboard.component.ts
+21:07:09.395 INFO  Analyzed 21 file(s) with current program
+21:07:09.398 INFO  Creating TypeScript program
+21:07:09.398 INFO  TypeScript configuration file /usr/src/remote-control-frontend/tsconfig.json
+21:07:12.139 INFO  Creating TypeScript program (done) | time=2742ms
+21:07:12.139 INFO  Starting analysis with current program
+21:07:13.927 INFO  Analyzed 17 file(s) with current program
+21:07:13.930 INFO  Creating TypeScript program
+21:07:13.930 INFO  TypeScript configuration file /usr/src/configuration-frontend/tsconfig.json
+21:07:16.686 INFO  Creating TypeScript program (done) | time=2756ms
+21:07:16.687 INFO  Starting analysis with current program
+21:07:17.473 INFO  Analyzed 3 file(s) with current program
+21:07:17.476 INFO  Skipped 11 file(s) because they were not part of any tsconfig.json (enable debug logs to see the full list)
+21:07:17.478 INFO  79/79 source files have been analyzed
+21:07:17.478 INFO  Hit the cache for 0 out of 68
+21:07:17.479 INFO  Miss the cache for 68 out of 68: ANALYSIS_MODE_INELIGIBLE [68/68]
+21:07:17.479 INFO  Sensor TypeScript analysis [javascript] (done) | time=18561ms
+21:07:17.480 INFO  Sensor JavaScript inside YAML analysis [javascript]
+21:07:17.526 INFO  No input files found for analysis
+21:07:17.526 INFO  Hit the cache for 0 out of 0
+21:07:17.526 INFO  Miss the cache for 0 out of 0
+21:07:17.526 INFO  Sensor JavaScript inside YAML analysis [javascript] (done) | time=46ms
+21:07:17.526 INFO  Sensor CSS Rules [javascript]
+21:07:17.539 INFO  46 source files to be analyzed
+21:07:18.345 INFO  46/46 source files have been analyzed
+21:07:18.345 INFO  Hit the cache for 0 out of 0
+21:07:18.346 INFO  Miss the cache for 0 out of 0
+21:07:18.346 INFO  Sensor CSS Rules [javascript] (done) | time=820ms
+21:07:18.346 INFO  Sensor CSS Metrics [javascript]
+21:07:18.471 INFO  Sensor CSS Metrics [javascript] (done) | time=125ms
+21:07:18.471 INFO  Sensor C# Project Type Information [csharp]
+21:07:18.474 INFO  Sensor C# Project Type Information [csharp] (done) | time=3ms
+21:07:18.474 INFO  Sensor C# Analysis Log [csharp]
+21:07:18.495 INFO  Sensor C# Analysis Log [csharp] (done) | time=21ms
+21:07:18.496 INFO  Sensor C# Properties [csharp]
+21:07:18.496 INFO  Sensor C# Properties [csharp] (done) | time=0ms
+21:07:18.496 INFO  Sensor SurefireSensor [java]
+21:07:18.497 INFO  parsing [/usr/src/target/surefire-reports]
+21:07:18.498 INFO  Sensor SurefireSensor [java] (done) | time=2ms
+21:07:18.498 INFO  Sensor HTML [web]
+21:07:18.877 INFO  Sensor HTML [web] (done) | time=379ms
+21:07:18.877 INFO  Sensor XML Sensor [xml]
+21:07:18.883 INFO  43 source files to be analyzed
+21:07:19.400 WARN  Unable to analyse file file:///usr/src/testing/vna/pom.xml;
+21:07:19.480 WARN  Unable to analyse file file:///usr/src/ihe-domain-model/pom.xml;
+21:07:19.484 WARN  Unable to analyse file file:///usr/src/testing/sync-fhir/README.xml;
+21:07:19.486 WARN  Unable to analyse file file:///usr/src/ihe-domain-model/README.xml;
+21:07:19.556 WARN  Unable to analyse file file:///usr/src/configuration-backend/src/main/resources/db/changelog/db.changelog-master.xml;
+21:07:19.557 WARN  Unable to analyse file file:///usr/src/testing/sync-vna/README.xml;
+21:07:20.126 INFO  43/43 source files have been analyzed
+21:07:20.132 INFO  Sensor XML Sensor [xml] (done) | time=1254ms
+21:07:20.135 INFO  Sensor TextAndSecretsSensor [text]
+21:07:20.231 INFO  562 source files to be analyzed
+21:07:21.722 INFO  562/562 source files have been analyzed
+21:07:21.723 INFO  Sensor TextAndSecretsSensor [text] (done) | time=1587ms
+21:07:21.723 INFO  Sensor VB.NET Project Type Information [vbnet]
+21:07:21.730 INFO  Sensor VB.NET Project Type Information [vbnet] (done) | time=7ms
+21:07:21.730 INFO  Sensor VB.NET Analysis Log [vbnet]
+21:07:21.746 INFO  Sensor VB.NET Analysis Log [vbnet] (done) | time=16ms
+21:07:21.746 INFO  Sensor VB.NET Properties [vbnet]
+21:07:21.746 INFO  Sensor VB.NET Properties [vbnet] (done) | time=0ms
+21:07:21.746 INFO  Sensor IaC Docker Sensor [iac]
+21:07:21.758 INFO  0 source files to be analyzed
+21:07:21.845 INFO  0/0 source files have been analyzed
+21:07:21.845 INFO  Sensor IaC Docker Sensor [iac] (done) | time=99ms
+21:07:21.855 INFO  ------------- Run sensors on project
+21:07:22.073 INFO  Sensor Analysis Warnings import [csharp]
+21:07:22.074 INFO  Sensor Analysis Warnings import [csharp] (done) | time=1ms
+21:07:22.074 INFO  Sensor Zero Coverage Sensor
+21:07:22.277 INFO  Sensor Zero Coverage Sensor (done) | time=203ms
+21:07:22.278 INFO  Sensor Java CPD Block Indexer
+21:07:22.610 INFO  Sensor Java CPD Block Indexer (done) | time=332ms
+21:07:22.646 INFO  SCM Publisher No SCM system was detected. You can use the 'sonar.scm.provider' property to explicitly specify it.
+21:07:22.701 INFO  CPD Executor 58 files had no CPD blocks
+21:07:22.702 INFO  CPD Executor Calculating CPD for 290 files
+21:07:22.930 INFO  CPD Executor CPD calculation finished (done) | time=227ms
+21:07:23.882 INFO  Analysis report generated in 507ms, dir size=3.2 MB
+21:07:32.987 INFO  Analysis report compressed in 9103ms, zip size=1.6 MB
+21:07:33.089 INFO  Analysis report uploaded in 100ms
+21:07:33.096 INFO  ------------- Check Quality Gate status
+21:07:33.097 INFO  Waiting for the analysis report to be processed (max 900s)
+21:07:49.123 INFO  EXECUTION FAILURE
+21:07:49.127 INFO  Total time: 2:59.448s
