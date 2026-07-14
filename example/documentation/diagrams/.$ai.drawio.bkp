@@ -1,0 +1,519 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17" pages="4">
+
+  <!-- ================================================================
+       TAB 1: PROCESS
+       Development process as a PDCA / Deming cycle with swim lanes.
+       PLAN: Gather materials, define requirements (functional + ASRs)
+       DO:   Implement, write unit + integration tests, commit to Git
+       CHECK: Review implementation and tests, pass/fail decision
+       ACT:  Fix & loop back (No), or Release & Deploy (Yes)
+       ================================================================ -->
+  <diagram name="process" id="VYmjz0CrdqbFdfy_v-9W">
+    <mxGraphModel dx="2200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title-1" value="Development Process &#x2014; PDCA / Deming Cycle" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="700" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ===== PLAN lane ===== -->
+        <mxCell id="lane-plan" value="PLAN" style="swimlane;startSize=30;horizontal=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="80" width="1500" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="p-start" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="lane-plan">
+          <mxGeometry x="50" y="80" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p-provide" value="&#x1F4E6; Provide Materials" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="lane-plan">
+          <mxGeometry x="150" y="70" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-mat-repo" value="Materials&#xa;Repository" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=10;" vertex="1" parent="lane-plan">
+          <mxGeometry x="170" y="140" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p-nonfunc" value="&#x1F4CB; Copy &amp; Create&#xa;Non-Functional Specs (ASRs)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="lane-plan">
+          <mxGeometry x="380" y="70" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-func" value="&#x1F4DD; Create Functional&#xa;Requirements / Specifications" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="lane-plan">
+          <mxGeometry x="660" y="70" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-req-repo" value="Requirements&#xa;Repository" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=10;" vertex="1" parent="lane-plan">
+          <mxGeometry x="700" y="140" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p-note" value="Deming: PLAN &#x2014; establish objectives and processes" style="text;html=1;align=left;strokeColor=none;fillColor=none;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="lane-plan">
+          <mxGeometry x="980" y="85" width="380" height="30" as="geometry" />
+        </mxCell>
+        <!-- PLAN edges -->
+        <mxCell id="e1" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="p-start" target="p-provide" parent="lane-plan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="endArrow=open;html=1;rounded=0;dashed=1;" edge="1" source="p-provide" target="p-mat-repo" parent="lane-plan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="p-provide" target="p-nonfunc" parent="lane-plan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="p-nonfunc" target="p-func" parent="lane-plan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="" style="endArrow=open;html=1;rounded=0;dashed=1;" edge="1" source="p-func" target="p-req-repo" parent="lane-plan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== DO lane ===== -->
+        <mxCell id="lane-do" value="DO" style="swimlane;startSize=30;horizontal=0;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="290" width="1500" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="d-impl" value="&#x2699; Implementation Phase" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="lane-do">
+          <mxGeometry x="150" y="70" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d-unit" value="&#x1F9EA; Create Unit Tests" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="lane-do">
+          <mxGeometry x="390" y="50" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d-integ" value="&#x1F517; Create Integration Tests" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="lane-do">
+          <mxGeometry x="390" y="130" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d-git-repo" value="Git&#xa;Repository" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="lane-do">
+          <mxGeometry x="630" y="60" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="d-note" value="Deming: DO &#x2014; implement the plan, execute the process" style="text;html=1;align=left;strokeColor=none;fillColor=none;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="lane-do">
+          <mxGeometry x="840" y="85" width="380" height="30" as="geometry" />
+        </mxCell>
+        <!-- DO edges -->
+        <mxCell id="e7" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="d-impl" target="d-unit" parent="lane-do">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="d-impl" target="d-integ" parent="lane-do">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="" style="endArrow=open;html=1;rounded=0;dashed=1;" edge="1" source="d-unit" target="d-git-repo" parent="lane-do">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="" style="endArrow=open;html=1;rounded=0;dashed=1;" edge="1" source="d-integ" target="d-git-repo" parent="lane-do">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Cross-lane: PLAN -> DO -->
+        <mxCell id="e6-cross" value="start impl" style="endArrow=classic;html=1;rounded=0;" edge="1" source="p-func" target="d-impl" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== CHECK lane ===== -->
+        <mxCell id="lane-check" value="CHECK" style="swimlane;startSize=30;horizontal=0;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="500" width="1500" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="c-rev-impl" value="&#x1F50D; Review&#xa;Implementation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;" vertex="1" parent="lane-check">
+          <mxGeometry x="150" y="70" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-rev-unit" value="&#x2705; Review&#xa;Unit Tests" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;" vertex="1" parent="lane-check">
+          <mxGeometry x="380" y="50" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-rev-integ" value="&#x2705; Review&#xa;Integration Tests" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;" vertex="1" parent="lane-check">
+          <mxGeometry x="380" y="130" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-decision" value="Pass?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;" vertex="1" parent="lane-check">
+          <mxGeometry x="620" y="65" width="100" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="c-note" value="Deming: CHECK &#x2014; monitor and evaluate against objectives" style="text;html=1;align=left;strokeColor=none;fillColor=none;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="lane-check">
+          <mxGeometry x="840" y="85" width="380" height="30" as="geometry" />
+        </mxCell>
+        <!-- CHECK edges -->
+        <mxCell id="e14" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="c-rev-impl" target="c-decision" parent="lane-check">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="c-rev-unit" target="c-decision" parent="lane-check">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="c-rev-integ" target="c-decision" parent="lane-check">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Cross-lane: DO -> CHECK -->
+        <mxCell id="e11-cross" value="review" style="endArrow=classic;html=1;rounded=0;" edge="1" source="d-impl" target="c-rev-impl" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12-cross" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="d-unit" target="c-rev-unit" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13-cross" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="d-integ" target="c-rev-integ" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== ACT lane ===== -->
+        <mxCell id="lane-act" value="ACT" style="swimlane;startSize=30;horizontal=0;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="710" width="1500" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="a-fix" value="&#x1F527; Fix / Rework" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=11;" vertex="1" parent="lane-act">
+          <mxGeometry x="150" y="70" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="a-release" value="&#x1F680; Release &amp; Deploy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=11;" vertex="1" parent="lane-act">
+          <mxGeometry x="390" y="70" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="a-stop" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#000000;strokeColor=#000000;strokeWidth=4;" vertex="1" parent="lane-act">
+          <mxGeometry x="640" y="80" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a-note" value="Deming: ACT &#x2014; standardise, improve, or initiate next cycle" style="text;html=1;align=left;strokeColor=none;fillColor=none;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="lane-act">
+          <mxGeometry x="840" y="85" width="380" height="30" as="geometry" />
+        </mxCell>
+        <!-- ACT edges -->
+        <mxCell id="e20" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" source="a-release" target="a-stop" parent="lane-act">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Cross-lane: CHECK -> ACT -->
+        <mxCell id="e17-cross" value="No" style="endArrow=classic;html=1;rounded=0;" edge="1" source="c-decision" target="a-fix" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e19-cross" value="Yes" style="endArrow=classic;html=1;rounded=0;" edge="1" source="c-decision" target="a-release" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Fix loops back to DO -->
+        <mxCell id="e18-loop" value="re-do" style="endArrow=classic;html=1;rounded=0;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="a-fix" target="d-impl" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="40" y="810" />
+              <mxPoint x="40" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ================================================================
+       TAB 2: COMPONENTS
+       Full deployment diagram of the hello-world project.
+       Shows all Docker containers with host:port details.
+       Architecture: Browser -> nginx -> {frontend, backend}
+                     backend -> {postgres, keycloak, artemis}
+                     device/bridge -> artemis
+                     bridge -> atna-fhir-backend
+       Observability: prometheus, grafana, loki, promtail, jaeger
+       ================================================================ -->
+  <diagram id="zHumhdwKcVhnfcVzmpAm" name="components">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="comp-title" value="Hello World &#x2014; Component &amp; Deployment Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="800" height="40" as="geometry" />
+        </mxCell>
+        <!-- Client zone -->
+        <mxCell id="zone-client" value="&#x1F464; Client" style="swimlane;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=12;fontStyle=1;startSize=25;" vertex="1" parent="1">
+          <mxGeometry x="60" y="80" width="180" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-browser" value="Browser / PWA" style="shape=mxgraph.cisco.computers_and_peripherals.pc;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;aspect=fixed;" vertex="1" parent="zone-client">
+          <mxGeometry x="50" y="30" width="70" height="55" as="geometry" />
+        </mxCell>
+        <!-- Docker zone -->
+        <mxCell id="zone-docker" value="&#x1F433; Docker Compose / ECS Cluster" style="swimlane;fillColor=#e1f5fe;strokeColor=#0288d1;fontColor=#0288d1;fontSize=12;fontStyle=1;startSize=30;" vertex="1" parent="1">
+          <mxGeometry x="300" y="60" width="1250" height="880" as="geometry" />
+        </mxCell>
+        <!-- nginx -->
+        <mxCell id="comp-nginx" value="nginx&#xa;localhost:80&#xa;Reverse proxy / load balancer&#xa;Routes: /api/, /ws, /docs, /testing/, /" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="zone-docker">
+          <mxGeometry x="480" y="50" width="250" height="80" as="geometry" />
+        </mxCell>
+        <!-- Frontend -->
+        <mxCell id="comp-frontend" value="hello-world-frontend&#xa;frontend:80&#xa;React / Vite / TypeScript SPA&#xa;(multiple replicas, DNS round-robin)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="zone-docker">
+          <mxGeometry x="180" y="220" width="240" height="80" as="geometry" />
+        </mxCell>
+        <!-- Backend -->
+        <mxCell id="comp-backend" value="hello-world-backend&#xa;backend:3000&#xa;Node.js / Express&#xa;REST API + WebSocket + Swagger" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="zone-docker">
+          <mxGeometry x="470" y="220" width="250" height="80" as="geometry" />
+        </mxCell>
+        <!-- ATNA/FHIR -->
+        <mxCell id="comp-atna" value="atna-fhir-backend&#xa;atna:8080&#xa;Java / Spring&#xa;FHIR R4 + ATNA audit logging" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="zone-docker">
+          <mxGeometry x="760" y="220" width="220" height="80" as="geometry" />
+        </mxCell>
+        <!-- Bridge -->
+        <mxCell id="comp-bridge" value="hello-world-bridge&#xa;bridge:8080&#xa;Java / Spring&#xa;Alarm bridge (IHE AWIS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="zone-docker">
+          <mxGeometry x="1010" y="220" width="200" height="80" as="geometry" />
+        </mxCell>
+        <!-- Device -->
+        <mxCell id="comp-device" value="hello-world-device&#xa;(internal)&#xa;Rust&#xa;Alarm device simulator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="zone-docker">
+          <mxGeometry x="1010" y="100" width="200" height="80" as="geometry" />
+        </mxCell>
+        <!-- PostgreSQL -->
+        <mxCell id="comp-postgres" value="PostgreSQL&#xa;postgres:5432&#xa;Persistent data store" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="zone-docker">
+          <mxGeometry x="330" y="420" width="150" height="90" as="geometry" />
+        </mxCell>
+        <!-- Keycloak -->
+        <mxCell id="comp-keycloak" value="Keycloak&#xa;keycloak:8080&#xa;Identity &amp; Access Management&#xa;OAuth2 / OIDC / everon-realm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="zone-docker">
+          <mxGeometry x="520" y="420" width="240" height="80" as="geometry" />
+        </mxCell>
+        <!-- Artemis -->
+        <mxCell id="comp-artemis" value="ActiveMQ Artemis&#xa;artemis:61616 (AMQP)&#xa;artemis:8161 (web console)&#xa;Message broker &#x2014; alarm events" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="zone-docker">
+          <mxGeometry x="800" y="420" width="240" height="80" as="geometry" />
+        </mxCell>
+        <!-- Observability -->
+        <mxCell id="zone-obs" value="&#x1F4CA; Observability Stack" style="swimlane;fillColor=#f0f0f0;strokeColor=#999999;fontSize=11;fontStyle=1;startSize=25;" vertex="1" parent="zone-docker">
+          <mxGeometry x="80" y="630" width="1060" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-prometheus" value="Prometheus&#xa;prometheus:9090&#xa;Metrics scraper" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="zone-obs">
+          <mxGeometry x="20" y="50" width="160" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-grafana" value="Grafana&#xa;grafana:3001&#xa;Dashboards &amp; alerts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="zone-obs">
+          <mxGeometry x="205" y="50" width="160" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-loki" value="Loki&#xa;loki:3100&#xa;Log aggregation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="zone-obs">
+          <mxGeometry x="390" y="50" width="160" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-promtail" value="Promtail&#xa;(internal)&#xa;Log shipper to Loki" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="zone-obs">
+          <mxGeometry x="575" y="50" width="160" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-jaeger" value="Jaeger&#xa;jaeger:16686 (UI)&#xa;Distributed tracing (OTLP)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="zone-obs">
+          <mxGeometry x="760" y="50" width="160" height="65" as="geometry" />
+        </mxCell>
+        <!-- Edges inside docker zone -->
+        <mxCell id="ce2" value="/ SPA" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="comp-nginx" target="comp-frontend" parent="zone-docker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce3" value="/api/ /ws /docs" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="comp-nginx" target="comp-backend" parent="zone-docker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce4" value="SQL :5432" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="comp-backend" target="comp-postgres" parent="zone-docker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce5" value="OAuth2/OIDC" style="endArrow=classic;html=1;rounded=0;fontSize=10;dashed=1;" edge="1" source="comp-backend" target="comp-keycloak" parent="zone-docker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce6" value="AMQP :61616" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="comp-bridge" target="comp-artemis" parent="zone-docker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce7" value="AMQP :61616" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="comp-device" target="comp-artemis" parent="zone-docker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce8" value="subscribe" style="endArrow=classic;html=1;rounded=0;fontSize=10;dashed=1;" edge="1" source="comp-backend" target="comp-artemis" parent="zone-docker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce9" value="FHIR/ATNA" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="comp-bridge" target="comp-atna" parent="zone-docker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Cross-zone: Browser to nginx -->
+        <mxCell id="ce1" value="HTTP/WS :80" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="comp-browser" target="comp-nginx" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ================================================================
+       TAB 3: REPOSITORIES
+       All repository types used in the process:
+       - Materials repository (raw inputs, drawings, questions)
+       - Functional requirements repository (use cases, user stories)
+       - Non-functional requirements / ASRs (SHARED across projects)
+       - Specifications repository (combined FR+NFR, ADRs)
+       - Git source-code repository (code, CI/CD, tags)
+       - Documentation repository (API docs, compliance, HTML pages)
+       Cylinders = persistent/versioned storage.
+       Orange border = shared across multiple projects.
+       ================================================================ -->
+  <diagram id="YYrvf1fhsgIlSehTTfvx" name="repositories">
+    <mxGraphModel dx="1400" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="repo-title" value="Repository Overview" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="600" height="40" as="geometry" />
+        </mxCell>
+        <!-- Materials -->
+        <mxCell id="r-materials" value="&#x1F4E6; Materials Repository&#xa;&#xa;Raw input artefacts,&#xa;reference docs, drawings,&#xa;interview questions" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="200" width="190" height="130" as="geometry" />
+        </mxCell>
+        <!-- Functional -->
+        <mxCell id="r-func" value="&#x1F4DD; Functional Requirements&#xa;Repository&#xa;&#xa;Use cases, user stories,&#xa;acceptance criteria" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="360" y="120" width="210" height="130" as="geometry" />
+        </mxCell>
+        <!-- Non-functional ASRs - SHARED -->
+        <mxCell id="r-nonfunc" value="&#x2699; Non-Functional Requirements (ASRs)&#xa;&#xa;SHARED across projects&#xa;Architecture significant requirements:&#xa;security, performance, compliance" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="360" y="320" width="210" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="r-shared-label" value="&#x26A0; Shared / reused across multiple projects" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="475" width="250" height="30" as="geometry" />
+        </mxCell>
+        <!-- Git -->
+        <mxCell id="r-git" value="&#x1F500; Git Repository&#xa;&#xa;Source code, branches,&#xa;tags, CI/CD pipelines,&#xa;pull requests" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="680" y="120" width="200" height="130" as="geometry" />
+        </mxCell>
+        <!-- Documentation -->
+        <mxCell id="r-docs" value="&#x1F4D6; Documentation Repository&#xa;&#xa;Architecture docs, API docs,&#xa;compliance docs (GDPR, OWASP,&#xa;WCAG), generated HTML" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="680" y="320" width="200" height="140" as="geometry" />
+        </mxCell>
+        <!-- Specifications -->
+        <mxCell id="r-specs" value="&#x1F4CB; Specifications Repository&#xa;&#xa;Combined FR + NFR,&#xa;design decisions (ADRs),&#xa;architecture baseline" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="220" width="210" height="130" as="geometry" />
+        </mxCell>
+        <!-- Legend -->
+        <mxCell id="r-legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="80" y="540" width="580" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="r-legend-title" value="Legend" style="text;html=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="100" y="550" width="100" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="r-legend-1" value="Cylinder shape = persistent storage / versioned repository" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="100" y="576" width="450" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="r-legend-2" value="Orange border = shared / reused across multiple projects" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="100" y="598" width="450" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="r-legend-3" value="Solid arrow = provides input / contributes to    Dashed = guides / references" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="100" y="620" width="500" height="20" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="re1" value="provides input" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="r-materials" target="r-func" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re2" value="provides input" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="r-materials" target="r-nonfunc" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re3" value="contributes to" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="r-func" target="r-specs" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re4" value="contributes to" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="r-nonfunc" target="r-specs" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re5" value="guides impl" style="endArrow=classic;html=1;rounded=0;fontSize=10;dashed=1;" edge="1" source="r-specs" target="r-git" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re6" value="generates" style="endArrow=classic;html=1;rounded=0;fontSize=10;" edge="1" source="r-git" target="r-docs" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re7" value="references" style="endArrow=classic;html=1;rounded=0;fontSize=10;dashed=1;" edge="1" source="r-func" target="r-git" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ================================================================
+       TAB 4: MILESTONES
+       How the development process fits into an agile delivery lifecycle
+       aligned with TOGAF ADM phases and ITIL 4 service management.
+       Three rows of framework alignment (TOGAF / ITIL / Agile),
+       plus a concrete hello-world sample schedule (M1-M7, 16 weeks).
+       TOGAF ADM: Preliminary -> A -> B-D -> E-F -> G-H -> ADM Change
+       ITIL 4:    Strategy -> Design -> Transition -> Operation
+       Agile:     Sprint 0 -> Sprint 1-N -> UAT -> Go-Live -> Ops
+       ================================================================ -->
+  <diagram id="QikNhIm6O8TWDJN9w7vS" name="milestones">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ms-title" value="Milestones &amp; Agile Schedule &#x2014; TOGAF ADM + ITIL 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="15" width="1000" height="40" as="geometry" />
+        </mxCell>
+        <!-- Phase header -->
+        <mxCell id="ms-header" value="Phase:  Materials  |  Architecture &amp; Planning  |  Development (Sprints)  |  UAT / Pilot  |  Production  |  Operations" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="65" width="1520" height="30" as="geometry" />
+        </mxCell>
+        <!-- TOGAF row -->
+        <mxCell id="ms-togaf-label" value="TOGAF ADM" style="text;html=1;fontStyle=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="110" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-t-prelim" value="Preliminary&#xa;Principles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="185" y="110" width="130" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-t-a" value="Phase A&#xa;Architecture Vision" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="330" y="110" width="150" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-t-bcd" value="Phases B&#x2013;D: Business / IS / Technology Architecture" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="495" y="110" width="370" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-t-ef" value="Phases E&#x2013;F&#xa;Opportunities &amp; Migration" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="110" width="185" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-t-gh" value="Phases G&#x2013;H&#xa;Implementation Governance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="110" width="190" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-t-adm" value="ADM Change&#xa;Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1285" y="110" width="155" height="55" as="geometry" />
+        </mxCell>
+        <!-- ITIL row -->
+        <mxCell id="ms-itil-label" value="ITIL 4" style="text;html=1;fontStyle=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="180" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-i-strategy" value="Service Strategy&#xa;Demand, Portfolio" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="185" y="180" width="295" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-i-design" value="Service Design &#x2014; Availability, Capacity, Security, Continuity" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="495" y="180" width="370" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-i-transition" value="Service Transition&#xa;Change, Release, Testing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="180" width="185" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-i-op" value="Service Operation &#x2014; Incident, Event, Problem Management + CSI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="180" width="360" height="55" as="geometry" />
+        </mxCell>
+        <!-- Agile row -->
+        <mxCell id="ms-agile-label" value="Agile" style="text;html=1;fontStyle=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="250" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-sprint0" value="Sprint 0&#xa;Setup, backlog, skeleton,&#xa;docker-compose, CI baseline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="185" y="250" width="295" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-sprint1n" value="Sprint 1&#x2013;N  (2-week sprints)&#xa;Feature increments, PDCA per sprint, daily stand-ups, retrospectives" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="495" y="250" width="370" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-uat" value="UAT / Pilot&#xa;Acceptance testing,&#xa;stakeholder sign-off" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="250" width="185" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-prod-go" value="&#x1F680; Production&#xa;Go-Live" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="250" width="185" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-ops" value="&#x1F504; Operations&#xa;Monitoring, alerting,&#xa;incident response,&#xa;continuous improvement" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="245" width="165" height="65" as="geometry" />
+        </mxCell>
+        <!-- Hello-world sample milestones -->
+        <mxCell id="ms-hw-label" value="Hello-World&#xa;Sample&#xa;Schedule" style="text;html=1;fontStyle=1;fontSize=10;fillColor=#f5f5f5;strokeColor=#666666;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="360" width="110" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-m1" value="&#x1F4CC; M1: Materials Ready&#xa;Week 1&#x2013;2&#xa;questions.md, ai.drawio,&#xa;requirements drafted" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="185" y="360" width="170" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-m2" value="&#x1F4CC; M2: Architecture Baseline&#xa;Week 3&#x2013;4&#xa;Specs, ASRs, ADRs&#xa;finalised in repo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="370" y="360" width="170" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-m3" value="&#x1F4CC; M3: MVP (Sprint 2)&#xa;Week 5&#x2013;8&#xa;Core alarm workflow&#xa;running end-to-end" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="555" y="360" width="170" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-m4" value="&#x1F4CC; M4: Feature Complete&#xa;Week 9&#x2013;12&#xa;All features, tests,&#xa;documentation done" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="740" y="360" width="170" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-m5" value="&#x1F4CC; M5: UAT Sign-off&#xa;Week 13&#x2013;14&#xa;Acceptance tests pass,&#xa;change record approved" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="920" y="360" width="170" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-m6" value="&#x1F680; M6: Production Release&#xa;Week 15&#xa;CloudFormation / ECS,&#xa;ITIL CAB approval" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1105" y="360" width="170" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-m7" value="&#x1F504; M7: Steady-State Ops&#xa;Week 16+&#xa;Grafana/Loki monitoring,&#xa;incident SLAs active" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="360" width="165" height="95" as="geometry" />
+        </mxCell>
+        <!-- Milestone connector arrows -->
+        <mxCell id="mse1" value="" style="endArrow=block;endFill=1;html=1;rounded=0;" edge="1" source="ms-m1" target="ms-m2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mse2" value="" style="endArrow=block;endFill=1;html=1;rounded=0;" edge="1" source="ms-m2" target="ms-m3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mse3" value="" style="endArrow=block;endFill=1;html=1;rounded=0;" edge="1" source="ms-m3" target="ms-m4" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mse4" value="" style="endArrow=block;endFill=1;html=1;rounded=0;" edge="1" source="ms-m4" target="ms-m5" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mse5" value="" style="endArrow=block;endFill=1;html=1;rounded=0;" edge="1" source="ms-m5" target="ms-m6" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mse6" value="" style="endArrow=block;endFill=1;html=1;rounded=0;" edge="1" source="ms-m6" target="ms-m7" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <!-- Legend -->
+        <mxCell id="ms-legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="60" y="530" width="720" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-legend-title" value="Framework Alignment" style="text;html=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="542" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-lt" value="&#x1F535; TOGAF ADM &#x2014; Architecture governance, phase gates, artefact delivery reviews" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="568" width="680" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-li" value="&#x1F7E2; ITIL 4 &#x2014; Service lifecycle: strategy &#x2192; design &#x2192; transition &#x2192; operation &#x2192; CSI" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="590" width="680" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-la" value="&#x1F7E1; Agile &#x2014; Incremental delivery, PDCA per sprint, retrospectives, backlog refinement" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="612" width="680" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ms-lp" value="&#x1F534; Production milestone &#x2014; ITIL Change Advisory Board (CAB) approval required before release" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="634" width="680" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+</mxfile>
