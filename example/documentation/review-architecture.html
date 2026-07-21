@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Tool Architecture</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });</script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+
+<main class="main-content">
+    <header class="header"><h2>Code Review System — Architecture</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>System Architecture</h3>
+            <p>
+                The review system consists of five components: a master orchestrator script, a shared base agent class, and four language-specific agent implementations.
+            </p>
+
+            <pre class="mermaid">
+flowchart TB
+    subgraph Entry["User Execution"]
+        CLI["./run-review.sh<br/>LANGUAGE=all<br/>INTERNET=false<br/>DEEPSEEK=true"]
+    end
+
+    subgraph Orchestrator["Master Script"]
+        Parse["Parse Parameters<br/>LANGUAGE, INTERNET, DEEPSEEK"]
+        Validate["Validate Parameters"]
+        Create["Create output dirs<br/>./review/results/&lt;timestamp&gt;/"]
+    end
+
+    subgraph Agents["Language-Specific Agents"]
+        TS["① TypeScript Agent<br/>(typescript-agent.js)"]
+        JV["② Java Agent<br/>(java-agent.js)"]
+        RS["③ Rust Agent<br/>(rust-agent.js)"]
+        RX["④ React Agent<br/>(react-agent.js)"]
+    end
+
+    subgraph Base["Shared Base Class"]
+        BASE["ReviewAgent<br/>(base-agent.js)"]
+    end
+
+    subgraph Data["Data Sources"]
+        REQ1["./requirements/functional/"]
+        REQ2["./requirements/non-functional/"]
+        REQ3["./review/requirements/"]
+    end
+
+    subgraph Scanning["Codebase Scanning"]
+        ScanTS["Scan *.ts, *.tsx"]
+        ScanJV["Scan *.java"]
+        ScanRS["Scan *.rs"]
+        ScanRX["Scan *.tsx, *.jsx"]
+    end
+
+    subgraph Output["Report Generation"]
+        Report["Markdown Report<br/>review-&lt;lang&gt;-&lt;verdict&gt;-&lt;ts&gt;.md"]
+    end
+
+    CLI --> Parse
+    Parse --> Validate
+    Validate --> Create
+    Create --> TS & JV & RS & RX
+
+    TS & JV & RS & RX -.-> BASE
+
+    REQ1 & REQ2 & REQ3 --> TS & JV & RS & RX
+
+    TS --> ScanTS
+    JV --> ScanJV
+    RS --> ScanRS
+    RX --> ScanRX
+
+    ScanTS & ScanJV & ScanRS & ScanRX --> Report
+            </pre>
+        </section>
+
+        <section class="content-section">
+            <h3>Analysis Method: Hybrid Regex + Optional Deepseek</h3>
+            <p>The review system supports two analysis approaches:</p>
+
+            <h4>1. Regex-Based Analysis (Default, Always Available)</h4>
+            <ul>
+                <li><strong>Method:</strong> Fast pattern matching using JavaScript regular expressions</li>
+                <li><strong>Pros:</strong> Instant, deterministic, no dependencies, predictable</li>
+                <li><strong>Cons:</strong> No semantic understanding, limited to exact patterns</li>
+                <li><strong>Use cases:</strong> File counting, binary pattern detection (localStorage, SQL string concat)</li>
+                <li><strong>Performance:</strong> 3-10 seconds per language</li>
+            </ul>
+
+            <h4>2. Deepseek LLM Analysis (Optional, Offline, via Ollama)</h4>
+            <p>When available, the system uses Deepseek Coder for semantic code analysis:</p>
+            <ul>
+                <li><strong>Method:</strong> Local LLM inference using Ollama</li>
+                <li><strong>Activation:</strong> Enabled when <code>DEEPSEEK=true</code> and Ollama is available on localhost:11434</li>
+                <li><strong>Model:</strong> <code>deepseek-coder:1.3b-base</code> (lightweight) or <code>6.7b-base</code> (better quality)</li>
+                <li><strong>Pros:</strong> Semantic understanding, context-aware, fewer false positives</li>
+                <li><strong>Cons:</strong> Slower (30s per semantic check), requires Ollama installation</li>
+                <li><strong>Use cases:</strong> Language-appropriate requirement filtering, semantic requirement matching</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>Deepseek Setup (Optional):</strong> Download and install Ollama from https://ollama.ai, then run:
+                <div class="code-block">ollama pull deepseek-coder:1.3b-base
+ollama serve  # Starts on localhost:11434</div>
+                The review system will automatically detect and use it when <code>DEEPSEEK=true</code>. Use <code>DEEPSEEK=false</code> to force regex-only mode.
+            </div>
+
+            <h4>Hybrid Strategy</h4>
+            <table>
+                <thead><tr><th>Analysis Type</th><th>Method</th><th>Speed</th><th>Accuracy</th></tr></thead>
+                <tbody>
+                    <tr><td>Test coverage ratio</td><td>Regex (count files)</td><td>Instant</td><td>100%</td></tr>
+                    <tr><td>Pattern detection (localStorage, SQL string concat)</td><td>Regex</td><td>Instant</td><td>95%</td></tr>
+                    <tr><td>Language-appropriate requirement filtering</td><td>Deepseek (if available)</td><td>Slow (30s)</td><td>95%+</td></tr>
+                    <tr><td>Semantic requirement matching</td><td>Deepseek (if available)</td><td>Slow (30s)</td><td>90%+</td></tr>
+                    <tr><td>Code organization/naming</td><td>Regex + Deepseek</td><td>Mixed</td><td>85%+</td></tr>
+                </tbody>
+            </table>
+
+            <p><strong>Report header:</strong> Each generated report includes <code>Deepseek Analysis</code> and <code>Analysis Method: Regex</code> or <code>Analysis Method: Hybrid (Regex + Deepseek)</code> to indicate which approach was used.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Core Components</h3>
+            <h4>1. Master Orchestrator: <code>./run-review.sh</code></h4>
+            <ul>
+                <li>Entry point for all reviews</li>
+                <li>Parses parameters: <code>LANGUAGE</code>, <code>INTERNET</code>, <code>DEEPSEEK</code></li>
+                <li>Creates a per-run output directory: <code>./review/results/&lt;timestamp&gt;/</code> or <code>./review/results/&lt;timestamp&gt;-N/</code> if the same minute is already in use</li>
+                <li>Spawns agent processes based on <code>LANGUAGE</code> parameter</li>
+                <li>Collects agent exit codes and reports results</li>
+                <li>Execution: ~10-20 seconds overhead for orchestration</li>
+            </ul>
+
+            <h4>2. Base Agent: <code>./review/agents/base-agent.js</code></h4>
+            <p>Shared base class with common functionality:</p>
+            <ul>
+                <li><code>loadRequirements()</code> — loads .md files from <code>./requirements/</code></li>
+                <li><code>scanProjectFiles()</code> — recursively scans for language-specific files</li>
+                <li><code>extractRequirementCheckpoints()</code> — parses requirement text for validation points</li>
+                <li><code>evaluateAgainstRequirement()</code> — matches code against requirements</li>
+                <li><code>generateVerdict()</code> — computes APPROVED|APPROVED WITH CHANGES|DENIED based on findings</li>
+                <li><code>writeReport()</code> — formats Markdown output</li>
+            </ul>
+
+            <h4>3. Language Agents</h4>
+            <p>Each extends the base class and adds language-specific checks:</p>
+
+            <table>
+                <thead><tr><th>Agent</th><th>Main Checks</th><th>Files Scanned</th><th>Time</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>TypeScript</strong></td><td>Strict mode, type safety, tests, requirement coverage</td><td><code>*.ts, *.tsx</code></td><td>~5-10s</td></tr>
+                    <tr><td><strong>Java</strong></td><td>Spring 3.2, Jackson, SQL injection, tests</td><td><code>*.java</code></td><td>~5-10s</td></tr>
+                    <tr><td><strong>Rust</strong></td><td>Memory safety, error handling, async patterns, tests</td><td><code>*.rs</code></td><td>~3-5s</td></tr>
+                    <tr><td><strong>React</strong></td><td>Accessibility, security, performance, component org</td><td><code>*.tsx, *.jsx</code></td><td>~5-10s</td></tr>
+                </tbody>
+            </table>
+
+            <h4>4. Requirement Files</h4>
+            <p>Agents load requirements from three locations:</p>
+            <ul>
+                <li><code>./requirements/functional/REQ-*.md</code> — 75 functional requirements</li>
+                <li><code>./requirements/non-functional/*.md</code> — GDPR, OWASP, WCAG, EN 50518 reqs</li>
+                <li><code>./review/requirements/REVIEW-*.md</code> — Review-specific standards</li>
+            </ul>
+
+            <h4>5. Finding Classification</h4>
+            <p>Issues are classified by severity:</p>
+            <div class="code-block">Finding {
+  severity:    'critical' | 'major' | 'minor',
+  title:       string,
+  file:        string,
+  line:        number | 'N/A',
+  description: string,
+  requirement: string  // which REQ/REVIEW applies
+}
+
+Change Suggestion {
+  title:       string,
+  file:        string,
+  language:    string,  // ts, java, rs, tsx, etc.
+  reason:      string,
+  codeSnippet: string
+}</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Data Flow: Single Review</h3>
+
+            <p>Example: Running <code>LANGUAGE=typescript ./run-review.sh</code></p>
+
+            <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant S as review.sh
+    participant T as TypeScript Agent
+    participant REQ as Requirements
+    participant CODE as Codebase
+    participant OUT as Output
+
+    U->>S: LANGUAGE=typescript ./run-review.sh
+    S->>S: validate params
+    S->>S: create ./review/results/&lt;timestamp&gt;/
+    S->>T: spawn typescript-agent.js
+    T->>REQ: load requirements/
+    REQ-->>T: 75 functional + NF reqs
+    T->>CODE: scan *.ts, *.tsx files
+    CODE-->>T: file list
+    T->>T: extract checkpoints from reqs
+    T->>T: match code against checkpoints
+    T->>T: classify findings
+    T->>T: generate verdict
+    T->>OUT: write report
+    OUT-->>S: report written
+    S-->>U: Review complete
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>File Organization</h3>
+
+            <div class="code-block">./review/
+├── agents/
+│   ├── base-agent.js           # Shared ReviewAgent base class
+│   ├── typescript-agent.js     # TypeScript-specific checks
+│   ├── java-agent.js           # Java-specific checks
+│   ├── rust-agent.js           # Rust-specific checks
+│   └── react-agent.js          # React-specific checks
+├── requirements/
+│   ├── REVIEW-001-typescript-standards.md
+│   ├── REVIEW-002-java-standards.md
+│   ├── REVIEW-003-react-standards.md
+│   ├── REVIEW-004-rust-standards.md
+│   └── REVIEW-005-system-requirements.md
+└── results/
+    └── 202605261949/
+        ├── review-typescript-approved-202605261949.md
+        ├── review-java-approved-202605261949.md
+        ├── review-react-approved-202605261949.md
+        └── review-rust-approved-202605261949.md</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Agent Execution Flow (per language)</h3>
+
+            <ol>
+                <li><strong>Load requirements</strong> — read all .md files from <code>./requirements/</code></li>
+                <li><strong>Scan project</strong> — recursively find all files matching language pattern (e.g., <code>*.ts</code>)</li>
+                <li><strong>Extract checkpoints</strong> — parse requirement text for validation points</li>
+                <li><strong>Evaluate code</strong> — match codebase against each requirement checkpoint</li>
+                <li><strong>Classify issues</strong> — categorize findings by severity</li>
+                <li><strong>Suggest changes</strong> — provide code fixes for identified issues</li>
+                <li><strong>Generate verdict</strong> — compute final APPROVED|APPROVED WITH CHANGES|DENIED</li>
+                <li><strong>Write report</strong> — output Markdown file to the current run folder under <code>./review/results/&lt;timestamp&gt;/</code></li>
+            </ol>
+
+            <div class="info-box">
+                <strong>Performance note:</strong> Agents sample code (first 10-15 files) for pattern detection to keep execution fast. Critical checks are exhaustive; best-practice checks are sampled.
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Requirements-Driven Design</h3>
+
+            <p>
+                The review system is explicitly <strong>requirements-driven</strong>. Every issue raised is traced back to a specific requirement (functional, non-functional, or review-specific). This ensures:
+            </p>
+
+            <ul>
+                <li><strong>Traceability:</strong> Every finding references the requirement it violates</li>
+                <li><strong>Consistency:</strong> All reviews check the same set of requirements</li>
+                <li><strong>Clarity:</strong> Developers know exactly what standard they should meet</li>
+                <li><strong>Extensibility:</strong> Adding new requirements automatically adds new checks</li>
+            </ul>
+
+            <p><strong>Example:</strong> REQ-006 (TypeScript Compile-Time Safety) contains a checkpoint about <code>strict: true</code> in <code>tsconfig.json</code>. The TypeScript agent checks for this and raises a major finding if missing, referencing REQ-006.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Internet Access Mode</h3>
+
+            <p>Agents support two modes:</p>
+
+            <table>
+                <thead><tr><th>Mode</th><th>Enabled Checks</th><th>Offline Performance</th><th>Use Case</th></tr></thead>
+                <tbody>
+                    <tr><td><code>INTERNET=false</code> (default)</td><td>Local code review, pattern matching, requirement coverage</td><td>✓ 30-60s total</td><td>Pre-commit hooks, CI gates</td></tr>
+                    <tr><td><code>INTERNET=true</code></td><td>+ CVE database lookups, dependency resolution, registry checks</td><td>✗ 2-5 minutes</td><td>Scheduled reviews, manual deep dives</td></tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>Default offline mode ensures:</strong> Fast execution suitable for CI/CD pipelines, deterministic results, no network dependencies, works in restricted environments.
+            </div>
+        </section>
+
+    </div>
+</main>
+</body>
+</html>

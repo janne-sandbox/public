@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Tool — TypeScript Agent</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });</script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+
+<main class="main-content">
+    <header class="header"><h2>Code Review System — TypeScript Agent</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>TypeScript Agent Architecture</h3>
+            <p>The TypeScript Agent extends the base <code>ReviewAgent</code> class and implements language-specific checks for TypeScript and Node.js projects. It focuses on compile-time safety, type correctness, testing discipline, and requirement coverage.</p>
+            
+            <h4>Key Responsibilities</h4>
+            <ul>
+                <li>Verify TypeScript strict mode enabled in <code>tsconfig.json</code></li>
+                <li>Detect type safety violations (excessive <code>any</code>, missing type annotations)</li>
+                <li>Check test file coverage (target ≥30% of files have test counterparts)</li>
+                <li>Match project code against functional requirements</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Class Structure</h3>
+            <div class="code-block">class TypeScriptAgent extends ReviewAgent {
+  constructor(internetEnabled = false)
+  async run(projectRoot, requirementsDir, outputDir, timestamp)
+  
+  _evaluateTypeScriptCoverage(tsFiles)
+  _checkStrictMode(tsFiles)
+  _checkTypeSafety(tsFiles)
+  _checkTestCoverage(tsFiles)
+  _checkFunctionalRequirements(tsFiles)
+}</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Check Methods</h3>
+
+            <h4>1. Strict Mode Check</h4>
+            <p><code>_checkStrictMode()</code> — Verifies that <code>tsconfig.json</code> has <code>"strict": true</code></p>
+            <ul>
+                <li><strong>Severity:</strong> MAJOR (compile-time safety is critical)</li>
+                <li><strong>Requirement:</strong> REQ-006 TypeScript Compile-Time Safety</li>
+                <li><strong>How it works:</strong> Reads <code>tsconfig.json</code>, parses JSON, checks <code>compilerOptions.strict</code></li>
+                <li><strong>Finding if failed:</strong> "TypeScript strict mode not enabled" → blocks APPROVED verdict</li>
+            </ul>
+
+            <h4>2. Type Safety Check</h4>
+            <p><code>_checkTypeSafety()</code> — Scans for excessive <code>any</code> usage and type annotations</p>
+            <ul>
+                <li><strong>Severity:</strong> MINOR or MAJOR depending on finding type</li>
+                <li><strong>Requirement:</strong> REQ-007 Type Safety (no implicit <code>any</code>)</li>
+                <li><strong>How it works:</strong> Regex scan for <code>: any</code> patterns and heuristic checks for discriminated-union style modeling</li>
+                <li><strong>Sample files:</strong> First 10 TypeScript files (not exhaustive)</li>
+            </ul>
+
+            <h4>3. Test Coverage Check</h4>
+            <p><code>_checkTestCoverage()</code> — Verifies minimum test file ratio</p>
+            <ul>
+                <li><strong>Severity:</strong> MINOR (advisory heuristic below 30%)</li>
+                <li><strong>Requirement:</strong> REQ-012 Test Coverage ≥30%</li>
+                <li><strong>How it works:</strong> Lists all <code>*.ts</code> and <code>*.test.ts</code> files, calculates ratio</li>
+                <li><strong>Target:</strong> At least 30% of files have test counterparts</li>
+            </ul>
+
+            <h4>4. Functional Requirements Check</h4>
+            <p><code>_checkFunctionalRequirements()</code> — Matches code against project requirements</p>
+            <ul>
+                <li><strong>Severity:</strong> MINOR</li>
+                <li><strong>How it works:</strong> Loads requirements from <code>./requirements/functional/</code>, checks if TypeScript files address them</li>
+                <li><strong>Coverage report:</strong> Lists which requirements are reflected in code</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Implementation Method</h3>
+            <p><strong>Technology Stack:</strong> Node.js 20 + regex-based pattern matching + optional Deepseek LLM</p>
+            <ul>
+                <li><strong>Default (Regex):</strong> Fast pattern matching (instant, no dependencies)</li>
+                <li><strong>Enhanced (Deepseek):</strong> Offline LLM analysis via Ollama (if available on localhost:11434)</li>
+                <li><strong>Engine:</strong> Regex for speed + Deepseek for semantic understanding (hybrid approach)</li>
+                <li><strong>No internet required:</strong> Deepseek runs locally via Ollama, no cloud API calls</li>
+            </ul>
+
+            <h4>Analysis Method</h4>
+            <p><strong>Default Mode (Always Available):</strong> Regex-based pattern matching</p>
+            <ul>
+                <li>Scans for: tsconfig.json strict mode, <code>any</code> annotations, discriminated unions, and test files</li>
+                <li>Performance: ~5-10 seconds</li>
+                <li>No external tools or dependencies</li>
+            </ul>
+
+            <p><strong>Enhanced Mode (If Deepseek Available):</strong> Hybrid regex + LLM analysis</p>
+            <ul>
+                <li>Uses Deepseek to filter language-appropriate requirements (skip React/Java requirements)</li>
+                <li>Semantic requirement matching: "does this code actually address requirement X?"</li>
+                <li>Performance: ~30-45 seconds (due to LLM inference)</li>
+                <li>Accuracy: Eliminates false positives from regex-only approach</li>
+                <li>Requires: Ollama running locally with deepseek-coder model loaded</li>
+            </ul>
+
+            <h4>Components Used</h4>
+            <table>
+                <thead><tr><th>Component</th><th>Purpose</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td><code>ReviewAgent</code> base class</td><td>Requirement loading, file scanning, report generation</td><td><code>base-agent.js</code></td></tr>
+                    <tr><td><code>fs</code> module (Node.js built-in)</td><td>Read file contents, scan directories</td><td>No npm dependencies</td></tr>
+                    <tr><td><code>path</code> module (Node.js built-in)</td><td>Path manipulation and resolution</td><td>No npm dependencies</td></tr>
+                    <tr><td><code>JSON.parse()</code></td><td>Parse tsconfig.json, package.json configuration files</td><td>Built-in JavaScript</td></tr>
+                    <tr><td>ECMAScript Regex</td><td>Pattern matching for <code>any</code>, union types, and test file names</td><td>Standard RegExp object</td></tr>
+                </tbody>
+            </table>
+
+            <h4>What This Means</h4>
+            <p>The TypeScript Agent:</p>
+            <ul>
+                <li>✓ Uses regex patterns for fast, deterministic code analysis</li>
+                <li>✓ Can optionally use Deepseek via Ollama for language-aware filtering and semantic requirement matching</li>
+                <li>✗ Does NOT use TypeScript compiler (no AST, no semantic analysis)</li>
+                <li>✗ Does NOT use eslint or prettier (no external tools)</li>
+                <li>✗ Cannot understand complex type relationships or full scope resolution</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>File Scanning Pattern</h3>
+            <p>The agent scans for TypeScript files matching <code>**/*.ts</code> and <code>**/*.tsx</code>. The tree below is illustrative; these names are not taken from a reviewed project.</p>
+            <div class="code-block">sample-api/src/
+├── index.ts                  Scanned
+├── routes/
+│   ├── orders.ts             Scanned
+│   └── orders.test.ts        Test file
+├── middleware/
+│   ├── request-id.ts         Scanned
+│   └── request-id.test.ts    Test file
+
+sample-web/src/
+├── App.tsx                   Scanned
+├── components/
+│   ├── ProductCard.tsx       Scanned
+│   └── ProductCard.test.tsx  Test file</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Verdict Logic</h3>
+
+            <table>
+                <thead><tr><th>Critical Issues</th><th>Major Issues</th><th>Verdict</th></tr></thead>
+                <tbody>
+                    <tr><td>≥1</td><td>—</td><td><strong>DENIED</strong></td></tr>
+                    <tr><td>0</td><td>≥1</td><td><strong>APPROVED WITH CHANGES</strong></td></tr>
+                    <tr><td>0</td><td>0</td><td><strong>APPROVED</strong></td></tr>
+                </tbody>
+            </table>
+
+            <p><strong>Minor findings</strong> do not affect verdict but are reported for awareness.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Example Report</h3>
+            <div class="code-block"># Code Review Report — TYPESCRIPT
+
+**Timestamp:** 2026-05-26T15:53:35.115Z
+**Internet Access:** Disabled
+**Deepseek Analysis:** Disabled
+**Analysis Method:** Regex
+**Verdict:** `APPROVED WITH CHANGES`
+
+## Summary
+- Total findings: 2
+- Critical issues: 0
+- Major issues: 2
+- Minor issues: 0
+
+## Detailed Findings
+### Insufficient test file coverage (MINOR)
+- **File:** `Test suite`
+- **Line:** N/A
+- **Description:** Only 7.7% of files have test counterparts. Target ≥30%.
+- **Requirement:** REQ-012
+
+### No discriminated unions detected (MINOR)
+- **File:** `Architecture`
+- **Line:** N/A
+- **Description:** Consider using discriminated unions for type-safe state modeling
+- **Requirement:** REQ-006</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Performance Characteristics</h3>
+            <ul>
+                <li><strong>Execution time:</strong> 5-10 seconds</li>
+                <li><strong>Sample size:</strong> First 15 files for pattern detection, all files for counting</li>
+                <li><strong>Memory usage:</strong> ~20-50 MB (typical)</li>
+                <li><strong>Network access:</strong> None required (offline mode)</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Limitations &amp; Future Improvements</h3>
+            <ul>
+                <li><strong>Current:</strong> Regex-based pattern matching (fast, not AST-based)</li>
+                <li><strong>Could improve:</strong> Use TypeScript compiler API for precise type analysis</li>
+                <li><strong>Current:</strong> Samples first 15 files for performance</li>
+                <li><strong>Could improve:</strong> Full AST traversal for critical checks</li>
+                <li><strong>Current:</strong> No CVE checking for dependencies</li>
+                <li><strong>Could improve:</strong> Integrate npm audit or Snyk API when INTERNET=true</li>
+            </ul>
+        </section>
+
+    </div>
+</main>
+</body>
+</html>

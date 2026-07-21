@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Tool - React Agent</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>Code Review System - React Agent</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>React Agent Architecture</h3>
+            <p>The React Agent extends <code>ReviewAgent</code> and scans JavaScript, JSX, TypeScript, and TSX files for accessibility, browser security, performance, organization, and requirement coverage.</p>
+            <h4>Key responsibilities</h4>
+            <ul>
+                <li>Find image elements without alternative text.</li>
+                <li>Check for ARIA signals in larger React codebases.</li>
+                <li>Detect unsanitized <code>dangerouslySetInnerHTML</code>.</li>
+                <li>Flag authentication tokens stored in browser storage.</li>
+                <li>Suggest splitting large components and using lazy loading.</li>
+                <li>Look for component and custom-hook organization.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Class Structure</h3>
+            <div class="code-block">class ReactAgent extends ReviewAgent {
+  async run(projectRoot, requirementsDir, outputDir, timestamp)
+  _isExcludedReactPath(filePath)
+  _evaluateReactCoverage(reactFiles)
+  _checkAccessibility(reactFiles)
+  _checkSecurity(reactFiles)
+  _checkPerformance(reactFiles)
+  _checkComponentOrganization(reactFiles)
+  _checkFunctionalRequirements(reactFiles)
+}</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Checks</h3>
+            <h4>Accessibility</h4>
+            <p>Every scanned file is checked for image elements without <code>alt</code>. Missing text produces a major finding. In projects with more than ten React files, the absence of ARIA attributes also produces a major finding.</p>
+            <h4>Browser security</h4>
+            <p>Unsanitized <code>dangerouslySetInnerHTML</code> produces a critical finding. Storing tokens through <code>localStorage</code> or <code>sessionStorage</code> produces a major finding.</p>
+            <h4>Performance</h4>
+            <p>The first fifteen files are sampled. Multiple components larger than 5 KB trigger a minor suggestion, as does missing lazy loading in projects with more than ten React files.</p>
+            <h4>Organization</h4>
+            <p>Larger projects receive minor suggestions when their paths show no component folder or custom-hook structure.</p>
+            <h4>Requirement coverage</h4>
+            <p>The first five relevant functional requirements are evaluated against the scanned React files. Missing evidence is reported as a minor finding.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Illustrative File Tree</h3>
+            <p>This fictional tree demonstrates matching only; it does not represent files from a reviewed project.</p>
+            <div class="code-block">sample-web/src/
+├── App.tsx                       Scanned
+├── components/
+│   ├── ProductCard.tsx           Scanned
+│   └── ProductCard.test.tsx      Scanned
+└── hooks/
+    └── useCatalog.ts             Scanned</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Security and Accessibility Examples</h3>
+            <h4>Alternative text</h4>
+            <div class="code-block">&lt;img src="product-thumbnail.png" alt="Blue travel mug" /&gt;</div>
+            <h4>Sanitized rich text</h4>
+            <div class="code-block">const safeHtml = DOMPurify.sanitize(untrustedHtml);
+
+return &lt;div dangerouslySetInnerHTML={{ __html: safeHtml }} /&gt;;</div>
+            <div class="info-box">The agent recognizes sanitization signals such as <code>DOMPurify</code>, <code>sanitizeHtml</code>, or <code>xss</code> in the sampled files.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Scanning Scope and Limitations</h3>
+            <ul>
+                <li>The scanner matches <code>.js</code>, <code>.jsx</code>, <code>.ts</code>, and <code>.tsx</code>.</li>
+                <li>Paths under review output, documentation, coverage, distribution, and build folders are excluded.</li>
+                <li>The agent uses regex heuristics rather than the React compiler, ESLint, or an AST.</li>
+                <li>Security, performance, and organization checks cannot prove runtime behavior.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Verdict Logic</h3>
+            <table>
+                <thead><tr><th>Findings</th><th>Verdict</th></tr></thead>
+                <tbody>
+                    <tr><td>At least one critical finding</td><td><strong>DENIED</strong></td></tr>
+                    <tr><td>No critical findings and at least one major finding</td><td><strong>APPROVED WITH CHANGES</strong></td></tr>
+                    <tr><td>No critical or major findings</td><td><strong>APPROVED</strong></td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</main>
+</body>
+</html>

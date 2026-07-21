@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>Example Project Documentation</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Review Project Changes Locally</h3>
+            <p>
+                <span class="badge success">Automated</span>
+                <span class="badge info">4 Languages</span>
+                <span class="badge">Local-First</span>
+                <span class="badge warn">Requirements-Driven</span>
+            </p>
+            <p>The review tool scans Java, Rust, React, and TypeScript code against the project's functional and non-functional requirements. Each language-specific agent produces a Markdown report with findings, suggestions, and a final verdict.</p>
+            <div class="info-box"><strong>Default behavior:</strong> all four agents run without internet access. Deepseek analysis is enabled when a local Ollama service is available and otherwise falls back to deterministic checks.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Quick Start</h3>
+            <h4>Run every review agent</h4>
+            <div class="code-block">./run-review.sh</div>
+            <h4>Review one language</h4>
+            <div class="code-block">LANGUAGE=java ./run-review.sh
+LANGUAGE=typescript ./run-review.sh</div>
+            <h4>Use deterministic checks only</h4>
+            <div class="code-block">DEEPSEEK=false ./run-review.sh</div>
+            <p>Reports are written to <code>review/results/&lt;timestamp&gt;/</code>. Set <code>LANGUAGE</code> to <code>java</code>, <code>rust</code>, <code>react</code>, <code>typescript</code>, or <code>all</code>.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Review Documentation</h3>
+            <div class="chapter-grid">
+                <a class="chapter-card" href="review-overview.html"><h4>Overview</h4><p>Capabilities, verdicts, agents, configuration, and CI usage.</p></a>
+                <a class="chapter-card" href="review-instructions.html"><h4>Using the tool</h4><p>Commands, report interpretation, troubleshooting, and extension points.</p></a>
+                <a class="chapter-card" href="review-architecture.html"><h4>Architecture</h4><p>Components, analysis flow, file organization, and requirements mapping.</p></a>
+                <a class="chapter-card" href="review-agent-typescript.html"><h4>TypeScript agent</h4><p>Strict mode, type safety, tests, requirement coverage, and verdict logic.</p></a>
+                <a class="chapter-card" href="review-agent-java.html"><h4>Java agent</h4><p>Modern Java, Jackson, OWASP checks, tests, and verdict logic.</p></a>
+                <a class="chapter-card" href="review-agent-rust.html"><h4>Rust agent</h4><p>Memory safety, error handling, async patterns, tests, and requirements.</p></a>
+                <a class="chapter-card" href="review-agent-react.html"><h4>React agent</h4><p>Accessibility, browser security, performance, and component organization.</p></a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Development Process</h3>
+            <p>Follow the lifecycle from planning and implementation through review, release, and continuous improvement.</p>
+            <div class="chapter-grid">
+                <a class="chapter-card" href="process.html"><h4>Process overview</h4><p>The complete process, its operating principles, and links to the source diagrams.</p></a>
+                <a class="chapter-card" href="process-pdca.html"><h4>PDCA delivery cycle</h4><p>Detailed activities, inputs, outputs, responsibilities, and feedback loops.</p></a>
+                <a class="chapter-card" href="process-governance.html"><h4>Governance and gates</h4><p>Readiness, review, release decisions, traceability, and quality evidence.</p></a>
+                <a class="chapter-card" href="process-milestones.html"><h4>Milestones and operations</h4><p>Delivery stages, framework alignment, go-live, and steady-state improvement.</p></a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Verdicts</h3>
+            <table>
+                <thead><tr><th>Verdict</th><th>Meaning</th><th>Next step</th></tr></thead>
+                <tbody>
+                    <tr><td><code>APPROVED</code></td><td>No blocking findings were detected.</td><td>Review the report and proceed.</td></tr>
+                    <tr><td><code>APPROVED WITH CHANGES</code></td><td>The review found issues or improvements.</td><td>Address the reported suggestions.</td></tr>
+                    <tr><td><code>DENIED</code></td><td>Critical security or correctness issues were found.</td><td>Resolve blockers before merging.</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</main>
+</body>
+</html>

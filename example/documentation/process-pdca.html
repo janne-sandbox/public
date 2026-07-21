@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDCA Delivery Cycle</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>Development Process - PDCA Delivery Cycle</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Delivery Loop</h3>
+            <p>PDCA is applied to each meaningful increment. The cycle is deliberately small enough that findings can return to implementation quickly, while each pass still produces the evidence needed for a release decision.</p>
+            <figure class="diagram-figure">
+                <a class="diagram-link" href="diagrams/svgs/ai-process.svg" target="_blank" rel="noopener">
+                    <img src="diagrams/svgs/ai-process.svg" alt="PDCA delivery cycle with requirements, implementation, tests, review, rework, and release">
+                </a>
+                <figcaption>The generated process diagram is the visual reference for the phase sequence and feedback loop.</figcaption>
+            </figure>
+        </section>
+
+        <section class="content-section">
+            <h3>Plan</h3>
+            <p><strong>Goal:</strong> create a shared, testable understanding of the change before implementation begins.</p>
+            <h4>Activities</h4>
+            <ol>
+                <li>Collect source material and identify stakeholders affected by the change.</li>
+                <li>Describe the desired outcome, current constraint, and boundaries of the increment.</li>
+                <li>Write or refine functional and non-functional requirements.</li>
+                <li>Record significant architectural choices and known risks.</li>
+                <li>Define acceptance criteria and the evidence required at review.</li>
+            </ol>
+            <h4>Exit criteria</h4>
+            <ul>
+                <li>The change has an owner and a bounded scope.</li>
+                <li>Requirements are identifiable and testable.</li>
+                <li>Dependencies, risks, and assumptions are visible.</li>
+                <li>The planned tests and review approach are understood.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Do</h3>
+            <p><strong>Goal:</strong> implement the smallest complete increment that can be checked against the plan.</p>
+            <h4>Activities</h4>
+            <ol>
+                <li>Implement the change using the repository's established conventions.</li>
+                <li>Add focused unit tests for decisions and edge cases.</li>
+                <li>Add integration tests at changed boundaries.</li>
+                <li>Update documentation, examples, and architecture decisions when behavior changes.</li>
+                <li>Run relevant local validation and retain useful output for review.</li>
+            </ol>
+            <div class="warning-box"><strong>Keep the increment reviewable:</strong> unrelated refactoring and broad formatting changes make requirement traceability and defect isolation harder.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Check</h3>
+            <p><strong>Goal:</strong> decide whether the implementation and its evidence satisfy the planned outcome.</p>
+            <table>
+                <thead><tr><th>Check</th><th>Evidence</th><th>Decision question</th></tr></thead>
+                <tbody>
+                    <tr><td>Requirement coverage</td><td>Linked requirement, implementation, and acceptance test</td><td>Is the intended behavior present and observable?</td></tr>
+                    <tr><td>Implementation quality</td><td>Code review and automated review report</td><td>Is the solution correct, maintainable, and appropriately scoped?</td></tr>
+                    <tr><td>Unit behavior</td><td>Passing focused tests</td><td>Are decisions and edge cases covered?</td></tr>
+                    <tr><td>Integration behavior</td><td>Passing boundary or workflow tests</td><td>Do affected components still cooperate correctly?</td></tr>
+                    <tr><td>Risk controls</td><td>Security, privacy, reliability, and operational checks</td><td>Are relevant non-functional requirements satisfied?</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Act</h3>
+            <p><strong>Goal:</strong> respond to the evidence and improve both the product and the next cycle.</p>
+            <h4>When the check passes</h4>
+            <ul>
+                <li>Record the accepted version and approval evidence.</li>
+                <li>Release through the defined deployment path.</li>
+                <li>Confirm post-deployment health and expected behavior.</li>
+                <li>Move operational observations into the improvement backlog.</li>
+            </ul>
+            <h4>When the check does not pass</h4>
+            <ul>
+                <li>Translate findings into specific changes with owners.</li>
+                <li>Return to Do for implementation or to Plan if the requirement itself is unclear.</li>
+                <li>Repeat affected tests and reviews; do not reuse stale evidence.</li>
+            </ul>
+            <div class="info-box"><strong>Cycle completion:</strong> a release is not the end of PDCA. Production feedback, incidents, and measured outcomes become inputs to the next Plan phase.</div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

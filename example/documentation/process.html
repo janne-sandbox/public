@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Process Overview</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>Development Process - Overview</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Purpose</h3>
+            <p>The development process turns source material and requirements into reviewed, releasable software through a repeating Plan-Do-Check-Act cycle. It keeps architecture decisions, implementation, tests, review findings, and operational feedback connected throughout delivery.</p>
+            <p>
+                <span class="badge success">Iterative</span>
+                <span class="badge info">Evidence-Based</span>
+                <span class="badge">Requirements-Driven</span>
+                <span class="badge warn">Continuous Improvement</span>
+            </p>
+            <div class="info-box"><strong>Working rule:</strong> every change starts with an understood need, produces testable evidence, passes an explicit review decision, and contributes learning to the next cycle.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Process at a Glance</h3>
+            <figure class="diagram-figure">
+                <a class="diagram-link" href="diagrams/svgs/ai-process.svg" target="_blank" rel="noopener">
+                    <img src="diagrams/svgs/ai-process.svg" alt="Development process shown as Plan, Do, Check, and Act swimlanes">
+                </a>
+                <figcaption>Select the diagram to open the generated SVG at full size.</figcaption>
+            </figure>
+            <div class="phase-grid">
+                <div class="phase-card"><h4>Plan</h4><p>Clarify the problem, collect source material, define requirements, identify risks, and agree on acceptance evidence.</p></div>
+                <div class="phase-card"><h4>Do</h4><p>Implement a small increment, add unit and integration tests, and keep documentation and decisions current.</p></div>
+                <div class="phase-card"><h4>Check</h4><p>Review the implementation and its tests against acceptance criteria, requirements, security controls, and quality expectations.</p></div>
+                <div class="phase-card"><h4>Act</h4><p>Release an accepted increment or return findings to implementation, then record lessons and adjust the next plan.</p></div>
+            </div>
+            <div class="source-links">
+                <a class="source-link" href="diagrams/ai.drawio">Editable draw.io source</a>
+                <a class="source-link" href="diagrams/svgs/ai-process.svg">Generated process SVG</a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Chapter Guide</h3>
+            <div class="chapter-grid">
+                <a class="chapter-card" href="process-pdca.html"><h4>PDCA delivery cycle</h4><p>Inputs, activities, outputs, ownership, and the rework loop for each phase.</p></a>
+                <a class="chapter-card" href="process-governance.html"><h4>Governance and gates</h4><p>Decision points, traceability, review evidence, and release readiness.</p></a>
+                <a class="chapter-card" href="process-milestones.html"><h4>Milestones and operations</h4><p>Architecture, delivery, acceptance, production, and operational stages.</p></a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Core Artifacts</h3>
+            <table>
+                <thead><tr><th>Artifact</th><th>Purpose</th><th>Maintained when</th></tr></thead>
+                <tbody>
+                    <tr><td>Source materials</td><td>Record the original business, technical, and operational context.</td><td>Plan</td></tr>
+                    <tr><td>Requirements</td><td>Define observable behavior and non-functional constraints.</td><td>Plan and Act</td></tr>
+                    <tr><td>Architecture decisions</td><td>Explain significant choices, alternatives, and consequences.</td><td>Plan and Do</td></tr>
+                    <tr><td>Source and tests</td><td>Implement the increment and demonstrate expected behavior.</td><td>Do</td></tr>
+                    <tr><td>Review report</td><td>Capture findings, suggested changes, requirement coverage, and verdict.</td><td>Check</td></tr>
+                    <tr><td>Release evidence</td><td>Identify the accepted version, deployment inputs, and approval record.</td><td>Act</td></tr>
+                    <tr><td>Operational feedback</td><td>Feed incidents, observations, and improvement ideas into planning.</td><td>Act and the next Plan</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</main>
+</body>
+</html>

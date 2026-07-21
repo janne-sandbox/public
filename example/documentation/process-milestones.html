@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Milestones and Operations</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>Development Process - Milestones and Operations</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Delivery Roadmap</h3>
+            <p>The milestone model connects architecture governance, service management, and incremental delivery. Dates and named technologies in the diagram are illustrative; the durable part is the sequence of evidence-based gates.</p>
+            <figure class="diagram-figure">
+                <a class="diagram-link" href="diagrams/svgs/ai-milestones.svg" target="_blank" rel="noopener">
+                    <img src="diagrams/svgs/ai-milestones.svg" alt="Milestone schedule aligned across TOGAF, ITIL, Agile delivery, production, and operations">
+                </a>
+                <figcaption>Select the generated milestone SVG to inspect the schedule and framework alignment at full size.</figcaption>
+            </figure>
+            <div class="source-links">
+                <a class="source-link" href="diagrams/ai.drawio">Editable draw.io source</a>
+                <a class="source-link" href="diagrams/svgs/ai-milestones.svg">Generated milestone SVG</a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Milestone Detail</h3>
+            <table>
+                <thead><tr><th>Milestone</th><th>Outcome</th><th>Evidence to advance</th></tr></thead>
+                <tbody>
+                    <tr><td>M1 - Materials ready</td><td>The delivery context and source information are available.</td><td>Materials inventoried, owners identified, initial requirements drafted</td></tr>
+                    <tr><td>M2 - Architecture baseline</td><td>The intended structure and significant trade-offs are understood.</td><td>Architecture views, decisions, risks, and non-functional requirements reviewed</td></tr>
+                    <tr><td>M3 - Minimum viable increment</td><td>A thin end-to-end workflow demonstrates feasibility.</td><td>Working path, focused tests, deployment skeleton, early review evidence</td></tr>
+                    <tr><td>M4 - Feature complete</td><td>Planned scope is implemented and integrated.</td><td>Requirement coverage, complete tests, current documentation, resolved blockers</td></tr>
+                    <tr><td>M5 - Acceptance complete</td><td>Stakeholders accept behavior and operational readiness.</td><td>Acceptance results, security and compliance evidence, known-issue decision</td></tr>
+                    <tr><td>M6 - Production release</td><td>The accepted version is deployed through controlled release.</td><td>Approval, immutable version, rollback plan, deployment and health results</td></tr>
+                    <tr><td>M7 - Steady-state operations</td><td>The service is monitored, supported, and continuously improved.</td><td>Service ownership, alerts, response procedures, objectives, improvement backlog</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Framework Alignment</h3>
+            <h4>Architecture governance</h4>
+            <p>Architecture work establishes principles and a baseline early, then continues through implementation governance and controlled change. Decisions remain connected to delivery rather than ending after initial design.</p>
+            <h4>Service management</h4>
+            <p>Service strategy and design inform requirements; transition governs testing and release; operations provide incident, event, and performance feedback for continued improvement.</p>
+            <h4>Agile delivery</h4>
+            <p>Short iterations produce testable increments. Each sprint uses the same PDCA logic: plan a bounded outcome, implement it, inspect evidence, and adapt the backlog and working method.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Production and Operations</h3>
+            <p>A successful deployment is a transition into measured operation, not the final step of development.</p>
+            <h4>Release verification</h4>
+            <ul>
+                <li>Confirm the deployed version and configuration.</li>
+                <li>Run health, smoke, and critical-path checks.</li>
+                <li>Verify monitoring, alert routing, and dashboards.</li>
+                <li>Keep rollback criteria and responsibility explicit during the observation window.</li>
+            </ul>
+            <h4>Continuous improvement</h4>
+            <ul>
+                <li>Turn incidents and recurring support work into prioritized improvement items.</li>
+                <li>Compare observed reliability, performance, and usage with the planned objectives.</li>
+                <li>Update requirements and architecture decisions when operating assumptions change.</li>
+                <li>Feed lessons into the next milestone or sprint planning cycle.</li>
+            </ul>
+        </section>
+    </div>
+</main>
+</body>
+</html>

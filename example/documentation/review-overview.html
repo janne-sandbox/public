@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Tool Overview</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });</script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+
+<main class="main-content">
+    <header class="header"><h2>Code Review System — Overview</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Overview</h3>
+            <p>
+                <span class="badge success">Automated</span>
+                <span class="badge info">4 Languages</span>
+                <span class="badge">Local-First</span>
+                <span class="badge warn">Requirement-Driven</span>
+            </p>
+            <p>
+                The <strong>Example Code Review Tool</strong> is an automated review framework that evaluates codebase changes against project requirements. It supports four primary languages: <strong>TypeScript</strong>, <strong>Java</strong>, <strong>Rust</strong>, and <strong>React</strong>. Reviews run locally without internet access by default, making the system suitable for offline development and CI/CD pipelines.
+            </p>
+
+            <div class="info-box">
+                <strong>Core purpose:</strong> Provide fast, deterministic, requirement-based code reviews that catch common issues in each language before they reach the main branch.
+            </div>
+
+            <h4>Three review verdicts</h4>
+            <table>
+                <thead><tr><th>Verdict</th><th>Meaning</th><th>Action</th></tr></thead>
+                <tbody>
+                    <tr><td><code>APPROVED</code></td><td>No issues found. Code passes all checks.</td><td>Can merge</td></tr>
+                    <tr><td><code>APPROVED WITH CHANGES</code></td><td>Issues found; suggestions provided. Review and implement suggestions.</td><td>Request changes</td></tr>
+                    <tr><td><code>DENIED</code></td><td>Critical issues prevent approval (security, compilation, etc.).</td><td>Block merge</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Quick Start</h3>
+
+            <h4>Review all languages (default)</h4>
+            <div class="code-block">./run-review.sh</div>
+
+            <h4>Review TypeScript only, with internet access</h4>
+            <div class="code-block">LANGUAGE=typescript INTERNET=true ./run-review.sh</div>
+
+            <h4>Review Java codebase, no internet</h4>
+            <div class="code-block">LANGUAGE=java ./run-review.sh</div>
+
+            <p>Results are written to a per-run folder at <code>./review/results/&lt;timestamp&gt;/</code>. Each run produces 1 to 4 report files depending on the selected <code>LANGUAGE</code> value. If another run starts within the same minute, the folder gets a numeric suffix such as <code>202605261955-1/</code>.</p>
+
+            <h4>Review with optional Deepseek analysis</h4>
+            <div class="code-block"># Default: DEEPSEEK=true, auto-uses Ollama if available
+LANGUAGE=all ./run-review.sh
+
+# Force regex-only mode
+LANGUAGE=all DEEPSEEK=false ./run-review.sh</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Four review agents</h3>
+
+            <h4>① TypeScript Agent</h4>
+            <ul>
+                <li><strong>Scope:</strong> TypeScript and TSX files anywhere in the reviewed project</li>
+                <li><strong>Checks:</strong> Strict mode, type safety patterns, tests, and requirement coverage</li>
+                <li><strong>Based on:</strong> REQ-006, REQ-012, REVIEW-001</li>
+            </ul>
+
+            <h4>② Java Agent</h4>
+            <ul>
+                <li><strong>Scope:</strong> Java source and test files anywhere in the reviewed project</li>
+                <li><strong>Checks:</strong> Java 21 patterns, Jackson usage, SQL injection prevention, tests</li>
+                <li><strong>Based on:</strong> REQ-033, REQ-058, OWASP-REQ, REVIEW-002</li>
+            </ul>
+
+            <h4>③ Rust Agent</h4>
+            <ul>
+                <li><strong>Scope:</strong> IoT device simulator</li>
+                <li><strong>Checks:</strong> Memory safety, error handling, async patterns, and tests</li>
+                <li><strong>Based on:</strong> REQ-051, REVIEW-004</li>
+            </ul>
+
+            <h4>④ React Agent</h4>
+            <ul>
+                <li><strong>Scope:</strong> React JavaScript, JSX, TypeScript, and TSX files</li>
+                <li><strong>Checks:</strong> Accessibility (WCAG), security, performance, component organization</li>
+                <li><strong>Based on:</strong> REQ-011, WCAG-REQ, OWASP-REQ, REVIEW-003</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Requirements-driven reviews</h3>
+
+            <p>
+                Each agent loads requirements from two sources:
+            </p>
+
+            <ol>
+                <li><strong><code>./requirements/functional/</code></strong> — 75 functional requirements (REQ-003 through REQ-075)</li>
+                <li><strong><code>./requirements/non-functional/</code></strong> — Non-functional requirements (GDPR, OWASP, WCAG, EN 50518)</li>
+                <li><strong><code>./review/requirements/</code></strong> — Review system requirements (REVIEW-001 through REVIEW-005)</li>
+            </ol>
+
+            <p>
+                Requirements are scanned for <strong>checkpoints</strong> — code blocks, lists, and instructions — then matched against the codebase. The review verdict is based on how many requirements are met or violated.
+            </p>
+
+            <div class="warning-box">
+                <strong>Example:</strong> The TypeScript agent checks if <code>tsconfig.json</code> has <code>"strict": true</code> (from REQ-006). If not, a <strong>major</strong> finding is issued with a suggested code fix.
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Output format</h3>
+
+            <p>Review reports are written as Markdown files with the following structure:</p>
+
+            <div class="code-block">./review/results/202605261949/
+├── review-typescript-approved-202605261949.md
+├── review-java-approved-202605261949.md
+├── review-react-approved-202605261949.md
+└── review-rust-approved-202605261949.md</div>
+
+            <p>Each report includes:</p>
+            <ul>
+                <li><strong>Timestamp, verdict, and analysis mode</strong> — when the review ran, overall result, and whether regex-only or hybrid Deepseek analysis was used</li>
+                <li><strong>Summary</strong> — issue count by severity (critical, major, minor)</li>
+                <li><strong>Suggested changes</strong> — with code snippets and explanations</li>
+                <li><strong>Detailed findings</strong> — per-issue description and file location</li>
+                <li><strong>Requirements coverage</strong> — which requirements were checked</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Parameters and configuration</h3>
+
+            <table>
+                <thead><tr><th>Parameter</th><th>Values</th><th>Default</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><code>LANGUAGE</code></td><td><code>typescript|java|rust|react|all</code></td><td><code>all</code></td><td>Which language(s) to review</td></tr>
+                    <tr><td><code>INTERNET</code></td><td><code>true|false</code></td><td><code>false</code></td><td>Allow external lookups (CVE checks, dependencies)</td></tr>
+                    <tr><td><code>DEEPSEEK</code></td><td><code>true|false</code></td><td><code>true</code></td><td>Enable optional Ollama-backed semantic checks; falls back to regex if Ollama is unavailable</td></tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>Default behavior:</strong> Reviews run locally, offline, with <code>INTERNET=false</code>. This makes them fast and deterministic, suitable for pre-commit or CI/CD gates. Set <code>INTERNET=true</code> only if you need dependency CVE checks or internet-based validations.
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Finding severity levels</h3>
+
+            <table>
+                <thead><tr><th>Severity</th><th>Impact</th><th>Action</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Critical</strong></td><td>Security or safety issue; code does not compile; hard requirement violated</td><td><code>DENIED</code> — must fix before merge</td></tr>
+                    <tr><td><strong>Major</strong></td><td>Significant quality issue; compliance gap; missing test coverage</td><td><code>APPROVED WITH CHANGES</code> — should fix</td></tr>
+                    <tr><td><strong>Minor</strong></td><td>Code style; best practice; optimization opportunity</td><td><code>APPROVED</code> or <code>APPROVED WITH CHANGES</code> — nice to have</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Integration with CI/CD</h3>
+
+            <p>Example GitHub Actions workflow:</p>
+
+            <div class="code-block">jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run code review
+        run: LANGUAGE=all INTERNET=false ./run-review.sh
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: review-reports
+          path: ./review/results/</div>
+
+            <div class="info-box">
+                <strong>Tip:</strong> Set the CI job to fail if any report contains <code>DENIED</code> verdict. Parse report files to automate approval workflows.
+            </div>
+        </section>
+
+    </div>
+</main>
+</body>
+</html>

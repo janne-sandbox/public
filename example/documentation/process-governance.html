@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Governance and Gates</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>Development Process - Governance and Gates</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Decision Model</h3>
+            <p>Governance turns the PDCA flow into explicit decisions. A gate is not a document ceremony; it is a point where accountable people inspect current evidence and decide to proceed, rework, re-plan, or stop.</p>
+            <figure class="diagram-figure">
+                <a class="diagram-link" href="diagrams/svgs/ai-process.svg" target="_blank" rel="noopener">
+                    <img src="diagrams/svgs/ai-process.svg" alt="Development workflow highlighting the review decision between implementation and release">
+                </a>
+                <figcaption>The Check-to-Act decision separates accepted increments from work that must return to planning or implementation.</figcaption>
+            </figure>
+        </section>
+
+        <section class="content-section">
+            <h3>Quality Gates</h3>
+            <table>
+                <thead><tr><th>Gate</th><th>Minimum evidence</th><th>Possible decision</th></tr></thead>
+                <tbody>
+                    <tr><td>Ready for implementation</td><td>Bounded scope, requirements, acceptance criteria, identified dependencies</td><td>Start, clarify, or defer</td></tr>
+                    <tr><td>Ready for review</td><td>Implementation, relevant tests, validation results, updated documentation</td><td>Review or return incomplete work</td></tr>
+                    <tr><td>Review verdict</td><td>Peer review, automated review report, requirement and risk evidence</td><td>Approve, approve with changes, or deny</td></tr>
+                    <tr><td>Ready for release</td><td>Accepted review, passing pipeline, deployment and rollback plan</td><td>Schedule, hold, or reject</td></tr>
+                    <tr><td>Release verified</td><td>Deployment result, health checks, monitoring signals, known-issue record</td><td>Complete, remediate, or roll back</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Traceability</h3>
+            <p>Traceability should make it possible to move in both directions: from a requirement to its implementation and evidence, and from a changed line or component back to the reason it exists.</p>
+            <div class="code-block">Source material
+  -> Requirement and acceptance criteria
+    -> Architecture decision or implementation task
+      -> Source change
+        -> Unit and integration evidence
+          -> Review finding and verdict
+            -> Release identifier
+              -> Operational observation</div>
+            <h4>Practical identifiers</h4>
+            <ul>
+                <li>Use stable requirement identifiers in tasks, test names, or review descriptions.</li>
+                <li>Reference architecture decisions when a change depends on a significant trade-off.</li>
+                <li>Keep generated review reports with the build or change they assess.</li>
+                <li>Associate releases and operational incidents with the exact deployed version.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Review Tool in the Check Phase</h3>
+            <p>The repository's review agents provide repeatable evidence for Java, TypeScript, Rust, and React changes. They supplement peer review by checking language-specific patterns and comparing source with configured requirements.</p>
+            <div class="code-block">./run-review.sh
+
+LANGUAGE=java DEEPSEEK=false ./run-review.sh</div>
+            <p>Generated reports are stored under <code>review/results/&lt;timestamp&gt;/</code>. A report is evidence for the current source state only; regenerate it after changes made in response to findings.</p>
+            <div class="source-links">
+                <a class="source-link" href="review-overview.html">Review tool overview</a>
+                <a class="source-link" href="review-instructions.html">Review instructions</a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Roles and Accountability</h3>
+            <table>
+                <thead><tr><th>Role</th><th>Primary accountability</th></tr></thead>
+                <tbody>
+                    <tr><td>Requirement owner</td><td>Clarifies intent, priority, acceptance criteria, and scope changes.</td></tr>
+                    <tr><td>Implementer</td><td>Produces the change, tests, documentation, and local validation evidence.</td></tr>
+                    <tr><td>Reviewer</td><td>Challenges correctness, risk, maintainability, and requirement coverage independently.</td></tr>
+                    <tr><td>Release owner</td><td>Confirms release readiness, deployment controls, rollback capability, and approvals.</td></tr>
+                    <tr><td>Service owner</td><td>Observes production outcomes and prioritizes operational improvements.</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</main>
+</body>
+</html>

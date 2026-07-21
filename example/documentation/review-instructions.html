@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using the Review Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });</script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+
+<main class="main-content">
+    <header class="header"><h2>Code Review System — Instructions</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Basic Usage</h3>
+
+            <h4>Review all languages (default)</h4>
+            <div class="code-block">cd /path/to/example-project
+./run-review.sh</div>
+
+            <h4>Review single language</h4>
+            <div class="code-block"># TypeScript only
+LANGUAGE=typescript ./run-review.sh
+
+# Java only
+LANGUAGE=java ./run-review.sh
+
+# React only
+LANGUAGE=react ./run-review.sh
+
+# Rust only
+LANGUAGE=rust ./run-review.sh</div>
+
+            <h4>Control internet access</h4>
+            <div class="code-block"># Offline (default)
+LANGUAGE=typescript INTERNET=false ./run-review.sh
+
+# With internet enabled (CVE checks, dependency resolution)
+LANGUAGE=typescript INTERNET=true ./run-review.sh</div>
+
+            <h4>Control Deepseek semantic analysis</h4>
+            <div class="code-block"># Default: DEEPSEEK=true
+LANGUAGE=all ./run-review.sh
+
+# Force regex-only mode
+LANGUAGE=all DEEPSEEK=false ./run-review.sh
+
+# Use Deepseek when Ollama is available
+LANGUAGE=all DEEPSEEK=true ./run-review.sh</div>
+
+            <h4>Combined parameters</h4>
+            <div class="code-block"># All languages, with internet
+LANGUAGE=all INTERNET=true ./run-review.sh
+
+# React only, no internet
+LANGUAGE=react ./run-review.sh</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Reading Review Reports</h3>
+
+            <p>Reports are written to a timestamped run folder under <code>./review/results/</code> with naming pattern:</p>
+            <div class="code-block">./review/results/<timestamp>/review-<language>-<verdict>-<timestamp>.md</div>
+
+            <p>If two runs start within the same minute, the later folder gets a numeric suffix such as <code>./review/results/202605261955-1/</code> so previous results are not overwritten.</p>
+
+            <p>Examples:</p>
+            <div class="code-block">./review/results/202605261949/
+├── review-typescript-approved-202605261949.md
+├── review-java-approved-202605261949.md
+├── review-react-approved-202605261949.md
+└── review-rust-approved-202605261949.md</div>
+
+            <p>A single-language run produces one file in that folder. <code>LANGUAGE=all</code> produces up to four files.</p>
+
+            <h4>Report sections</h4>
+
+            <ul>
+                <li><strong>Header</strong> — timestamp, verdict, internet mode, Deepseek status, analysis method</li>
+                <li><strong>Summary</strong> — total findings by severity (critical, major, minor)</li>
+                <li><strong>Suggested Changes</strong> — code samples with explanations</li>
+                <li><strong>Detailed Findings</strong> — each issue with file, line, description, and requirement reference</li>
+                <li><strong>Requirements Coverage</strong> — which requirements were evaluated</li>
+            </ul>
+
+            <h4>Example report header</h4>
+            <div class="code-block"># Code Review Report — TYPESCRIPT
+
+**Timestamp:** 2026-05-26T18:24:00.000Z
+**Internet Access:** Disabled
+**Deepseek Analysis:** Disabled
+**Analysis Method:** Regex
+**Verdict:** `APPROVED WITH CHANGES`
+
+## Summary
+- Total findings: 2
+- Critical issues: 0
+- Major issues: 1
+- Minor issues: 1</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Interpreting Verdicts</h3>
+
+            <h4>APPROVED</h4>
+            <p><span class="badge success">No action required</span></p>
+            <ul>
+                <li>No critical or major issues found</li>
+                <li>Code passes all mandatory checks</li>
+                <li>Ready to merge</li>
+            </ul>
+
+            <h4>APPROVED WITH CHANGES</h4>
+            <p><span class="badge warn">Review suggestions</span></p>
+            <ul>
+                <li>Major issues found OR suggestions provided</li>
+                <li>Review suggested changes and decide whether to implement</li>
+                <li>Can merge if stakeholders agree no changes are needed</li>
+            </ul>
+
+            <h4>DENIED</h4>
+            <p><span class="badge">Block merge</span></p>
+            <ul>
+                <li>Critical issue detected (security, safety, compilation failure)</li>
+                <li>Must resolve all critical issues before resubmitting for review</li>
+                <li>Cannot merge until verdict changes to APPROVED</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>Decision matrix:</strong> Critical findings always block merge. Major findings can be negotiated. Minor findings are advisory.
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Common Findings &amp; Fixes</h3>
+
+            <h4>TypeScript: Strict mode not enabled</h4>
+            <p><strong>Issue:</strong> <code>tsconfig.json</code> missing <code>"strict": true</code></p>
+            <p><strong>Fix:</strong></p>
+            <div class="code-block">{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitAny": true
+  }
+}</div>
+
+            <h4>Java: Manual JSON construction</h4>
+            <p><strong>Issue:</strong> Using <code>JSONObject</code> instead of Jackson</p>
+            <p><strong>Fix:</strong></p>
+            <div class="code-block">// ✓ Good: Use Jackson with record classes
+@RestController
+public class MyController {
+  @PostMapping
+  public ResponseEntity<?> create(@RequestBody @Valid MyDto dto) {
+    return ResponseEntity.ok(dto);
+  }
+
+  public record MyDto(String id, String name) { }
+}</div>
+
+            <h4>React: Missing alt text on images</h4>
+            <p><strong>Issue:</strong> <code>&lt;img&gt;</code> tags without <code>alt</code> attribute</p>
+            <p><strong>Fix:</strong></p>
+            <div class="code-block">// ✗ Bad
+&lt;img src="product-thumbnail.png" /&gt;
+
+// ✓ Good
+&lt;img src="product-thumbnail.png" alt="Product thumbnail" /&gt;</div>
+
+            <h4>Rust: Unwrap instead of ? operator</h4>
+            <p><strong>Issue:</strong> Using <code>.unwrap()</code> in error paths</p>
+            <p><strong>Fix:</strong></p>
+            <div class="code-block">// ✗ Bad
+let data = fs::read_to_string("file.txt").unwrap();
+
+// ✓ Good
+let data = fs::read_to_string("file.txt")?;</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Integration with Git Workflow</h3>
+
+            <h4>Pre-commit hook example</h4>
+            <div class="code-block">#!/bin/bash
+# .git/hooks/pre-commit
+
+LANGUAGE=all INTERNET=false ./run-review.sh || exit 1
+echo "✓ Code review passed."</div>
+
+            <h4>GitHub Actions CI/CD example</h4>
+            <div class="code-block">name: Code Review
+on: [pull_request]
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run code review
+        run: LANGUAGE=all INTERNET=false DEEPSEEK=false ./run-review.sh
+      - name: Check for DENIED verdicts
+        run: |
+          if find ./review/results -type f -name 'review-*.md' -print0 | xargs -0 grep -q "DENIED"; then
+            echo "Critical review failures detected."
+            exit 1
+          fi
+      - name: Upload reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: review-reports
+          path: ./review/results/</div>
+
+            <div class="info-box">
+                <strong>CI/CD best practice:</strong> Run review on every PR. Report DENIED as failed check. APPROVED WITH CHANGES requires maintainer override. APPROVED auto-passes.
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Troubleshooting</h3>
+
+            <h4>Agent not found error</h4>
+            <div class="code-block">ERROR: TypeScript agent not found at ./review/agents/typescript-agent.js</div>
+            <p><strong>Solution:</strong> Ensure all agent files exist in <code>./review/agents/</code>:</p>
+            <div class="code-block">chmod +x ./run-review.sh
+ls -la ./review/agents/
+# Should show: base-agent.js, typescript-agent.js, java-agent.js, rust-agent.js, react-agent.js</div>
+
+            <h4>No Node.js installed</h4>
+            <div class="code-block">node: command not found</div>
+            <p><strong>Solution:</strong> Install Node.js 18+ from <a href="https://nodejs.org/" target="_blank" rel="noopener">nodejs.org</a></p>
+            <div class="code-block">node --version  # Should show v18+</div>
+
+            <h4>Review script not executable</h4>
+            <div class="code-block">bash: ./run-review.sh: Permission denied</div>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">chmod +x ./run-review.sh
+LANGUAGE=typescript ./run-review.sh</div>
+
+            <h4>Requirements files not found</h4>
+            <div class="code-block">ERROR: No requirements found in ./requirements/</div>
+            <p><strong>Solution:</strong> Ensure requirements exist:</p>
+            <div class="code-block">ls -la ./requirements/functional/
+ls -la ./requirements/non-functional/
+ls -la ./review/requirements/</div>
+
+            <div class="warning-box">
+                <strong>Note:</strong> Agents expect requirements to be populated from both the platform <code>./requirements/</code> folders and the review-specific <code>./review/requirements/REVIEW-*.md</code> files. Both must be present for complete reviews.
+            </div>
+
+              <h4>Deepseek not being used</h4>
+              <div class="code-block">**Deepseek Analysis:** Disabled
+        **Analysis Method:** Regex</div>
+              <p><strong>Solution:</strong> Make sure Ollama is running on <code>localhost:11434</code> and Deepseek is enabled:</p>
+              <div class="code-block">ollama serve
+        LANGUAGE=all DEEPSEEK=true ./run-review.sh</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Advanced: Extending Reviews</h3>
+
+            <h4>Add a new requirement check</h4>
+            <p>Edit the relevant agent file and add a new check method:</p>
+            <div class="code-block">// In ./review/agents/typescript-agent.js
+
+checkNoConsoleLog() {
+  const findings = [];
+  this.files.forEach(file => {
+    const content = fs.readFileSync(file, 'utf8');
+    if (content.includes('console.log')) {
+      findings.push({
+        severity: 'minor',
+        title: 'console.log found in production code',
+        file,
+        line: 'N/A',
+        description: 'Remove console.log statements before production',
+        requirement: 'REVIEW-001 TypeScript Standards'
+      });
+    }
+  });
+  return findings;
+}</div>
+
+            <h4>Add a new requirement file</h4>
+            <p>Create a new <code>REVIEW-00X-*.md</code> file in <code>./review/requirements/</code>:</p>
+            <div class="code-block"># REVIEW-006 Custom Standards
+
+## Python Code Quality
+- **Type hints:** All functions must have type hints
+- **Docstrings:** All modules must have docstrings
+- **Tests:** Must have ≥75% test coverage
+- **Linting:** Code must pass pylint</div>
+
+            <div class="info-box">
+                <strong>Agents auto-load requirements:</strong> Any new REVIEW-*.md file in <code>./review/requirements/</code> will be loaded on next agent run. No code changes needed.
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Performance Tuning</h3>
+
+            <h4>Speed up reviews</h4>
+            <ul>
+                <li>Use <code>INTERNET=false</code> (default) to skip network operations</li>
+                <li>Review single language instead of all: <code>LANGUAGE=typescript</code></li>
+                <li>Clear old reports: <code>rm -rf ./review/results/*</code></li>
+            </ul>
+
+            <h4>Expected times</h4>
+            <div class="code-block">Single language (offline):  5-15 seconds
+All languages (offline):   30-60 seconds
+With internet (CVE, deps): 2-5 minutes per language</div>
+        </section>
+
+    </div>
+</main>
+</body>
+</html>
