@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JavaScript client · Math2</title><link rel="stylesheet" href="styles.css"></head><body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a aria-current="page" href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 05.2 · JavaScript</p><h1>A zero-dependency ES module client.</h1><p class="lede">Use Node.js 18+ or a browser with <code>fetch</code>. Local values and equations are immutable; calculation happens over REST.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Libraries</strong><a href="clients.html">Overview</a><a href="client-java.html">Java</a><a aria-current="page" href="client-javascript.html">JavaScript</a><a href="client-typescript.html">TypeScript</a><a href="client-dotnet.html">.NET</a><a href="client-cpp.html">C++</a><a href="client-rust.html">Rust</a></aside><article class="prose">
+<h2>Single calculation</h2><pre><code>import { Equation, Math2Client, Number } from "@nologo2/math2";
+
+const two = Equation.of(Number.fromInteger(2));
+const equation = two.power(Equation.of(Number.fromInteger(1000)));
+const result = await new Math2Client().calculate(equation, 1000);
+console.log(result.toString());</code></pre>
+<h2>Batch and client options</h2><pre><code>const client = new Math2Client({
+  baseUrl: "http://127.0.0.1:8080",
+  timeoutMs: 30_000,
+  fetchImpl: globalThis.fetch
+});
+const results = await client.calculateBatch([
+  Equation.parse("sqrt(2)"),
+  Equation.parse("pi")
+], 1000);</code></pre>
+<h2>Errors</h2><p><code>ValidationError</code> is local, <code>TransportError</code> covers network/timeouts, <code>ProtocolError</code> rejects malformed success data, and <code>ServiceError</code> carries HTTP status, stable code, message, and optional parser position.</p><pre><code>cd js-api &amp;&amp; npm test</code></pre>
+<div class="next-links"><a href="client-java.html"><span>Previous library</span>← Java</a><a href="client-typescript.html"><span>Next library</span>TypeScript →</a></div>
+</article></div></main><footer class="site-footer">Package · @nologo2/math2</footer></body></html>

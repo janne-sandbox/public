@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>REST examples · Math2</title><link rel="stylesheet" href="styles.css"></head><body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a aria-current="page" href="api.html">REST API</a><a href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 04.1 · REST API</p><h1>Worked HTTP examples.</h1><p class="lede">Use proper query encoding; operators such as <code>+</code> otherwise have special URL form semantics.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>REST chapter</strong><a href="api.html">Endpoint reference</a><a aria-current="page" href="rest-examples.html">Worked examples</a><a href="#javascript">fetch</a><a href="#errors">Error handling</a></aside><article class="prose">
+<h2>curl: high-precision π</h2><pre><code>curl --get \
+  --data-urlencode 'equation=2*pi' \
+  --data-urlencode 'precision=1000' \
+  http://127.0.0.1:8080/api/v1/calculate</code></pre><p>The response contains a <code>result</code> string with 1,001 characters: one decimal point plus 1,000 significant digits.</p>
+<h2>curl: nested batch</h2><pre><code>curl --get \
+  --data-urlencode 'equations=1+1,max(2,3),sqrt(16)' \
+  --data-urlencode 'precision=100' \
+  http://127.0.0.1:8080/api/v1/calculate/batch
+
+{"results":["2","3","4"]}</code></pre>
+<h2 id="javascript">Browser or Node fetch</h2><pre><code>const url = new URL("http://127.0.0.1:8080/api/v1/calculate");
+url.searchParams.set("equation", "sqrt(2)");
+url.searchParams.set("precision", "1000");
+
+const response = await fetch(url, { headers: { accept: "application/json" } });
+const body = await response.json();
+if (!response.ok) throw new Error(`${body.code}: ${body.message}`);
+console.log(body.result); // keep this as a string</code></pre>
+<h2 id="errors">Structured domain failure</h2><pre><code>curl --get --data-urlencode 'equation=1/0' \
+  http://127.0.0.1:8080/api/v1/calculate
+
+HTTP/1.1 400
+{"code":"DIVISION_BY_ZERO","message":"Division by zero"}</code></pre>
+<div class="note"><strong>Prefer a native client.</strong> The JavaScript, TypeScript, .NET, C++, and Rust clients already implement URL encoding, timeouts, response validation, batch cardinality checks, and structured service errors.</div>
+<div class="next-links"><a href="api.html"><span>Reference</span>Endpoints and limits ←</a><a href="clients.html"><span>Next chapter</span>Client libraries →</a></div>
+</article></div></main><footer class="site-footer">Canonical decimal results must remain strings until explicit conversion.</footer></body></html>

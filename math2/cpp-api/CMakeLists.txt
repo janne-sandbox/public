@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.20)
+project(math2_cpp VERSION 0.1.0 LANGUAGES CXX)
+
+find_package(CURL REQUIRED)
+add_library(math2 src/math2.cpp)
+target_include_directories(math2 PUBLIC include)
+target_compile_features(math2 PUBLIC cxx_std_20)
+target_link_libraries(math2 PUBLIC CURL::libcurl)
+
+include(CTest)
+if(BUILD_TESTING)
+  add_executable(math2_tests tests/math2_test.cpp)
+  target_link_libraries(math2_tests PRIVATE math2)
+  add_test(NAME math2_tests COMMAND math2_tests)
+endif()

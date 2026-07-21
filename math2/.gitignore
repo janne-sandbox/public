@@ -1,31 +1,21 @@
-# Maven
 target/
-*.class
+**/target/
 
-# IDE
-.idea/
-*.iml
-.vscode/
-*.swp
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Node
-node_modules/
-dist/
-
-# Logs
+# Runtime state
+*.mv.db
+*.trace.db
+*.lock.db
+.math2/
+*.pid
 *.log
-logs/
 
-# Testcontainers local Docker client cache (auto-generated, not project code)
-org/
-
-# Terraform
-terraform/.terraform/
-terraform/*.tfstate
-terraform/*.tfstate.backup
-terraform/*.tfplan
-terraform/.terraform.lock.hcl
+# IDE and operating system
+.idea/
+.vscode/
+*.iml
+.DS_Store
+node_modules/
+cpp-api/build/
+**/bin/
+**/obj/
+Cargo.lock

@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TypeScript client · Math2</title><link rel="stylesheet" href="styles.css"></head><body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a aria-current="page" href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 05.3 · TypeScript</p><h1>The same REST client with static contracts.</h1><p class="lede">Typed values, client options, service errors, and readonly batch results make the protocol visible to the compiler.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Libraries</strong><a href="clients.html">Overview</a><a href="client-java.html">Java</a><a href="client-javascript.html">JavaScript</a><a aria-current="page" href="client-typescript.html">TypeScript</a><a href="client-dotnet.html">.NET</a><a href="client-cpp.html">C++</a><a href="client-rust.html">Rust</a></aside><article class="prose">
+<h2>Typed usage</h2><pre><code>import { Equation, Math2Client, Number } from "@nologo2/math2-typescript";
+
+const equation: Equation = Equation.of(Number.fromInteger(9))
+  .sqrt()
+  .add(Equation.parse("2^3"));
+
+const result: Number = await new Math2Client().calculate(equation, 1000);</code></pre>
+<h2>Custom transport</h2><pre><code>const client = new Math2Client({
+  baseUrl: "http://127.0.0.1:8080",
+  timeoutMs: 15_000,
+  fetchImpl: fetch
+});</code></pre><p>The source is exported directly as TypeScript. The repository tests run on Node.js 22.6+:</p><pre><code>cd ts-api &amp;&amp; npm test</code></pre>
+<div class="next-links"><a href="client-javascript.html"><span>Previous library</span>← JavaScript</a><a href="client-dotnet.html"><span>Next library</span>.NET →</a></div>
+</article></div></main><footer class="site-footer">Package · @nologo2/math2-typescript</footer></body></html>

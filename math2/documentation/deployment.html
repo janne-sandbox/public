@@ -1,0 +1,21 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Configuration and Docker · Math2</title><link rel="stylesheet" href="styles.css"></head><body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a href="clients.html">Libraries</a><a aria-current="page" href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 06.1 · Operations</p><h1>Configure the boundary, cache, and container.</h1><p class="lede">Defaults favor local development: loopback HTTP, a persistent file cache, bounded input, and no H2 console.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Operations</strong><a href="performance.html">Measured sample</a><a aria-current="page" href="deployment.html">Configuration &amp; Docker</a><a href="#configuration">Environment variables</a><a href="#cache">Cache modes</a><a href="#docker">Docker</a></aside><article class="prose">
+<h2 id="configuration">Environment variables</h2><div class="table-wrap"><table><thead><tr><th>Variable</th><th>Default</th><th>Purpose</th></tr></thead><tbody><tr><td><code>MATH2_SERVER_ADDRESS</code></td><td><code>127.0.0.1</code></td><td>HTTP bind address</td></tr><tr><td><code>MATH2_SERVER_PORT</code></td><td><code>8080</code></td><td>HTTP port</td></tr><tr><td><code>MATH2_MAX_LENGTH</code></td><td><code>1000</code></td><td>Maximum significant-digit precision</td></tr><tr><td><code>MATH2_CACHE_ENABLED</code></td><td><code>true</code></td><td>Enable database-backed cache</td></tr><tr><td><code>MATH2_CACHE_MAX_ENTRIES</code></td><td><code>100</code></td><td>Persistent LRU bound</td></tr><tr><td><code>MATH2_DATASOURCE_URL</code></td><td><code>jdbc:h2:file:./.math2/cache</code></td><td>H2 location</td></tr><tr><td><code>MATH2_MAX_BATCH_SIZE</code></td><td><code>100</code></td><td>Equations per batch</td></tr><tr><td><code>MATH2_MAX_EXPRESSION_LENGTH</code></td><td><code>10000</code></td><td>Request expression characters</td></tr></tbody></table></div>
+<h2 id="cache">Persistent or cache-free</h2><pre><code># Persistent H2 cache
+MATH2_CACHE_ENABLED=true ./run-dev-local.sh
+
+# No datasource, Hibernate repository, or Liquibase initialization
+MATH2_CACHE_ENABLED=false ./run-dev-local.sh</code></pre><p>The schema is managed by Liquibase and Hibernate validates it. Result data is CLOB-backed, and canonical-expression plus access-order indexes support cache behavior.</p>
+<h2 id="docker">Docker</h2><pre><code>docker build -f java-rest-service/Dockerfile -t math2:local .
+docker run --rm \
+  -p 127.0.0.1:8080:8080 \
+  -e MATH2_MAX_LENGTH=5000 \
+  -e MATH2_CACHE_MAX_ENTRIES=1000 \
+  -v math2-data:/app/data \
+  math2:local</code></pre><p>The image runs as a non-root user. Keep the host mapping on loopback unless a separate authenticated and encrypted ingress is intentionally configured.</p>
+<h2>Health and shutdown</h2><pre><code>curl http://127.0.0.1:8080/actuator/health
+# {"status":"UP"}</code></pre>
+<div class="next-links"><a href="performance.html"><span>Evidence</span>← H2 performance sample</a><a href="api.html"><span>Reference</span>REST limits →</a></div>
+</article></div></main><footer class="site-footer">H2 console disabled · actuator exposes health only</footer></body></html>

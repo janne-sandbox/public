@@ -1,0 +1,21 @@
+server:
+  address: 127.0.0.1
+spring:
+  datasource:
+    url: jdbc:h2:mem:math2-test;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+math2:
+  precision:
+    max-length: 1200
+  cache:
+    max-entries: 2
+  request:
+    max-batch-size: 3
+    max-expression-length: 10000

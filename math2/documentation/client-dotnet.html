@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>.NET client · Math2</title><link rel="stylesheet" href="styles.css"></head><body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a aria-current="page" href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 05.4 · .NET</p><h1>Async REST calculation for .NET 8.</h1><p class="lede">The client supports cancellation, configurable timeout/base URL, and injection of an application-owned <code>HttpClient</code>.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Libraries</strong><a href="clients.html">Overview</a><a href="client-java.html">Java</a><a href="client-javascript.html">JavaScript</a><a href="client-typescript.html">TypeScript</a><a aria-current="page" href="client-dotnet.html">.NET</a><a href="client-cpp.html">C++</a><a href="client-rust.html">Rust</a></aside><article class="prose">
+<h2>Calculate asynchronously</h2><pre><code>using Nologo2.Math2;
+
+using var client = new Math2Client(timeout: TimeSpan.FromSeconds(30));
+var equation = Equation.Parse("sqrt(2)+pi");
+Number result = await client.CalculateAsync(
+    equation,
+    precision: 1000,
+    cancellationToken);</code></pre>
+<h2>Batch</h2><pre><code>var results = await client.CalculateBatchAsync(
+    new[] { Equation.Parse("1/7"), Equation.Parse("pi") },
+    precision: 1000);</code></pre>
+<h2>Error taxonomy</h2><p><code>Math2ValidationException</code>, <code>Math2TransportException</code>, <code>Math2ProtocolException</code>, and <code>Math2ServiceException</code> separate caller, network, response, and server failures.</p><pre><code>dotnet test dotnet-api/Math2.Tests/Math2.Tests.csproj</code></pre>
+<div class="next-links"><a href="client-typescript.html"><span>Previous library</span>← TypeScript</a><a href="client-cpp.html"><span>Next library</span>C++ →</a></div>
+</article></div></main><footer class="site-footer">Target framework · net8.0</footer></body></html>

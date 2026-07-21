@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Math2 — decimal mathematics without the ceiling</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav><a class="brand" href="index.html">Math2</a><div><a href="api.html">API</a><a href="clients.html">Clients</a><a href="operations.html">Operations</a></div></nav>
+  <main>
+    <section class="hero"><p class="eyebrow">ARBITRARY-PRECISION TOOLKIT</p><h1>Decimal mathematics<br><em>without the ceiling.</em></h1><p class="lede">Compose equations in Java or your native stack, evaluate up to 1000 significant digits by default, and cache repeat work through a local-first REST service.</p><div class="actions"><a class="button" href="api.html">Explore the API</a><code>./run-dev-local.sh</code></div></section>
+    <section class="grid"><article><span>01</span><h2>Exact values</h2><p>Canonical decimal strings cross every language boundary without JSON floating-point loss.</p></article><article><span>02</span><h2>Composable equations</h2><p>Immutable Number and Equation classes make precedence and intent explicit.</p></article><article><span>03</span><h2>Local by default</h2><p>Loopback binding, bounded requests, persistent H2 caching, and no exposed database console.</p></article></section>
+    <section class="terminal"><div class="dots">● ● ●</div><pre><span>$</span> curl --get --data-urlencode 'equation=sqrt(9)+2^3' \
+  http://127.0.0.1:8080/api/v1/calculate
+
+{"result":"11"}</pre></section>
+  </main>
+  <footer>Math2 · Java 21 · Spring Boot · OpenAPI</footer>
+</body>
+</html>

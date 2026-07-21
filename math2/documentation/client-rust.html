@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rust client · Math2</title><link rel="stylesheet" href="styles.css"></head><body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a aria-current="page" href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 05.6 · Rust</p><h1>A Rust 2021 blocking client over rustls.</h1><p class="lede">The crate uses <code>Result</code> throughout and represents service failures as a structured enum variant.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Libraries</strong><a href="clients.html">Overview</a><a href="client-java.html">Java</a><a href="client-javascript.html">JavaScript</a><a href="client-typescript.html">TypeScript</a><a href="client-dotnet.html">.NET</a><a href="client-cpp.html">C++</a><a aria-current="page" href="client-rust.html">Rust</a></aside><article class="prose">
+<h2>Usage</h2><pre><code>use nologo2_math2::{Client, Equation};
+
+let client = Client::localhost()?;
+let equation = Equation::parse("sqrt(2)+pi")?;
+let result = client.calculate(&amp;equation, Some(1000))?;
+println!("{}", result.as_str());</code></pre>
+<h2>Batch</h2><pre><code>let equations = vec![
+    Equation::parse("1/7")?,
+    Equation::parse("pi")?
+];
+let results = client.calculate_batch(&amp;equations, Some(1000))?;</code></pre>
+<h2>Transport and errors</h2><p><code>reqwest</code> provides blocking HTTP with rustls. <code>Math2Error</code> distinguishes <code>Validation</code>, <code>Transport</code>, <code>Protocol</code>, and structured <code>Service</code> failures.</p><pre><code>cargo test --manifest-path rust-api/Cargo.toml</code></pre>
+<div class="next-links"><a href="client-cpp.html"><span>Previous library</span>← C++</a><a href="performance.html"><span>Next chapter</span>Performance →</a></div>
+</article></div></main><footer class="site-footer">Crate · nologo2-math2</footer></body></html>

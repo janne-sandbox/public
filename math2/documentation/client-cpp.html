@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C++ client · Math2</title><link rel="stylesheet" href="styles.css"></head><body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a aria-current="page" href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 05.5 · C++</p><h1>C++20 values with a libcurl transport.</h1><p class="lede">The native API uses immutable-style value returns and keeps every decimal in <code>std::string</code>.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Libraries</strong><a href="clients.html">Overview</a><a href="client-java.html">Java</a><a href="client-javascript.html">JavaScript</a><a href="client-typescript.html">TypeScript</a><a href="client-dotnet.html">.NET</a><a aria-current="page" href="client-cpp.html">C++</a><a href="client-rust.html">Rust</a></aside><article class="prose">
+<h2>Usage</h2><pre><code>#include "math2/math2.hpp"
+using namespace nologo2::math2;
+
+auto equation = Equation::parse("sqrt(2)+pi");
+auto result = Client("http://127.0.0.1:8080", 30000)
+    .calculate(equation, 1000);
+std::cout &lt;&lt; result.str() &lt;&lt; '\n';</code></pre>
+<h2>Build and test</h2><pre><code>cmake -S cpp-api -B cpp-api/build
+cmake --build cpp-api/build
+ctest --test-dir cpp-api/build</code></pre>
+<h2>Failures</h2><p>Catch <code>ValidationError</code>, <code>TransportError</code>, <code>ProtocolError</code>, or <code>ServiceError</code>. The service error provides HTTP status, stable code, and optional expression position.</p>
+<div class="next-links"><a href="client-dotnet.html"><span>Previous library</span>← .NET</a><a href="client-rust.html"><span>Next library</span>Rust →</a></div>
+</article></div></main><footer class="site-footer">Language level · C++20</footer></body></html>

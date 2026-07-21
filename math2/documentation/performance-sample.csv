@@ -1,0 +1,5 @@
+canonical_expression,precision,calculation_duration_ms,result_length,engine_version
+"(2+(3*4))",1000,1,2,3
+"(1/7)",1000,8,1002,3
+"pi",1000,36,1001,3
+"sqrt(2)",1000,125,1001,3

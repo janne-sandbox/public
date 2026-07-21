@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Calculation engine architecture · Math2</title><link rel="stylesheet" href="styles.css"><script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{primaryColor:'#d9ff57',primaryBorderColor:'#151515',lineColor:'#68665f',secondaryColor:'#f2efe7'}});</script></head>
+<body><nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a aria-current="page" href="architecture.html">Architecture</a><a href="api.html">REST API</a><a href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 02.1 · Architecture</p><h1>Inside the calculation engine.</h1><p class="lede">Public values stay canonical strings. Evaluation converts them into Math2-owned signed fixed-point values backed by base-1,000,000,000 limbs.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Architecture</strong><a href="architecture.html">System view</a><a aria-current="page" href="architecture-engine.html">Calculation engine</a><a href="architecture-service.html">REST and cache</a></aside><article class="prose">
+<h2>Evaluation pipeline</h2><pre class="mermaid">flowchart TD
+  INPUT[Canonical Number strings] --> AST[Immutable Equation tree]
+  AST --> OP[BuiltInOperator]
+  OP --> SCALE[Dynamic working scale<br/>precision + 16 guard digits]
+  SCALE --> LIMBS[Signed decimal value<br/>base 1,000,000,000 limbs]
+  LIMBS --> BASIC{Operation family}
+  BASIC -->|+ - multiply divide| CORE[Limb arithmetic + decimal long division]
+  BASIC -->|sqrt| NEWTON[Newton iteration]
+  BASIC -->|log exp sin cos tan| SERIES[Range reduction + convergent series]
+  BASIC -->|pi| MACHIN[Machin formula]
+  CORE --> ROUND[HALF_EVEN significant-digit rounding]
+  NEWTON --> ROUND
+  SERIES --> ROUND
+  MACHIN --> ROUND
+  ROUND --> OUTPUT[Canonical Number string]</pre>
+<h2>No delegated numeric engine</h2><p>The evaluator does not call Apfloat, <code>BigDecimal</code>, <code>BigInteger</code>, or <code>BigDecimalMath</code>. A recursive bytecode test inspects the engine and nested implementation classes to prevent those dependencies from returning.</p>
+<h2>Precision and practical limits</h2><p>The configured maximum controls significant digits, not magnitude. Dynamic working scale preserves values such as <code>1e-2000</code>. Sixteen guard digits reduce intermediate rounding error before the requested HALF_EVEN result is produced.</p><div class="warning"><strong>Finite machine, configurable precision.</strong> “Arbitrary precision” means the caller selects precision rather than using a fixed primitive width. Available heap, array/string capacity, and execution time remain physical limits.</div>
+<h2>Algorithms</h2><div class="table-wrap"><table><thead><tr><th>Capability</th><th>Internal approach</th></tr></thead><tbody><tr><td>Add / subtract</td><td>Signed magnitude limb arithmetic</td></tr><tr><td>Multiply</td><td>Base-limb product with carry</td></tr><tr><td>Divide</td><td>Decimal long division with HALF_EVEN quotient rounding</td></tr><tr><td>Square root</td><td>Newton iteration</td></tr><tr><td>π</td><td>Machin formula using inverse-tangent series</td></tr><tr><td>Log / fractional power</td><td>Atanh logarithm and range-reduced exponential series</td></tr><tr><td>Trigonometry</td><td>π-based range reduction and sine/cosine series</td></tr></tbody></table></div>
+<div class="next-links"><a href="operations.html"><span>Related chapter</span>Operations and precision →</a><a href="performance.html"><span>Evidence</span>Measured performance →</a></div>
+</article></div></main><footer class="site-footer">Math2 calculation engine · deterministic decimal output</footer></body></html>

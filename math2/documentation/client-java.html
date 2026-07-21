@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Java library · Math2</title><link rel="stylesheet" href="styles.css"></head><body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a aria-current="page" href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 05.1 · Java</p><h1>Calculate directly in the JVM.</h1><p class="lede">The Java library is the authoritative implementation and does not require HTTP, Spring, or H2.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Libraries</strong><a href="clients.html">Overview</a><a aria-current="page" href="client-java.html">Java</a><a href="client-javascript.html">JavaScript</a><a href="client-typescript.html">TypeScript</a><a href="client-dotnet.html">.NET</a><a href="client-cpp.html">C++</a><a href="client-rust.html">Rust</a></aside><article class="prose">
+<h2>Maven dependency</h2><pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;com.nologo2&lt;/groupId&gt;
+  &lt;artifactId&gt;math2-java-api&lt;/artifactId&gt;
+  &lt;version&gt;0.1.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre><p>Install the reactor into the local Maven repository with <code>mvn install</code> until a release repository is configured.</p>
+<h2>Fluent equation</h2><pre><code>Number radius = Number.fromString("10");
+Equation area = radius.power(Number.fromInteger(2))
+    .multiply(Number.pi());
+Number result = area.calculate(1000);</code></pre>
+<h2>Parsed equation</h2><pre><code>Equation equation = Equation.parse("pi*10^2");
+Number result = equation.calculate(1000);</code></pre>
+<h2>Conversions</h2><p><code>toInt</code>, <code>toLong</code>, <code>toFloat</code>, and <code>toDouble</code> only succeed for an exact round trip. Otherwise <code>PrecisionLossException</code> exposes the source, target type, and nearest primitive value.</p>
+<div class="next-links"><a href="architecture-engine.html"><span>Internals</span>Calculation engine →</a><a href="client-javascript.html"><span>Next library</span>JavaScript →</a></div>
+</article></div></main><footer class="site-footer">Module · java-api</footer></body></html>

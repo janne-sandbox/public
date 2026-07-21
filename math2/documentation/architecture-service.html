@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>REST and cache architecture · Math2</title><link rel="stylesheet" href="styles.css"><script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{primaryColor:'#d9ff57',primaryBorderColor:'#151515',lineColor:'#68665f',secondaryColor:'#f2efe7'}});</script></head>
+<body><nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a aria-current="page" href="architecture.html">Architecture</a><a href="api.html">REST API</a><a href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 02.2 · Architecture</p><h1>REST, persistence, and cache lifecycle.</h1><p class="lede">The service keeps transport concerns outside the engine and makes persistence optional.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Architecture</strong><a href="architecture.html">System view</a><a href="architecture-engine.html">Calculation engine</a><a aria-current="page" href="architecture-service.html">REST and cache</a></aside><article class="prose">
+<h2>Service components</h2><pre class="mermaid">flowchart LR
+  HTTP[Loopback HTTP] --> CTRL[CalculationController]
+  CTRL --> LIMITS[Math2Properties limits]
+  CTRL --> SERVICE[CalculationService]
+  SERVICE --> PARSER[Equation parser]
+  SERVICE --> REPO[CalculationCacheRepository]
+  REPO --> JPA[Hibernate / JPA]
+  JPA --> DB[(H2 file database)]
+  LIQ[Liquibase] --> DB
+  SERVICE --> ENGINE[java-api engine]
+  OPENAPI[Springdoc OpenAPI] -. describes .-> CTRL</pre>
+<h2>Cache identity</h2><p>The key is SHA-256 over engine version, requested precision, and canonical expression. Equivalent whitespace produces the same expression. Changing engine behavior increments the version and prevents stale results from crossing implementations.</p><pre><code>SHA-256(engineVersion + "\n" + precision + "\n" + canonicalExpression)</code></pre>
+<h2>Stored evidence</h2><p>Each entry records the canonical expression, precision, engine version, unbounded result text, creation/access timestamps, and calculation duration in milliseconds. Indexes support canonical-expression lookup and least-recently-used ordering.</p>
+<h2>Optional cache</h2><p>Set <code>MATH2_CACHE_ENABLED=false</code> to calculate without initializing or using the datasource, Hibernate repositories, or Liquibase. A positive <code>MATH2_CACHE_MAX_ENTRIES</code> bounds persistent entries; excess rows are evicted by oldest access and creation time.</p>
+<div class="next-links"><a href="api.html"><span>Next chapter</span>REST reference →</a><a href="performance.html"><span>Evidence</span>H2 performance sample →</a></div>
+</article></div></main><footer class="site-footer">Default bind address · 127.0.0.1</footer></body></html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Tool — Java Agent</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });</script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+
+<main class="main-content">
+    <header class="header"><h2>Code Review System — Java Agent</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Java Agent Architecture</h3>
+            <p>The Java Agent extends the base <code>ReviewAgent</code> class and implements language-specific checks for Spring Boot 3.2 / Java 21 projects. It focuses on modern Java patterns, security compliance (OWASP), and proper use of frameworks.</p>
+            
+            <h4>Key Responsibilities</h4>
+            <ul>
+                <li>Look for modern Java patterns such as records and text blocks</li>
+                <li>Check Jackson usage for JSON serialization (no manual JSONObject construction)</li>
+                <li>Detect SQL injection vulnerabilities (string concatenation in queries)</li>
+                <li>Verify parameterized queries and prepared statements</li>
+                <li>Check test coverage (target ≥30% of classes)</li>
+                <li>Compare Java code with relevant functional requirements</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Class Structure</h3>
+            <div class="code-block">class JavaAgent extends ReviewAgent {
+  constructor(internetEnabled = false)
+  async run(projectRoot, requirementsDir, outputDir, timestamp)
+  
+  _evaluateJavaCoverage(javaFiles)
+  _checkModernJavaPatterns(javaFiles)
+  _checkJacksonUsage(javaFiles)
+  _checkOWASPCompliance(javaFiles)
+  _checkTestCoverage(javaFiles)
+  _checkFunctionalRequirements(javaFiles)
+}</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Check Methods</h3>
+
+            <h4>1. Modern Java Patterns Check</h4>
+            <p><code>_checkModernJavaPatterns()</code> — Verifies Java 21 language features</p>
+            <ul>
+                <li><strong>Features checked:</strong> Records, text blocks, switch expressions</li>
+                <li><strong>Severity:</strong> MINOR</li>
+                <li><strong>Requirement:</strong> REQ-033 Java 21 Adoption</li>
+                <li><strong>Records:</strong> Immutable value types for data classes (replace @Data)</li>
+                <li><strong>Text blocks:</strong> Multi-line strings (cleaner than concatenation)</li>
+                <li><strong>Switch expressions:</strong> Simpler, more expressive than traditional switch statements</li>
+            </ul>
+
+            <h4>2. Jackson Usage Check</h4>
+            <p><code>_checkJacksonUsage()</code> — Ensures proper JSON handling</p>
+            <ul>
+                <li><strong>Severity:</strong> MAJOR</li>
+                <li><strong>Requirement:</strong> REQ-035 Jackson Framework Usage</li>
+                <li><strong>What it detects:</strong> Manual JSONObject construction, string-based JSON building</li>
+                <li><strong>Finding if failed:</strong> "Manual JSON construction detected" → suggests using Jackson ObjectMapper with record classes</li>
+            </ul>
+
+            <h4>3. SQL Injection Prevention Check</h4>
+            <p><code>_checkOWASPCompliance()</code> includes SQL injection detection</p>
+            <ul>
+                <li><strong>Severity:</strong> CRITICAL (security vulnerability)</li>
+                <li><strong>Requirement:</strong> OWASP-REQ-001 Injection Prevention</li>
+                <li><strong>What it detects:</strong> String concatenation in SQL queries (e.g., <code>"SELECT * FROM users WHERE id = " + id</code>)</li>
+                <li><strong>Finding if found:</strong> "Potential SQL injection vulnerability" → blocks APPROVED verdict</li>
+                <li><strong>Solution:</strong> Use prepared statements or JPA queries with named parameters</li>
+            </ul>
+
+            <h4>4. Test Coverage Check</h4>
+            <p><code>_checkTestCoverage()</code> — Verifies minimum test file ratio</p>
+            <ul>
+                <li><strong>Severity:</strong> MINOR (advisory heuristic below 30%)</li>
+                <li><strong>Requirement:</strong> REQ-058 Test Coverage ≥30%</li>
+                <li><strong>How it works:</strong> Counts <code>*.java</code> and <code>*Test.java</code> files, calculates ratio</li>
+                <li><strong>Target:</strong> At least 30% of classes have corresponding test classes</li>
+            </ul>
+
+            <h4>5. Functional Requirements Check</h4>
+            <p><code>_checkFunctionalRequirements()</code> — Matches code against project requirements</p>
+            <ul>
+                <li><strong>Severity:</strong> MINOR</li>
+                <li><strong>How it works:</strong> Loads requirements from <code>./requirements/functional/</code>, checks if Java files address them</li>
+                <li><strong>Coverage report:</strong> Lists which requirements are reflected in code</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Implementation Method</h3>
+            <p><strong>Technology Stack:</strong> Node.js 20 + regex-based pattern matching + optional Deepseek LLM</p>
+            <ul>
+                <li><strong>Default (Regex):</strong> Fast pattern matching (instant, no dependencies)</li>
+                <li><strong>Enhanced (Deepseek):</strong> Offline LLM analysis via Ollama (if available on localhost:11434)</li>
+                <li><strong>Engine:</strong> Regex for speed + Deepseek for semantic understanding (hybrid approach)</li>
+                <li><strong>No internet required:</strong> Deepseek runs locally via Ollama, no cloud API calls</li>
+            </ul>
+
+            <h4>Analysis Method</h4>
+            <p><strong>Default Mode (Always Available):</strong> Regex-based pattern matching</p>
+            <ul>
+                <li>Scans for: SQL string concatenation, Jackson usage, records, text blocks, switch expressions</li>
+                <li>Performance: ~5-10 seconds</li>
+                <li>Does NOT use: javac, checkstyle, spotbugs, or any Java tools</li>
+            </ul>
+
+            <p><strong>Enhanced Mode (If Deepseek Available):</strong> Hybrid regex + LLM analysis</p>
+            <ul>
+                <li>Uses Deepseek to filter language-appropriate requirements (skip React/TypeScript requirements)</li>
+                <li>Uses the local model to select requirements relevant to Java</li>
+                <li>Performance: ~30-45 seconds (due to LLM inference)</li>
+                <li>The Java pattern checks remain deterministic and regex-based</li>
+                <li>Requires: Ollama running locally with deepseek-coder model</li>
+            </ul>
+
+            <h4>Components Used</h4>
+            <table>
+                <thead><tr><th>Component</th><th>Purpose</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td><code>ReviewAgent</code> base class</td><td>Requirement loading, file scanning, report generation</td><td><code>base-agent.js</code></td></tr>
+                    <tr><td><code>fs</code> module (Node.js built-in)</td><td>Read .java files, scan Maven directories</td><td>No npm dependencies</td></tr>
+                    <tr><td><code>path</code> module (Node.js built-in)</td><td>Path manipulation for source/test detection</td><td>No npm dependencies</td></tr>
+                    <tr><td>ECMAScript Regex</td><td>Pattern matching: SQL strings, Jackson usage, records, text blocks, switch expressions</td><td>Standard RegExp object</td></tr>
+                </tbody>
+            </table>
+
+            <h4>What This Means</h4>
+            <p>The Java Agent:</p>
+            <ul>
+                <li>✓ Uses regex patterns for fast, deterministic code analysis</li>
+                <li>✓ Can detect string concatenation patterns and simple code structures</li>
+                <li>✗ Does NOT use Java compiler (no bytecode analysis, no type inference)</li>
+                <li>✗ Does NOT use AST parser (no semantic understanding of code)</li>
+                <li>✗ Does NOT use static analysis tools like checkstyle, spotbugs, or sonarqube</li>
+                <li>✗ Cannot understand method signatures, inheritance chains, or type resolution</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>File Scanning Pattern</h3>
+            <p>The agent scans for Java files matching <code>**/*.java</code>. The tree below is illustrative; these names are not taken from a reviewed project.</p>
+            <div class="code-block">sample-java-service/src/main/java/org/example/sample/
+├── controller/
+│   └── OrderController.java               Scanned
+├── service/
+│   └── OrderService.java                  Scanned
+├── model/
+│   └── Order.java                         Scanned
+
+sample-java-service/src/test/java/org/example/sample/
+├── OrderControllerTest.java               Test file
+└── OrderServiceTest.java                  Test file</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Critical Issues: SQL Injection Example</h3>
+            
+            <div class="warning-box">
+                <strong>Critical finding (blocks APPROVED):</strong> SQL injection detected
+            </div>
+
+            <p><strong>❌ Bad code (detected as CRITICAL):</strong></p>
+            <div class="code-block">@GetMapping("/orders/{id}")
+public ResponseEntity&lt;Order&gt; getOrder(@PathVariable String id) {
+    String query = "SELECT * FROM orders WHERE id = " + id; // Critical
+    return repository.findByCustomQuery(query);
+}</div>
+
+            <p><strong>✓ Good code (passes check):</strong></p>
+            <div class="code-block">@GetMapping("/orders/{id}")
+public ResponseEntity&lt;Order&gt; getOrder(@PathVariable String id) {
+    return ResponseEntity.ok(orderRepository.findById(id)); // Parameterized by the repository
+}</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Verdict Logic</h3>
+
+            <table>
+                <thead><tr><th>Critical Issues</th><th>Major Issues</th><th>Verdict</th></tr></thead>
+                <tbody>
+                    <tr><td>≥1</td><td>—</td><td><strong>DENIED</strong></td></tr>
+                    <tr><td>0</td><td>≥1</td><td><strong>APPROVED WITH CHANGES</strong></td></tr>
+                    <tr><td>0</td><td>0</td><td><strong>APPROVED</strong></td></tr>
+                </tbody>
+            </table>
+
+            <p><strong>Minor findings</strong> do not affect verdict but are reported for awareness.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Performance Characteristics</h3>
+            <ul>
+                <li><strong>Execution time:</strong> 5-10 seconds</li>
+                <li><strong>Sample size:</strong> First 15 files for pattern detection, all files for counting</li>
+                <li><strong>Memory usage:</strong> ~20-50 MB (typical)</li>
+                <li><strong>Network access:</strong> None required (offline mode)</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Limitations &amp; Future Improvements</h3>
+            <ul>
+                <li><strong>Current:</strong> Regex-based pattern matching (fast, not AST-based)</li>
+                <li><strong>Could improve:</strong> Use JavaParser library for AST analysis</li>
+                <li><strong>Current:</strong> No support for Gradle projects</li>
+                <li><strong>Could improve:</strong> Parse build.gradle for dependency analysis</li>
+                <li><strong>Current:</strong> No CVE checking for Maven dependencies</li>
+                <li><strong>Could improve:</strong> Integrate OWASP Dependency Check when INTERNET=true</li>
+                <li><strong>Current:</strong> Samples first 15 files for performance</li>
+                <li><strong>Could improve:</strong> Full AST traversal for critical checks like SQL injection</li>
+            </ul>
+        </section>
+
+    </div>
+</main>
+</body>
+</html>

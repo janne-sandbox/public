@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+    <changeSet id="001-create-calculation-cache" author="math2">
+        <createTable tableName="calculation_cache">
+            <column name="cache_key" type="VARCHAR(64)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="canonical_expression" type="VARCHAR(10000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="calculation_precision" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="engine_version" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="result_value" type="VARCHAR(10000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_accessed_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="calculation_cache" indexName="idx_cache_last_accessed">
+            <column name="last_accessed_at"/>
+            <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="002-add-calculation-duration" author="math2">
+        <addColumn tableName="calculation_cache">
+            <column name="calculation_duration_ms" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="003-index-canonical-expression" author="math2">
+        <createIndex tableName="calculation_cache" indexName="idx_cache_canonical_expression">
+            <column name="canonical_expression"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="004-document-calculation-cache" author="math2">
+        <setTableRemarks
+                tableName="calculation_cache"
+                remarks="Persistent bounded cache of canonical Math2 calculation results."/>
+        <setColumnRemarks
+                tableName="calculation_cache"
+                columnName="cache_key"
+                remarks="SHA-256 key derived from engine version, precision, and canonical expression."/>
+        <setColumnRemarks
+                tableName="calculation_cache"
+                columnName="canonical_expression"
+                remarks="Normalized expression evaluated to produce the cached result."/>
+        <setColumnRemarks
+                tableName="calculation_cache"
+                columnName="calculation_precision"
+                remarks="Requested significant-decimal-digit precision used for evaluation."/>
+        <setColumnRemarks
+                tableName="calculation_cache"
+                columnName="engine_version"
+                remarks="Calculation engine version included in cache-key derivation."/>
+        <setColumnRemarks
+                tableName="calculation_cache"
+                columnName="result_value"
+                remarks="Canonical decimal representation of the calculation result."/>
+        <setColumnRemarks
+                tableName="calculation_cache"
+                columnName="created_at"
+                remarks="UTC instant when the cache entry was created."/>
+        <setColumnRemarks
+                tableName="calculation_cache"
+                columnName="last_accessed_at"
+                remarks="UTC instant of the most recent cache hit, used for LRU eviction."/>
+        <setColumnRemarks
+                tableName="calculation_cache"
+                columnName="calculation_duration_ms"
+                remarks="Elapsed calculation time for the cache miss, in whole milliseconds."/>
+    </changeSet>
+    <changeSet id="005-unbound-result-length" author="math2">
+        <modifyDataType
+                tableName="calculation_cache"
+                columnName="result_value"
+                newDataType="CLOB"/>
+        <setColumnRemarks
+                tableName="calculation_cache"
+                columnName="result_value"
+                remarks="Canonical decimal result with no fixed database character limit."/>
+    </changeSet>
+</databaseChangeLog>

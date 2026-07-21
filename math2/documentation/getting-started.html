@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Getting started · Math2</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a aria-current="page" href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 01 · Guide</p><h1>Choose the shortest path to a result.</h1><p class="lede">Use the Java library directly when calculation lives in the JVM. Run the REST service when several languages need the same engine and cache.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>In this chapter</strong><a href="#requirements">Requirements</a><a href="#service">Local service</a><a href="#java">Java library</a><a href="#docker">Docker</a><a href="#verify">Verification</a></aside>
+<article class="prose">
+<h2 id="requirements">Requirements</h2><p>Java 21 or newer and Maven 3.9 or newer are sufficient for the Java modules and service. Client toolchains are only needed for the corresponding language.</p>
+<div class="note"><strong>Precision model.</strong> The default maximum is 1,000 significant digits. Change it in-process with <code>Number.setMaxLength</code> or for the service with <code>MATH2_MAX_LENGTH</code>.</div>
+<h2 id="service">Start the local service</h2>
+<pre><code>./run-dev-local.sh
+curl --get --data-urlencode 'equation=sqrt(9)+2^3' --data-urlencode 'precision=1000' http://127.0.0.1:8080/api/v1/calculate
+# {"result":"11"}
+
+./stop-dev-local.sh</code></pre>
+<p>The service binds to <code>127.0.0.1</code>. OpenAPI is available at <code>/v3/api-docs</code> and Swagger UI at <code>/swagger-ui.html</code>.</p>
+<h2 id="java">Calculate inside Java</h2>
+<pre><code>import com.nologo2.math2.Equation;
+import com.nologo2.math2.Number;
+
+Equation equation = Number.fromInteger(9).sqrt()
+    .add(Number.fromInteger(2).power(Number.fromInteger(3)));
+
+Number result = equation.calculate(1000);
+System.out.println(result); // 11</code></pre>
+<p>Alternatively, parse the same syntax accepted by REST:</p><pre><code>Number circumference = Equation.parse("2*pi*10").calculate(1000);</code></pre>
+<h2 id="docker">Run with Docker</h2><pre><code>docker build -f java-rest-service/Dockerfile -t math2:local .
+docker run --rm -p 127.0.0.1:8080:8080 -v math2-data:/app/data math2:local</code></pre>
+<h2 id="verify">Verify the checkout</h2><pre><code>./test-java.sh               # Java library and REST service
+./run-smoke-test.sh         # packaged REST smoke test
+./test-client-integration.sh # every native client against one live service
+./test-all.sh                # complete Java and cross-language verification</code></pre>
+<div class="next-links"><a href="architecture.html"><span>Next chapter</span>Architecture →</a><a href="api.html"><span>Jump to</span>REST API →</a></div>
+</article></div></main><footer class="site-footer">Math2 guide · local-first by default</footer></body></html>

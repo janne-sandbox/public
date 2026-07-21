@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Math2 arbitrary-precision decimal calculation library, REST service, and native clients.">
+  <title>Math2 — decimal mathematics without the ceiling</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <a class="brand" href="index.html">Math2</a>
+    <div class="nav-links">
+      <a href="getting-started.html">Guide</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="api.html">REST API</a>
+      <a href="clients.html">Libraries</a>
+      <a href="performance.html">Performance</a>
+    </div>
+  </nav>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Arbitrary-precision toolkit</p>
+      <h1>Decimal mathematics<br><em>without the ceiling.</em></h1>
+      <p class="lede">Compose equations in Java or your native stack, evaluate 1,000 significant digits by default, and reuse expensive work through a local-first REST service.</p>
+      <div class="actions">
+        <a class="button" href="getting-started.html">Start the guide</a>
+        <a class="button secondary" href="architecture.html">See the architecture</a>
+        <code class="command">./run-dev-local.sh</code>
+      </div>
+    </section>
+
+    <section class="feature-grid" aria-label="Highlights">
+      <article><span class="number">01</span><h2>Exact values</h2><p>Canonical decimal strings cross every process and language boundary without JSON floating-point loss.</p></article>
+      <article><span class="number">02</span><h2>Owned arithmetic</h2><p>Math2 implements its decimal limb arithmetic, division, constants, and transcendental series inside the Java library.</p></article>
+      <article><span class="number">03</span><h2>Local by default</h2><p>Loopback binding, bounded requests, optional persistent H2 caching, and no exposed database console.</p></article>
+    </section>
+
+    <section class="terminal" aria-label="REST example">
+      <div class="dots">● ● ●</div>
+      <pre><span class="prompt">$</span> curl --get --data-urlencode 'equation=sqrt(9)+2^3' \
+  http://127.0.0.1:8080/api/v1/calculate
+
+{"result":"11"}</pre>
+    </section>
+
+    <section class="chapters">
+      <div class="section-heading">
+        <div><p class="eyebrow">Documentation</p><h2>Read by chapter.</h2></div>
+        <p>Each chapter is split into focused subtopics, from the in-process Java engine to language clients and reproducible H2 measurements.</p>
+      </div>
+      <div class="chapter-grid">
+        <a class="chapter-card" href="getting-started.html"><small>Chapter 01</small><h2>Getting started</h2><p>Run locally, calculate in Java, or call the service.</p></a>
+        <a class="chapter-card" href="architecture.html"><small>Chapter 02</small><h2>Architecture</h2><p>Mermaid views of the engine, REST path, cache, and clients.</p></a>
+        <a class="chapter-card" href="operations.html"><small>Chapter 03</small><h2>Calculation engine</h2><p>Precision, operators, rounding, constants, and errors.</p></a>
+        <a class="chapter-card" href="api.html"><small>Chapter 04</small><h2>REST API</h2><p>Endpoints, request limits, response shapes, and examples.</p></a>
+        <a class="chapter-card" href="clients.html"><small>Chapter 05</small><h2>Client libraries</h2><p>Java, JavaScript, TypeScript, .NET, C++, and Rust.</p></a>
+        <a class="chapter-card" href="performance.html"><small>Chapter 06</small><h2>Performance &amp; operations</h2><p>H2 measurements, environment, cache behavior, and Docker.</p></a>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">Math2 · Java 21+ · Spring Boot · H2 · OpenAPI · decimal results remain strings</footer>
+</body>
+</html>
