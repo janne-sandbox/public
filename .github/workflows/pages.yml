@@ -7,6 +7,7 @@ on:
     branches: ["main"]
     paths:
       - "example/documentation/**"
+      - "math2/documentation/**"      
       
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,6 +38,7 @@ jobs:
         run: |
           mkdir -p _site
           cp -R example/documentation _site/example
+          cp -R math2/documentation _site/math2
           cat > _site/index.html <<'EOF'
           <!doctype html>
           <html>
@@ -45,6 +47,7 @@ jobs:
               <h1>Documentation</h1>
               <ul>
                 <li><a href="./example/">Example</a></li>
+                <li><a href="./math2/">Math2</a></li>
               </ul>
             </body>
           </html>
