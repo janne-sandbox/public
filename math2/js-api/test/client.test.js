@@ -51,3 +51,14 @@ test("client exposes structured service errors", async () => {
   await assert.rejects(() => client.calculate(Equation.parse("bad")), error =>
     error instanceof ServiceError && error.status === 400 && error.position === 0);
 });
+
+test("client calculates against a live Math2 service", {
+  skip: !process.env.MATH2_TEST_BASE_URL
+}, async () => {
+  const client = new Math2Client({ baseUrl: process.env.MATH2_TEST_BASE_URL, timeoutMs: 30_000 });
+  assert.equal((await client.calculate(Equation.parse("sqrt(9)+2^3"), 1000)).toString(), "11");
+  const values = await client.calculateBatch([
+    Equation.parse("1+1"), Equation.parse("max(2,3)"), Equation.parse("sqrt(16)")
+  ], 1000);
+  assert.deepEqual(values.map(String), ["2", "3", "4"]);
+});
