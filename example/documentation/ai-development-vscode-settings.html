@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS Code JSON Settings - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / VS Code JSON settings</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>What settings.json controls</h3>
+            <p>VS Code stores editor preferences and extension configuration in <code>settings.json</code>. The graphical Settings editor and the JSON file modify the same values. JSON is useful for review, backup, and exact configuration, but a single incorrect comma or value can prevent VS Code from writing settings.</p>
+            <div class="warning-box"><strong>The supplied sample contained <code>true,,</code>.</strong> That extra comma is invalid even though VS Code accepts JSON with comments. The corrected sample below contains one comma.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Open settings and shortcuts</h3>
+            <table>
+                <thead><tr><th>Action</th><th>macOS</th><th>Windows / Linux / WSL</th></tr></thead>
+                <tbody>
+                    <tr><td>Open Settings UI</td><td><code>⌘,</code></td><td><code>Ctrl+,</code></td></tr>
+                    <tr><td>Open Command Palette</td><td><code>⇧⌘P</code></td><td><code>Ctrl+Shift+P</code></td></tr>
+                    <tr><td>Open user JSON</td><td colspan="2">Command Palette → <code>Preferences: Open User Settings (JSON)</code></td></tr>
+                    <tr><td>Open workspace JSON</td><td colspan="2">Command Palette → <code>Preferences: Open Workspace Settings (JSON)</code></td></tr>
+                    <tr><td>Open keyboard shortcuts</td><td><code>⌘K ⌘S</code></td><td><code>Ctrl+K Ctrl+S</code></td></tr>
+                    <tr><td>Open keyboard shortcuts JSON</td><td colspan="2">Command Palette → <code>Preferences: Open Keyboard Shortcuts (JSON)</code></td></tr>
+                    <tr><td>Manage profiles</td><td colspan="2">Manage gear → <strong>Profiles</strong>, or File → Preferences → Profiles</td></tr>
+                </tbody>
+            </table>
+            <p>On macOS, <code>⌘</code> is Command and <code>⇧</code> is Shift. A chord such as <code>⌘K ⌘S</code> means press and release the first combination, then press the second.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Choose the correct scope</h3>
+            <table>
+                <thead><tr><th>Scope</th><th>Where it applies</th><th>Typical location</th><th>Use for</th></tr></thead>
+                <tbody>
+                    <tr><td>User</td><td>Every window using the default profile.</td><td>VS Code user-data directory.</td><td>Personal appearance and conservative defaults.</td></tr>
+                    <tr><td>Profile</td><td>Windows using the selected profile.</td><td><code>.../User/profiles/&lt;profile-id&gt;/settings.json</code></td><td>Language-, customer-, or AI-specific settings and extensions.</td></tr>
+                    <tr><td>Remote</td><td>The active WSL, SSH, or container environment.</td><td>Remote VS Code server user settings.</td><td>Remote interpreter paths and remote-only tools.</td></tr>
+                    <tr><td>Workspace</td><td>The current repository or workspace.</td><td><code>.vscode/settings.json</code></td><td>Shareable project formatter, lint, and schema settings.</td></tr>
+                    <tr><td>Workspace folder</td><td>One folder in a multi-root workspace.</td><td>That folder's <code>.vscode/settings.json</code></td><td>Folder-specific overrides.</td></tr>
+                </tbody>
+            </table>
+            <p>Later and more specific scopes usually override earlier ones. Language-specific settings have additional precedence rules. Use <code>@modified</code> in the Settings UI to find non-default values.</p>
+            <div class="info-box"><strong>WSL detail:</strong> Windows UI settings and WSL remote settings are different scopes. Put Linux paths such as <code>/usr/bin/python3</code> in the WSL remote scope, not the Windows user scope.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Why use a separate AI profile?</h3>
+            <p>Create a profile such as <strong>AI Agent Lab</strong> and associate it only with repositories where agent features are intentionally used.</p>
+            <ul>
+                <li>It prevents experimental AI settings and extensions from silently applying to every project.</li>
+                <li>It makes the active extension set, MCP servers, hooks, shortcuts, and permissions easier to audit.</li>
+                <li>It provides a fast escape hatch: switch back to a conservative profile when opening unknown code.</li>
+                <li>It avoids sharing macOS-only paths with Windows, WSL, or Linux profiles.</li>
+            </ul>
+            <ol>
+                <li>Open Profiles and choose <strong>New Profile</strong>.</li>
+                <li>Start from an Empty Profile or copy only the needed categories.</li>
+                <li>Install only the AI and language extensions required for that workflow.</li>
+                <li>Apply conservative settings first, then add narrow approvals after observing repeated safe actions.</li>
+                <li>Associate the profile with specific trusted folders or workspaces.</li>
+            </ol>
+            <div class="warning-box"><strong>A profile is organization, not isolation.</strong> Profiles run as the same operating-system user and can reach the same files, credentials, network, and processes. Use Workspace Trust, manual approvals, sandboxing, least-privilege credentials, containers or VMs, and OS controls for real security boundaries.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Corrected macOS sample</h3>
+            <p>This is the supplied configuration with valid JSON syntax. The personal home-directory component is shown as <code>&lt;username&gt;</code> so the example is reusable. It remains intentionally high risk and is not the recommended baseline.</p>
+            <div class="code-block">{
+  "workbench.colorTheme": "Dark Modern",
+  "asa.enableFeedbackPrompt": false,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "chat.instructionsFilesLocations": {
+    ".github/instructions": true
+  },
+  "chat.useAgentSkills": true,
+  "chat.mcp.discovery.enabled": {
+    "claude-desktop": true
+  },
+  "chat.agent.maxRequests": 250,
+  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3.13",
+  "chat.permissions.default": "autoApprove",
+  "chat.tools.terminal.autoApprove": {
+    "*": true
+  },
+  "mssql.connectionGroups": [
+    {
+      "name": "ROOT",
+      "id": "ROOT"
+    }
+  ],
+  "explorer.confirmDragAndDrop": false,
+  "update.showReleaseNotes": false,
+  "@azure.argTenant": "",
+  "chat.hookFilesLocations": {
+    ".github/hooks": true,
+    ".claude/settings.local.json": true,
+    ".claude/settings.json": true,
+    "~/.copilot/hooks": true,
+    "~/.claude/settings.json": true,
+    "~/.agents/hooks": true
+  },
+  "chat.tools.urls.autoApprove": {
+    "https://code.visualstudio.com": true,
+    "https://github.com/microsoft/vscode/wiki/*": true,
+    "http://localhost:4200": {
+      "approveRequest": true,
+      "approveResponse": true
+    },
+    "https://mermaid.js.org": true
+  },
+  "workbench.startupEditor": "none",
+  "yaml.schemas": {
+    "file:///Users/&lt;username&gt;/.vscode/extensions/continue.continue-2.0.0-darwin-arm64/config-yaml-schema.json": [
+      ".continue/**/*.yaml"
+    ],
+    "file:///Users/&lt;username&gt;/.vscode/extensions/continue.continue-2.1.0-darwin-arm64/config-yaml-schema.json": [
+      ".continue/**/*.yaml"
+    ]
+  },
+  "chat.tools.edits.autoApprove": {
+    "**/*": true,
+    "**/.vscode/*.json": false,
+    "**/.git/**": false,
+    "**/{package.json,server.xml,build.rs,web.config,.gitattributes,.env,Cargo.toml}": false,
+    "**/*.{code-workspace,csproj,fsproj,vbproj,vcxproj,proj,targets,props,gradle,gradle.kts}": false,
+    "**/gradle.properties": false,
+    "**/ruby_lsp/*/addon": false,
+    "**/*.lock": false,
+    "**/*-lock.{yaml,json}": false
+  },
+  "chat.tools.global.autoApprove": true,
+  "chat.tools.terminal.enableAutoApprove": true,
+  "chat.tools.terminal.ignoreDefaultAutoApproveRules": false,
+  "chat.agent.sandbox.allowAutoApprove": true,
+  "continue.enableTabAutocomplete": true,
+  "yaml.disableSchemaDetection": [
+    "**/.github/workflows/*.yml",
+    "**/.github/workflows/*.yaml",
+    "**/.gitea/workflows/*.yml",
+    "**/.gitea/workflows/*.yaml",
+    "**/.forgejo/workflows/*.yml",
+    "**/.forgejo/workflows/*.yaml"
+  ],
+  "continue.enableConsole": true
+}</div>
+        </section>
+
+        <section class="content-section">
+            <h3>What the general settings mean</h3>
+            <table>
+                <thead><tr><th>Setting</th><th>Meaning</th><th>Review note</th></tr></thead>
+                <tbody>
+                    <tr><td><code>workbench.colorTheme</code></td><td>Selects the editor color theme.</td><td>Presentation only.</td></tr>
+                    <tr><td><code>workbench.startupEditor</code></td><td><code>none</code> opens without a welcome/start page.</td><td>Convenience only.</td></tr>
+                    <tr><td><code>explorer.confirmDragAndDrop</code></td><td>Disables confirmation when dragging files in Explorer.</td><td>Increases the chance of accidental moves.</td></tr>
+                    <tr><td><code>update.showReleaseNotes</code></td><td>Hides release notes after updates.</td><td>May make security or behavior changes less visible.</td></tr>
+                    <tr><td><code>python.defaultInterpreterPath</code></td><td>Initial Python interpreter path for the Python extension.</td><td>This Homebrew path is macOS/Apple-Silicon and version specific.</td></tr>
+                    <tr><td><code>mssql.connectionGroups</code></td><td>Defines SQL Server extension connection-group metadata.</td><td>Do not place database passwords in settings.</td></tr>
+                    <tr><td><code>asa.enableFeedbackPrompt</code>, <code>@azure.argTenant</code></td><td>Extension-contributed settings.</td><td>Meaning and availability depend on installed extension versions; inspect them in the Settings UI.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>What the AI discovery settings mean</h3>
+            <table>
+                <thead><tr><th>Setting</th><th>Meaning</th><th>Risk or consequence</th></tr></thead>
+                <tbody>
+                    <tr><td><code>github.copilot.nextEditSuggestions.enabled</code></td><td>Enables Copilot suggestions for likely next edits.</td><td>Generated suggestions still require code and license review.</td></tr>
+                    <tr><td><code>chat.instructionsFilesLocations</code></td><td>Recursively discovers instruction files below enabled locations.</td><td>Repository instructions are model input; review them for prompt injection.</td></tr>
+                    <tr><td><code>chat.useAgentSkills</code></td><td>Enables agent skills.</td><td>A skill may include scripts or detailed procedures; trust its source.</td></tr>
+                    <tr><td><code>chat.mcp.discovery.enabled</code></td><td>Imports MCP server configuration from selected applications.</td><td>Discovery expands available tools. Review each discovered server and credential scope.</td></tr>
+                    <tr><td><code>chat.hookFilesLocations</code></td><td>Loads hook definitions from repository and user locations.</td><td>Hooks can automatically execute commands during agent events.</td></tr>
+                    <tr><td><code>chat.agent.maxRequests</code></td><td>Caps requests an agent can make; current documented default is 25.</td><td><code>250</code> permits much longer loops, increasing cost and the impact of mistakes.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Why the approval combination is dangerous</h3>
+            <table>
+                <thead><tr><th>Setting</th><th>Effect</th><th>Assessment</th></tr></thead>
+                <tbody>
+                    <tr><td><code>chat.permissions.default: "autoApprove"</code></td><td>Starts new chats in Bypass Approvals.</td><td>All tool calls can run without confirmation.</td></tr>
+                    <tr><td><code>chat.tools.global.autoApprove: true</code></td><td>Globally approves every tool.</td><td>VS Code describes this as disabling critical protections and does not recommend it.</td></tr>
+                    <tr><td><code>chat.tools.terminal.autoApprove: { "*": true }</code></td><td>Attempts to approve every terminal command.</td><td>A broad command rule can permit downloads, builds, credential access, or destructive actions.</td></tr>
+                    <tr><td><code>chat.tools.terminal.enableAutoApprove</code></td><td>Enables command-rule auto approval.</td><td>Use narrow commands rather than a wildcard.</td></tr>
+                    <tr><td><code>chat.tools.edits.autoApprove</code></td><td>Approves all files except listed sensitive patterns.</td><td>Useful deny patterns, but Bypass Approvals/global approval can override finer controls.</td></tr>
+                    <tr><td><code>chat.tools.urls.autoApprove</code></td><td>Approves matching URL requests and/or returned content.</td><td>Returned web or localhost content can contain prompt injection.</td></tr>
+                    <tr><td><code>chat.agent.sandbox.allowAutoApprove</code></td><td>Allows auto approval for commands already running inside an enabled sandbox.</td><td>It does not enable sandboxing; the sample has no <code>chat.agent.sandbox.enabled</code>.</td></tr>
+                    <tr><td><code>chat.tools.terminal.ignoreDefaultAutoApproveRules: false</code></td><td>Keeps VS Code's built-in terminal approval rules.</td><td>Helpful, but not a substitute for removing broad bypass settings.</td></tr>
+                </tbody>
+            </table>
+            <div class="warning-box"><strong>Finer deny rules do not rescue Bypass Approvals.</strong> VS Code documents that Bypass Approvals and Autopilot override per-tool, URL, terminal, and sandbox approval settings. A malicious instruction in source code, a fetched page, an MCP result, or a hook can therefore lead directly to actions.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Schema settings and portability</h3>
+            <ul>
+                <li><code>yaml.schemas</code> associates YAML patterns with schemas for completion and validation.</li>
+                <li>The sample points to two extension versions for the same files. Those absolute paths break after extension upgrades, on another username, on Intel macOS, Windows, WSL, or Linux, and may cause competing schema matches.</li>
+                <li>Prefer the schema automatically registered by Continue, a stable project schema, or one current extension path in a machine-specific profile.</li>
+                <li><code>yaml.disableSchemaDetection</code> disables automatic schema detection for CI workflow files. This can remove useful validation exactly where configuration mistakes have deployment or secret-handling consequences.</li>
+                <li><code>continue.enableTabAutocomplete</code> enables Continue inline completions; <code>continue.enableConsole</code> enables its diagnostic console and can expose prompt or context details during troubleshooting.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Safer macOS AI profile baseline</h3>
+            <p>Start conservatively and add only exact, repeatedly reviewed approvals. This baseline intentionally keeps edits, commands, URLs, and tools behind confirmation.</p>
+            <div class="code-block">{
+  "workbench.colorTheme": "Dark Modern",
+  "workbench.startupEditor": "none",
+  "explorer.confirmDragAndDrop": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "chat.instructionsFilesLocations": {
+    ".github/instructions": true
+  },
+  "chat.useAgentSkills": true,
+  "chat.mcp.discovery.enabled": false,
+  "chat.agent.maxRequests": 25,
+  "chat.permissions.default": "default",
+  "chat.tools.global.autoApprove": false,
+  "chat.tools.terminal.enableAutoApprove": false,
+  "chat.tools.terminal.ignoreDefaultAutoApproveRules": false,
+  "chat.tools.edits.autoApprove": {
+    "**/*": false
+  },
+  "chat.tools.urls.autoApprove": {},
+  "chat.agent.sandbox.enabled": "on",
+  "chat.agent.sandbox.allowAutoApprove": false,
+  "chat.hookFilesLocations": {
+    ".github/hooks": false,
+    ".claude/settings.local.json": false,
+    ".claude/settings.json": false,
+    "~/.copilot/hooks": false,
+    "~/.claude/settings.json": false,
+    "~/.agents/hooks": false
+  },
+  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3.13",
+  "continue.enableTabAutocomplete": true,
+  "continue.enableConsole": false
+}</div>
+            <p>Sandboxing is currently available for macOS and Linux, including WSL 2—not native Windows. Even with sandboxing, inspect diffs and use least-privilege credentials.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Review checklist</h3>
+            <ol>
+                <li>Fix all JSON errors and unknown-setting warnings before continuing.</li>
+                <li>Search Settings for <code>@modified</code> and review every non-default value.</li>
+                <li>Confirm the active profile and remote scope in the current window.</li>
+                <li>Keep Workspace Trust enabled and do not trust a parent directory containing unrelated repositories.</li>
+                <li>Remove global and wildcard approvals; add narrow rules only after repeated observation.</li>
+                <li>Audit hooks, skills, MCP servers, extension publishers, and imported configurations.</li>
+                <li>Do not store API keys, passwords, tokens, or connection secrets in settings or synchronized profiles.</li>
+                <li>Export a profile only after checking the export for machine paths and sensitive values.</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://code.visualstudio.com/docs/configure/settings" target="_blank" rel="noopener">User and workspace settings</a>
+                <a class="source-link" href="https://code.visualstudio.com/docs/configure/profiles" target="_blank" rel="noopener">VS Code profiles</a>
+                <a class="source-link" href="https://code.visualstudio.com/docs/agents/approvals" target="_blank" rel="noopener">Approvals and permissions</a>
+                <a class="source-link" href="https://code.visualstudio.com/docs/agents/security" target="_blank" rel="noopener">AI security baseline</a>
+                <a class="source-link" href="https://code.visualstudio.com/docs/agents/reference/ai-settings" target="_blank" rel="noopener">AI settings reference</a>
+                <a class="source-link" href="https://code.visualstudio.com/docs/editing/workspaces/workspace-trust" target="_blank" rel="noopener">Workspace Trust</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

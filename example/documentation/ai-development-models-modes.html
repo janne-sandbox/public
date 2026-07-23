@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Models and Operating Modes - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / Models and operating modes</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Model, role, and mode are different</h3>
+            <p>Terms such as “thinking,” “planning,” and “agent” describe different layers. A model generates responses. A role assigns that model to a feature. A mode controls which tools and actions the application makes available.</p>
+            <table>
+                <thead><tr><th>Layer</th><th>Question it answers</th><th>Example</th></tr></thead>
+                <tbody>
+                    <tr><td>Provider</td><td>Which service or runtime receives the request?</td><td>Ollama or Anthropic.</td></tr>
+                    <tr><td>Model</td><td>Which trained model processes the prompt?</td><td>DeepSeek R1, Qwen3 Coder, or Claude.</td></tr>
+                    <tr><td>Capability</td><td>What input and output can the model/provider actually handle?</td><td>Tool calls, image input, or long context.</td></tr>
+                    <tr><td>Role</td><td>Which IDE feature should use the model?</td><td><code>chat</code>, <code>edit</code>, <code>apply</code>, or <code>autocomplete</code>.</td></tr>
+                    <tr><td>Mode</td><td>What is the assistant allowed to do in this interaction?</td><td>Chat, Plan, or Agent.</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box"><strong>Key point:</strong> Plan and Agent are normally operating modes, not model names. In Continue, both use the selected chat model, provided the model/provider can use the required tools.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>General-purpose and code-specialized models</h3>
+            <table>
+                <thead><tr><th>Model type</th><th>Strength</th><th>Typical limitation</th><th>Good use</th></tr></thead>
+                <tbody>
+                    <tr><td>General-purpose</td><td>Broad language, code, analysis, and sometimes image understanding.</td><td>May be slower or more expensive than a narrow local model.</td><td>Architecture, cross-domain tasks, and complex agent work.</td></tr>
+                    <tr><td>Code-specialized</td><td>Programming syntax, repository patterns, edits, and code explanation.</td><td>May be weaker at non-code reasoning or unsupported tools.</td><td>Implementation, refactoring, tests, and code review.</td></tr>
+                    <tr><td>Small/local</td><td>Low latency, local processing, and offline availability after download.</td><td>Smaller context, weaker planning, and hardware-dependent quality.</td><td>Private code chat, focused edits, and repetitive tasks.</td></tr>
+                    <tr><td>Large/hosted</td><td>Stronger reasoning, broader capabilities, and larger context.</td><td>Network use, usage cost, data policy, and provider availability.</td><td>Complex migrations, architecture, and difficult debugging.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Thinking or reasoning models</h3>
+            <p>A thinking or reasoning model spends additional inference effort before producing its answer. It is useful when a task needs dependency analysis, multi-step debugging, mathematical reasoning, trade-off evaluation, or a careful implementation plan.</p>
+            <ul>
+                <li>Use it for ambiguous or high-impact work where a shallow first answer is risky.</li>
+                <li>Expect higher latency and often greater compute or token usage.</li>
+                <li>Do not confuse reasoning with proof: the final answer can still be wrong.</li>
+                <li>Ask for assumptions, evidence, risks, and verification—not hidden internal chain-of-thought.</li>
+            </ul>
+            <p>In the sample Continue configuration, <strong>DeepSeek R1 8B</strong> is the local reasoning-oriented choice. A larger hosted model can also be selected for difficult planning or agent tasks.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Chat, Plan, and Agent modes</h3>
+            <table>
+                <thead><tr><th>Mode</th><th>Tools</th><th>Use it for</th><th>Main risk</th></tr></thead>
+                <tbody>
+                    <tr><td>Chat</td><td>No autonomous tools in Continue Chat mode.</td><td>Questions, explanations, brainstorming, and manually supplied context.</td><td>An answer may sound correct without examining enough repository evidence.</td></tr>
+                    <tr><td>Plan</td><td>Read-only exploration tools.</td><td>Tracing behavior, investigating an issue, comparing approaches, and creating an implementation plan.</td><td>Read access can still expose sensitive files or external data.</td></tr>
+                    <tr><td>Agent</td><td>Read, write, terminal, and configured MCP tools.</td><td>Implementing a reviewed plan, running tests, and completing multi-step work.</td><td>It can modify files, run commands, or change external systems.</td></tr>
+                </tbody>
+            </table>
+            <div class="warning-box"><strong>Agent mode is an execution loop.</strong> The application sends tool definitions to the model, the model requests a tool call, the application asks for permission when required, executes it, and returns the result to the model. The model does not directly bypass the host's permissions.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Specialized Continue roles</h3>
+            <table>
+                <thead><tr><th>Role</th><th>Purpose</th><th>Preferred characteristic</th></tr></thead>
+                <tbody>
+                    <tr><td><code>chat</code></td><td>Conversation plus the model used by Plan and Agent modes.</td><td>Good instruction following and tool use.</td></tr>
+                    <tr><td><code>edit</code></td><td>Generate a requested code change.</td><td>Code quality and precise instruction following.</td></tr>
+                    <tr><td><code>apply</code></td><td>Merge a generated change into the correct file locations.</td><td>Fast, reliable diff application.</td></tr>
+                    <tr><td><code>autocomplete</code></td><td>Produce inline code suggestions while typing.</td><td>Very low latency and fill-in-the-middle support.</td></tr>
+                    <tr><td><code>embed</code></td><td>Convert code or documents into vectors for semantic search.</td><td>Retrieval quality; it does not generate chat responses.</td></tr>
+                    <tr><td><code>rerank</code></td><td>Reorder retrieved results by relevance.</td><td>Accurate relevance scoring; it does not implement code.</td></tr>
+                </tbody>
+            </table>
+            <p>A single model may hold several roles, as in the sample configuration, but a specialized and faster model can be better for autocomplete, apply, embeddings, or reranking.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Choose a workflow</h3>
+            <table>
+                <thead><tr><th>Task</th><th>Suggested model characteristic</th><th>Suggested mode</th></tr></thead>
+                <tbody>
+                    <tr><td>Explain one function</td><td>Fast code-capable model.</td><td>Chat.</td></tr>
+                    <tr><td>Understand an unfamiliar service</td><td>Strong context handling and reasoning.</td><td>Plan.</td></tr>
+                    <tr><td>Design a risky migration</td><td>Strong reasoning model.</td><td>Plan first; human approval before Agent.</td></tr>
+                    <tr><td>Implement a small reviewed fix</td><td>Reliable code and tool-use model.</td><td>Agent with Ask First permissions.</td></tr>
+                    <tr><td>Generate inline suggestions</td><td>Small, fast code-completion model.</td><td>Autocomplete role, not Agent mode.</td></tr>
+                    <tr><td>Search a large codebase</td><td>Embedding and optionally reranking models.</td><td>Context retrieval feeding Chat, Plan, or Agent.</td></tr>
+                </tbody>
+            </table>
+            <ol>
+                <li>Start in Chat for a narrow question or Plan for repository exploration.</li>
+                <li>Check that the proposed plan names files, risks, and validation commands.</li>
+                <li>Switch to Agent only when the scope and permissions are acceptable.</li>
+                <li>Review commands, diffs, and test evidence independently.</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h3>Capabilities must be real</h3>
+            <p>A configuration entry such as <code>tool_use</code> or <code>image_input</code> describes an expected capability; it does not teach the model that capability. Model size alone also does not guarantee reliable planning or tool use.</p>
+            <ul>
+                <li>Confirm support in the exact provider and model version.</li>
+                <li>Test tool calls using harmless read-only actions before allowing writes.</li>
+                <li>Evaluate models on representative project tasks rather than rankings alone.</li>
+                <li>Keep a fallback when a local model cannot satisfy the requested mode.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://docs.continue.dev/customize/model-roles/intro" target="_blank" rel="noopener">Continue model roles</a>
+                <a class="source-link" href="https://docs.continue.dev/ide-extensions/chat/quick-start" target="_blank" rel="noopener">Continue Chat mode</a>
+                <a class="source-link" href="https://docs.continue.dev/ide-extensions/agent/plan-mode" target="_blank" rel="noopener">Continue Plan mode</a>
+                <a class="source-link" href="https://docs.continue.dev/ide-extensions/agent/quick-start" target="_blank" rel="noopener">Continue Agent mode</a>
+                <a class="source-link" href="ai-development-temperature.html">Temperature and sampling</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

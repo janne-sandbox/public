@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local AI with Ollama - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / Local AI with Ollama</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>What Ollama does</h3>
+            <p>Ollama downloads and runs supported language models, supplies a command-line interface, and exposes a local HTTP API. It is a model runtime rather than a complete code-review policy: model quality, context size, tool integration, licensing, and hardware requirements vary by model.</p>
+            <p>This example's review tool can use Ollama for offline Deepseek analysis. With the default configuration, it expects <code>deepseek-coder:1.3b-base</code> at <code>http://localhost:11434</code>.</p>
+            <div class="warning-box"><strong>Plan storage before downloading.</strong> Models may require many gigabytes or tens of gigabytes. Confirm the model's license permits the intended use, and do not expose the Ollama API beyond loopback without authentication and network controls.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Install by platform</h3>
+            <h4>macOS</h4>
+            <ol>
+                <li>Check the current macOS and processor requirements in the official guide.</li>
+                <li>Download and mount <code>ollama.dmg</code>, then drag Ollama to Applications.</li>
+                <li>Start the app and allow it to add the <code>ollama</code> CLI to the path when prompted.</li>
+            </ol>
+
+            <h4>Windows (native)</h4>
+            <ol>
+                <li>Download and run <code>OllamaSetup.exe</code>. Administrator access is not normally required.</li>
+                <li>Start Ollama, open a new PowerShell window, and run <code>ollama -v</code>.</li>
+                <li>The native service publishes its API at <code>http://localhost:11434</code>.</li>
+            </ol>
+
+            <h4>Windows with WSL</h4>
+            <p>Prefer the native Windows Ollama application when you want Windows-managed GPU support. Run the review tool from Windows, or explicitly configure and secure connectivity from WSL. If the tool expects WSL's own <code>localhost</code>, install Ollama inside WSL using the Linux method instead. Do not assume Windows and WSL loopback behavior is identical on every networking mode.</p>
+
+            <h4>Ubuntu and Red Hat Enterprise Linux</h4>
+            <p>Ollama documents one Linux installer for both distributions:</p>
+            <div class="code-block">curl -fsSL https://ollama.com/install.sh | sh
+ollama -v
+sudo systemctl status ollama</div>
+            <p>Review the official manual-install and systemd instructions when installer scripts are not allowed. GPU acceleration needs supported hardware and current vendor drivers; CPU execution is slower but useful for small models.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Download and test the review model</h3>
+            <div class="code-block">ollama pull deepseek-coder:1.3b-base
+ollama list
+ollama run deepseek-coder:1.3b-base</div>
+            <p>Enter a short prompt, then type <code>/bye</code>. Verify the API independently:</p>
+            <div class="code-block">curl http://localhost:11434/api/generate \
+  -d '{"model":"deepseek-coder:1.3b-base","prompt":"Return only OK","stream":false}'</div>
+            <p>Then run the example's offline review from <code>example/</code>:</p>
+            <div class="code-block">LANGUAGE=cpp DEEPSEEK=true INTERNET=false ./run-review.sh
+LANGUAGE=csharp DEEPSEEK=true INTERNET=false ./run-review.sh</div>
+            <p>Inspect the generated report's provider status. If Ollama or the model is unavailable, the review tool deliberately falls back to deterministic checks.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Operational checks</h3>
+            <table>
+                <thead><tr><th>Check</th><th>Command or location</th><th>Expected result</th></tr></thead>
+                <tbody>
+                    <tr><td>CLI</td><td><code>ollama -v</code></td><td>A version is printed.</td></tr>
+                    <tr><td>Models</td><td><code>ollama list</code></td><td>The selected model appears.</td></tr>
+                    <tr><td>Linux service</td><td><code>systemctl status ollama</code></td><td>The service is active.</td></tr>
+                    <tr><td>Local API</td><td><code>http://localhost:11434</code></td><td>The process is bound only as intended.</td></tr>
+                    <tr><td>Disk</td><td>Platform disk-usage tools</td><td>Enough capacity remains for models and builds.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://docs.ollama.com/quickstart" target="_blank" rel="noopener">Ollama quickstart</a>
+                <a class="source-link" href="https://docs.ollama.com/macos" target="_blank" rel="noopener">Ollama on macOS</a>
+                <a class="source-link" href="https://docs.ollama.com/windows" target="_blank" rel="noopener">Ollama on Windows</a>
+                <a class="source-link" href="https://docs.ollama.com/linux" target="_blank" rel="noopener">Ollama on Linux</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

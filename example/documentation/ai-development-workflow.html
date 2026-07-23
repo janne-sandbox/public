@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsible AI Development Workflow - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / Responsible workflow</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>AI assists; engineering controls decide</h3>
+            <p>A useful AI workflow makes changes easier to inspect and prove. It does not bypass requirements, peer review, threat modeling, accessibility checks, licenses, or the definition of done.</p>
+            <div class="phase-grid">
+                <div class="phase-card"><h4>1. Prepare</h4><p>Use a clean branch, read project instructions, identify sensitive data, and define the acceptance criteria.</p></div>
+                <div class="phase-card"><h4>2. Constrain</h4><p>Name the files, behavior, compatibility boundaries, and commands in scope. Ask for a plan when risk is unclear.</p></div>
+                <div class="phase-card"><h4>3. Inspect</h4><p>Review commands and each changed line. Reject unrelated refactors, hidden dependencies, or weakened controls.</p></div>
+                <div class="phase-card"><h4>4. Prove</h4><p>Run tests, linters, builds, dependency checks, and security scans independently. Record exact results.</p></div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Prompt template</h3>
+            <div class="code-block">Goal:
+  &lt;one observable behavior&gt;
+
+Read first:
+  &lt;instructions, requirements, and relevant files&gt;
+
+Constraints:
+  - change only &lt;scope&gt;
+  - preserve &lt;API/data/security boundary&gt;
+  - do not add dependencies without approval
+  - never read or print secrets
+
+Acceptance:
+  - &lt;testable outcome&gt;
+  - run: &lt;exact validation command&gt;
+
+First response:
+  Explain the current behavior and propose a plan. Do not edit yet.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Review checklist</h3>
+            <table>
+                <thead><tr><th>Area</th><th>Questions</th></tr></thead>
+                <tbody>
+                    <tr><td>Scope</td><td>Are all changed files necessary? Did generated formatting hide a behavioral change?</td></tr>
+                    <tr><td>Correctness</td><td>Do tests cover success, failure, boundaries, concurrency, and cleanup where relevant?</td></tr>
+                    <tr><td>Security</td><td>Were authorization, input validation, escaping, cryptography, logging, and secret handling preserved?</td></tr>
+                    <tr><td>Dependencies</td><td>Is each new dependency necessary, maintained, compatible, and allowed by policy and license?</td></tr>
+                    <tr><td>Operations</td><td>Are errors observable? Are migrations, rollback, performance, and resource usage understood?</td></tr>
+                    <tr><td>Evidence</td><td>Were validation commands actually run, and are failures or skipped checks stated accurately?</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Data and access boundaries</h3>
+            <ul>
+                <li>Classify the repository before sending source to a hosted assistant.</li>
+                <li>Exclude credentials, environment files, production logs, personal data, and customer content.</li>
+                <li>Use organization-managed accounts and approved retention settings.</li>
+                <li>Grant filesystem, terminal, network, and cloud access only for the current task.</li>
+                <li>Review tool calls as carefully as generated code; a correct-looking result can still come from an unsafe command.</li>
+                <li>For Ollama, keep the API on loopback unless a secured, authenticated deployment has been designed.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Apply the local review suite</h3>
+            <p>AI-assisted changes still need deterministic analysis. From <code>example/</code>, run the review agents and then the language's real build and test commands.</p>
+            <div class="code-block">npm test
+DEEPSEEK=false ./run-review.sh
+
+# Optional local semantic analysis after Ollama is verified
+DEEPSEEK=true INTERNET=false ./run-review.sh</div>
+            <p>Read every generated report. A tool verdict is evidence for a reviewer, not permission to merge.</p>
+        </section>
+    </div>
+</main>
+</body>
+</html>

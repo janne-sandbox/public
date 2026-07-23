@@ -33,14 +33,21 @@ LANGUAGE=java ./run-review.sh
 LANGUAGE=react ./run-review.sh
 
 # Rust only
-LANGUAGE=rust ./run-review.sh</div>
+LANGUAGE=rust ./run-review.sh
+
+# C++ only
+LANGUAGE=cpp ./run-review.sh
+
+# C# only
+LANGUAGE=csharp ./run-review.sh</div>
 
             <h4>Control internet access</h4>
             <div class="code-block"># Offline (default)
 LANGUAGE=typescript INTERNET=false ./run-review.sh
 
-# With internet enabled (CVE checks, dependency resolution)
-LANGUAGE=typescript INTERNET=true ./run-review.sh</div>
+# Online Deepseek API (requires DEEPSEEK_API_KEY)
+export DEEPSEEK_API_KEY='your-key'
+LANGUAGE=cpp INTERNET=true DEEPSEEK=true ./run-review.sh</div>
 
             <h4>Control Deepseek semantic analysis</h4>
             <div class="code-block"># Default: DEEPSEEK=true
@@ -49,15 +56,20 @@ LANGUAGE=all ./run-review.sh
 # Force regex-only mode
 LANGUAGE=all DEEPSEEK=false ./run-review.sh
 
-# Use Deepseek when Ollama is available
-LANGUAGE=all DEEPSEEK=true ./run-review.sh</div>
+# Use offline Deepseek when Ollama is available
+LANGUAGE=all INTERNET=false DEEPSEEK=true ./run-review.sh
+
+# Use hosted Deepseek
+export DEEPSEEK_API_KEY='your-key'
+LANGUAGE=csharp INTERNET=true DEEPSEEK=true ./run-review.sh</div>
 
             <h4>Combined parameters</h4>
-            <div class="code-block"># All languages, with internet
-LANGUAGE=all INTERNET=true ./run-review.sh
+            <div class="code-block"># C++ with hosted Deepseek
+export DEEPSEEK_API_KEY='your-key'
+LANGUAGE=cpp INTERNET=true DEEPSEEK=true ./run-review.sh
 
-# React only, no internet
-LANGUAGE=react ./run-review.sh</div>
+# C# deterministic checks only
+LANGUAGE=csharp INTERNET=false DEEPSEEK=false ./run-review.sh</div>
         </section>
 
         <section class="content-section">
@@ -73,9 +85,11 @@ LANGUAGE=react ./run-review.sh</div>
 ├── review-typescript-approved-202605261949.md
 ├── review-java-approved-202605261949.md
 ├── review-react-approved-202605261949.md
-└── review-rust-approved-202605261949.md</div>
+├── review-rust-approved-202605261949.md
+├── review-cpp-approved-with-changes-202605261949.md
+└── review-csharp-approved-with-changes-202605261949.md</div>
 
-            <p>A single-language run produces one file in that folder. <code>LANGUAGE=all</code> produces up to four files.</p>
+            <p>A single-language run produces one file in that folder. <code>LANGUAGE=all</code> produces up to six files.</p>
 
             <h4>Report sections</h4>
 
@@ -227,7 +241,8 @@ jobs:
             <p><strong>Solution:</strong> Ensure all agent files exist in <code>./review/agents/</code>:</p>
             <div class="code-block">chmod +x ./run-review.sh
 ls -la ./review/agents/
-# Should show: base-agent.js, typescript-agent.js, java-agent.js, rust-agent.js, react-agent.js</div>
+# Includes: base-agent.js, typescript-agent.js, java-agent.js, rust-agent.js,
+# react-agent.js, cpp-agent.js, and csharp-agent.js</div>
 
             <h4>No Node.js installed</h4>
             <div class="code-block">node: command not found</div>
@@ -244,19 +259,22 @@ LANGUAGE=typescript ./run-review.sh</div>
             <div class="code-block">ERROR: No requirements found in ./requirements/</div>
             <p><strong>Solution:</strong> Ensure requirements exist:</p>
             <div class="code-block">ls -la ./requirements/functional/
-ls -la ./requirements/non-functional/
-ls -la ./review/requirements/</div>
+ls -la ./requirements/non-functional/</div>
 
             <div class="warning-box">
-                <strong>Note:</strong> Agents expect requirements to be populated from both the platform <code>./requirements/</code> folders and the review-specific <code>./review/requirements/REVIEW-*.md</code> files. Both must be present for complete reviews.
+                <strong>Note:</strong> The functional directory is optional. Agents load every Markdown file present in <code>requirements/functional/</code> and <code>requirements/non-functional/</code>.
             </div>
 
               <h4>Deepseek not being used</h4>
               <div class="code-block">**Deepseek Analysis:** Disabled
         **Analysis Method:** Regex</div>
-              <p><strong>Solution:</strong> Make sure Ollama is running on <code>localhost:11434</code> and Deepseek is enabled:</p>
+              <p><strong>Offline solution:</strong> Make sure Ollama is running on <code>127.0.0.1:11434</code>, the model is installed, and Deepseek is enabled:</p>
               <div class="code-block">ollama serve
-        LANGUAGE=all DEEPSEEK=true ./run-review.sh</div>
+ollama pull deepseek-coder:1.3b-base
+LANGUAGE=all INTERNET=false DEEPSEEK=true ./run-review.sh</div>
+              <p><strong>Online solution:</strong> Configure an API key and select online mode:</p>
+              <div class="code-block">export DEEPSEEK_API_KEY='your-key'
+LANGUAGE=cpp INTERNET=true DEEPSEEK=true ./run-review.sh</div>
         </section>
 
         <section class="content-section">
@@ -285,7 +303,7 @@ checkNoConsoleLog() {
 }</div>
 
             <h4>Add a new requirement file</h4>
-            <p>Create a new <code>REVIEW-00X-*.md</code> file in <code>./review/requirements/</code>:</p>
+            <p>Create a new <code>REVIEW-00X-*.md</code> file in <code>./requirements/non-functional/</code>:</p>
             <div class="code-block"># REVIEW-006 Custom Standards
 
 ## Python Code Quality
@@ -295,7 +313,7 @@ checkNoConsoleLog() {
 - **Linting:** Code must pass pylint</div>
 
             <div class="info-box">
-                <strong>Agents auto-load requirements:</strong> Any new REVIEW-*.md file in <code>./review/requirements/</code> will be loaded on next agent run. No code changes needed.
+                <strong>Agents auto-load requirements:</strong> Any new Markdown file in either configured requirements directory is loaded on the next run.
             </div>
         </section>
 
@@ -304,7 +322,7 @@ checkNoConsoleLog() {
 
             <h4>Speed up reviews</h4>
             <ul>
-                <li>Use <code>INTERNET=false</code> (default) to skip network operations</li>
+                <li>Use <code>INTERNET=false</code> (default) to keep model requests local</li>
                 <li>Review single language instead of all: <code>LANGUAGE=typescript</code></li>
                 <li>Clear old reports: <code>rm -rf ./review/results/*</code></li>
             </ul>
@@ -312,7 +330,7 @@ checkNoConsoleLog() {
             <h4>Expected times</h4>
             <div class="code-block">Single language (offline):  5-15 seconds
 All languages (offline):   30-60 seconds
-With internet (CVE, deps): 2-5 minutes per language</div>
+Hosted Deepseek: depends on API latency and selected model</div>
         </section>
 
     </div>

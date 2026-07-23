@@ -19,6 +19,7 @@ class JavaAgent extends ReviewAgent {
   async run(projectRoot, requirementsDir, outputDir, timestamp) {
     console.log('  Loading requirements...');
     this.loadRequirements(requirementsDir);
+    await this.initializeDeepseek();
     await this._filterRequirementsForLanguage();
 
     console.log('  Scanning Java files...');

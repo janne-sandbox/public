@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Tool - C++ Agent</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>Code Review System - C++ Agent</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Scope</h3>
+            <p>The C++ agent scans C and C++ source and header files: <code>*.c</code>, <code>*.cc</code>, <code>*.cpp</code>, <code>*.cxx</code>, <code>*.h</code>, <code>*.hh</code>, <code>*.hpp</code>, and <code>*.hxx</code>.</p>
+            <div class="code-block">LANGUAGE=cpp ./run-review.sh
+
+# Aliases
+LANGUAGE=c++ ./run-review.sh
+LANGUAGE=cxx ./run-review.sh</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Deterministic Checks</h3>
+            <ul>
+                <li>Unsafe or unbounded C functions such as <code>gets</code>, <code>strcpy</code>, <code>strcat</code>, <code>sprintf</code>, and <code>scanf</code>.</li>
+                <li>Raw <code>new</code> allocations when no smart-pointer ownership is present.</li>
+                <li>C-style casts that should be replaced by explicit C++ casts.</li>
+                <li>Missing source files whose names indicate tests or specifications.</li>
+                <li>Evidence for the first five language-relevant functional requirements.</li>
+            </ul>
+            <p>These checks run with <code>DEEPSEEK=false</code> and remain active if a configured model is unavailable.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Deepseek Review</h3>
+            <p>When Deepseek is available, the agent uses it to select C++-relevant requirements and semantically reviews bounded samples from up to six files. Findings are accepted only from a validated JSON array and are limited to ten per run.</p>
+            <div class="code-block"># Offline: source stays local
+ollama pull deepseek-coder:1.3b-base
+LANGUAGE=cpp INTERNET=false DEEPSEEK=true ./run-review.sh
+
+# Online: sampled source is sent to the Deepseek API
+export DEEPSEEK_API_KEY='your-key'
+LANGUAGE=cpp INTERNET=true DEEPSEEK=true ./run-review.sh</div>
+            <div class="warning-box"><strong>Online data boundary:</strong> online mode sends requirement headings and sampled source text to the hosted Deepseek API. Do not enable it for code that policy forbids sending to an external service.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Limitations</h3>
+            <ul>
+                <li>The agent uses text heuristics rather than Clang, compiler diagnostics, sanitizers, or an AST.</li>
+                <li>A filename-based test check does not measure executed coverage.</li>
+                <li>Deepseek findings are suggestions and require developer review.</li>
+            </ul>
+        </section>
+    </div>
+</main>
+</body>
+</html>

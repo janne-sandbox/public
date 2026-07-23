@@ -19,6 +19,7 @@ class TypeScriptAgent extends ReviewAgent {
   async run(projectRoot, requirementsDir, outputDir, timestamp) {
     console.log('  Loading requirements...');
     this.loadRequirements(requirementsDir);
+    await this.initializeDeepseek();
     await this._filterRequirementsForLanguage();
 
     console.log('  Scanning TypeScript files...');
@@ -26,7 +27,7 @@ class TypeScriptAgent extends ReviewAgent {
     console.log(`  Found ${tsFiles.length} TypeScript files`);
 
     console.log('  Evaluating against requirements...');
-    this._evaluateTypeScriptCoverage(tsFiles);
+    this._evaluateTypeScriptCoverage(tsFiles, projectRoot);
 
     console.log('  Writing report...');
     const reportPath = this.writeReport(outputDir, timestamp);
@@ -75,9 +76,9 @@ class TypeScriptAgent extends ReviewAgent {
     return !hasNonTsSignal;
   }
 
-  _evaluateTypeScriptCoverage(tsFiles) {
+  _evaluateTypeScriptCoverage(tsFiles, projectRoot) {
     // Check for strict TypeScript mode
-    this._checkStrictMode(tsFiles);
+    this._checkStrictMode(projectRoot);
 
     // Check for type safety patterns
     this._checkTypeSafety(tsFiles);
@@ -89,11 +90,8 @@ class TypeScriptAgent extends ReviewAgent {
     this._checkFunctionalRequirements(tsFiles);
   }
 
-  _checkStrictMode(tsFiles) {
-    const tsconfigFiles = this.scanProjectFiles(
-      path.dirname(tsFiles[0] || '.'),
-      /tsconfig\.json$/
-    );
+  _checkStrictMode(projectRoot) {
+    const tsconfigFiles = this.scanProjectFiles(projectRoot, /tsconfig\.json$/);
 
     for (const file of tsconfigFiles) {
       try {

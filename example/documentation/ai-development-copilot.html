@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS Code with GitHub Copilot - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / VS Code with GitHub Copilot</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Install and authenticate</h3>
+            <ol>
+                <li>Use a current VS Code release and a GitHub account with Copilot access.</li>
+                <li>Open Extensions and install <a href="https://marketplace.visualstudio.com/items?itemName=GitHub.copilot" target="_blank" rel="noopener">GitHub Copilot</a>. Verify that GitHub is the publisher.</li>
+                <li>Choose the Copilot icon in the status bar or title bar and sign in to GitHub.</li>
+                <li>Confirm the account and organization shown by VS Code are the intended ones.</li>
+            </ol>
+            <p>Use the same extension on macOS, native Windows, Ubuntu, and RHEL. In a WSL window, install Copilot in the location VS Code recommends so it can operate on the Linux workspace.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Choose an interaction mode</h3>
+            <table>
+                <thead><tr><th>Mode</th><th>Use it for</th><th>Review expectation</th></tr></thead>
+                <tbody>
+                    <tr><td>Inline suggestions</td><td>Small expressions, repetitive code, and test cases while typing.</td><td>Read the complete suggestion before accepting.</td></tr>
+                    <tr><td>Ask</td><td>Questions and explanations without requesting autonomous edits.</td><td>Validate explanations against code and documentation.</td></tr>
+                    <tr><td>Plan</td><td>Breaking a larger change into reviewable steps before implementation.</td><td>Correct scope, assumptions, and test strategy first.</td></tr>
+                    <tr><td>Agent</td><td>Multi-file work that may edit files and run terminal commands.</td><td>Inspect commands, diffs, test output, and unintended files.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Example workflow</h3>
+            <div class="code-block">Plan a fix for the failing parser test.
+Limit the plan to parser.ts and parser.test.ts.
+Preserve the public API and list the validation commands.
+Do not edit files until the plan is accepted.</div>
+            <ol>
+                <li>Review the plan and remove unrelated work.</li>
+                <li>Switch to Agent mode only when the planned edits are acceptable.</li>
+                <li>Review changed files in Source Control.</li>
+                <li>Run the test and static checks yourself.</li>
+                <li>Commit only a coherent, reviewed change.</li>
+            </ol>
+            <div class="warning-box"><strong>Generated completion is not provenance proof.</strong> Check licenses, security, correctness, and project conventions; do not assume a suggestion is original or compatible with the repository's license.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://docs.github.com/en/copilot/get-started/quickstart?tool=vscode" target="_blank" rel="noopener">Copilot quickstart for VS Code</a>
+                <a class="source-link" href="https://docs.github.com/en/copilot/how-tos/chat-with-copilot/chat-in-ide" target="_blank" rel="noopener">Copilot Chat modes</a>
+                <a class="source-link" href="https://docs.github.com/en/copilot/responsible-use" target="_blank" rel="noopener">Responsible use</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

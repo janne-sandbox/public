@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Temperature Means - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / What temperature means</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>A sampling control, not intelligence</h3>
+            <p>A language model produces probabilities for possible next tokens. Temperature changes how sharply the runtime samples from that distribution. Lower values favor the most likely choices; higher values allow more lower-probability choices and therefore more variation.</p>
+            <table>
+                <thead><tr><th>Temperature</th><th>Typical effect</th><th>Useful starting point</th></tr></thead>
+                <tbody>
+                    <tr><td>Low</td><td>More focused and repeatable wording.</td><td>Code review, extraction, classification, and precise edits.</td></tr>
+                    <tr><td>Medium</td><td>A balance of consistency and alternatives.</td><td>Implementation ideas, documentation, and ordinary chat.</td></tr>
+                    <tr><td>High</td><td>More diverse and surprising output, with more drift risk.</td><td>Brainstorming names, examples, or competing designs.</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box"><strong>Temperature does not add knowledge or reasoning.</strong> It cannot make a weak prompt correct, recover missing context, or prove generated code. Model choice, instructions, context, tools, tests, and review matter more.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Illustrative starting ranges</h3>
+            <table>
+                <thead><tr><th>Task</th><th>Starting range</th><th>Why</th></tr></thead>
+                <tbody>
+                    <tr><td>Security or requirements review</td><td><code>0.0–0.2</code></td><td>Prefer focused, comparable output.</td></tr>
+                    <tr><td>Code generation and test cases</td><td><code>0.1–0.4</code></td><td>Allow limited alternatives without excessive drift.</td></tr>
+                    <tr><td>Documentation drafts</td><td><code>0.3–0.7</code></td><td>Permit wording variety while retaining structure.</td></tr>
+                    <tr><td>Open brainstorming</td><td><code>0.7–1.0</code></td><td>Explore more diverse candidates.</td></tr>
+                </tbody>
+            </table>
+            <p>These are experiments, not universal standards. Scales, defaults, and supported ranges differ by model and provider. Compare outputs on a representative evaluation set before changing a production setting.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Where can it be configured?</h3>
+            <ul>
+                <li><strong>Ollama:</strong> exposes a temperature option through a Modelfile and generation API.</li>
+                <li><strong>Hosted model APIs:</strong> support is endpoint- and model-specific. Consult the selected model's current schema; omit unsupported parameters.</li>
+                <li><strong>Codex, GitHub Copilot, and Claude Code editor experiences:</strong> do not assume a raw temperature control exists. Their model and agent settings are not interchangeable with an API sampling parameter.</li>
+            </ul>
+            <div class="warning-box"><strong>Do not invent configuration keys.</strong> A setting named <code>temperature</code> in one provider's API or local runtime does not imply that another editor extension accepts it. Reasoning effort, model selection, top-p, and temperature are different controls.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Ollama example</h3>
+            <p>Create a review-focused model definition:</p>
+            <div class="code-block">FROM deepseek-coder:1.3b-base
+PARAMETER temperature 0.2
+PARAMETER seed 42
+SYSTEM You are a precise code reviewer. Cite the supplied code and requirements.</div>
+            <p>Save it as <code>Modelfile.review</code>, then create and run it:</p>
+            <div class="code-block">ollama create deepseek-review -f Modelfile.review
+ollama run deepseek-review</div>
+            <p>A fixed seed may improve repeatability in one runtime, but it does not guarantee identical results across model versions, hardware, context changes, tool calls, or software updates.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Evaluate instead of guessing</h3>
+            <ol>
+                <li>Prepare representative prompts with expected checks or acceptance criteria.</li>
+                <li>Keep the model, prompt, context, seed, and software version fixed.</li>
+                <li>Run several samples at each candidate temperature.</li>
+                <li>Score correctness, requirement coverage, false positives, consistency, and useful variety.</li>
+                <li>Select the lowest-variance setting that still produces the diversity the task needs.</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h3>Official reference</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://docs.ollama.com/modelfile" target="_blank" rel="noopener">Ollama Modelfile parameters</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

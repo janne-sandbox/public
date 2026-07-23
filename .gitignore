@@ -16,6 +16,14 @@ Thumbs.db
 node_modules/
 dist/
 
+# Reports
+reports/
+results/
+
+# .NET
+bin/
+obj/
+
 # Logs
 *.log
 logs/

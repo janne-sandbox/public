@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Development - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>AI-assisted software development</h3>
+            <p>
+                <span class="badge success">Human reviewed</span>
+                <span class="badge info">Cross-platform</span>
+                <span class="badge">Editor integrated</span>
+                <span class="badge warn">Verify every change</span>
+            </p>
+            <p>AI assistants can explain unfamiliar code, propose focused edits, create tests, and review changes. They do not understand every project constraint and can produce insecure, incorrect, or invented output. Treat generated code as an untrusted contribution that must pass the same review, testing, and security controls as human-written code.</p>
+            <div class="warning-box"><strong>Before using hosted AI:</strong> confirm the organization's data-handling policy. Do not submit secrets, credentials, personal data, proprietary source, or customer material unless the selected service and account are approved for that data.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Choose the right tool</h3>
+            <table>
+                <thead><tr><th>Tool</th><th>Best fit</th><th>Where inference runs</th><th>Account or model</th></tr></thead>
+                <tbody>
+                    <tr><td><a href="ai-development-codex.html">Codex</a></td><td>Repository-aware explanation, implementation, debugging, and review.</td><td>OpenAI service; local commands may run with explicit permissions.</td><td>ChatGPT sign-in or an API key, depending on the surface.</td></tr>
+                    <tr><td><a href="ai-development-copilot.html">GitHub Copilot</a></td><td>Inline completion, editor chat, planning, and agent tasks.</td><td>GitHub-hosted service.</td><td>GitHub account with Copilot access.</td></tr>
+                    <tr><td><a href="ai-development-claude.html">Claude Code</a></td><td>Editor or terminal-based repository work with visible diffs and permission modes.</td><td>Anthropic or a configured third-party provider.</td><td>Supported Claude subscription or Console/provider account.</td></tr>
+                    <tr><td><a href="ai-development-ollama.html">Ollama</a></td><td>Running supported models on the workstation and exposing a local API.</td><td>Local by default for local models.</td><td>A downloaded model; no hosted assistant account is needed for local use.</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box"><strong>Local does not mean risk-free.</strong> A local model can still read sensitive files you attach, write unsafe code, consume significant disk space, or expose an API if configured to listen beyond loopback.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Learning path</h3>
+            <div class="chapter-grid">
+                <a class="chapter-card" href="ai-development-vscode.html"><h4>1. Prepare VS Code</h4><p>Install the editor correctly for macOS, Windows, WSL, Ubuntu, or RHEL.</p></a>
+                <a class="chapter-card" href="ai-development-vscode-settings.html"><h4>2. Isolate VS Code settings</h4><p>Use profiles and conservative AI permissions before enabling agent features.</p></a>
+                <a class="chapter-card" href="ai-development-codex.html"><h4>3. Try Codex</h4><p>Add relevant editor context, request a small task, and inspect the diff.</p></a>
+                <a class="chapter-card" href="ai-development-copilot.html"><h4>4. Try Copilot</h4><p>Compare inline completion, Ask, Plan, and Agent workflows.</p></a>
+                <a class="chapter-card" href="ai-development-claude.html"><h4>5. Try Claude</h4><p>Use the graphical extension or the optional terminal CLI.</p></a>
+                <a class="chapter-card" href="ai-development-ollama.html"><h4>6. Explore local models</h4><p>Install Ollama, download a suitable model, and verify its local API.</p></a>
+                <a class="chapter-card" href="ai-development-continue-vscode.html"><h4>7. Configure Continue</h4><p>Use local Ollama and hosted Anthropic models from one VS Code assistant.</p></a>
+                <a class="chapter-card" href="ai-development-models-modes.html"><h4>8. Choose a model and mode</h4><p>Match reasoning, planning, tools, and specialized roles to the task.</p></a>
+                <a class="chapter-card" href="ai-development-continue.html"><h4>9. Continue across chats</h4><p>Record verified status and next steps once so another assistant can resume safely.</p></a>
+                <a class="chapter-card" href="ai-development-mcp.html"><h4>10. Understand MCP</h4><p>Connect assistants to external tools and data through explicit trust boundaries.</p></a>
+                <a class="chapter-card" href="ai-development-temperature.html"><h4>11. Understand temperature</h4><p>Control model variation where the selected interface supports sampling settings.</p></a>
+                <a class="chapter-card" href="ai-development-workflow.html"><h4>12. Adopt a safe workflow</h4><p>Scope, prompt, review, test, scan, and document the result.</p></a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>A useful first task</h3>
+            <p>Start with a reversible, bounded change in a clean Git worktree. Give the assistant the acceptance criteria and exact validation command.</p>
+            <div class="code-block">Read the project instructions and the selected files first.
+Explain the current behavior.
+Add one focused test for &lt;behavior&gt; without changing public APIs.
+Run the focused test and report the exact result.
+Do not change unrelated files.</div>
+            <p>Inspect <code>git diff</code>, run the project checks yourself, and only then keep or commit the change.</p>
+        </section>
+    </div>
+</main>
+</body>
+</html>

@@ -1,6 +1,6 @@
 #!/bin/bash
 # review.sh — Local AI-powered code review agent orchestrator
-# Usage: ./review.sh [LANGUAGE=java|rust|react|typescript|all] [INTERNET=true|false] [DEEPSEEK=true|false]
+# Usage: ./run-review.sh [LANGUAGE=java|rust|react|typescript|cpp|csharp|all] [INTERNET=true|false] [DEEPSEEK=true|false]
 # Example: ./review.sh LANGUAGE=typescript INTERNET=false DEEPSEEK=true
 # Default: LANGUAGE=all, INTERNET=false, DEEPSEEK=true
 
@@ -17,9 +17,19 @@ LANGUAGE="${LANGUAGE:-all}"
 INTERNET="${INTERNET:-false}"
 DEEPSEEK="${DEEPSEEK:-true}"
 
+# Normalize convenient aliases to the report and agent names.
+case "${LANGUAGE}" in
+    c++|cxx)
+        LANGUAGE="cpp"
+        ;;
+    "c#"|cs)
+        LANGUAGE="csharp"
+        ;;
+esac
+
 # Validate parameters
-if [[ ! "${LANGUAGE}" =~ ^(java|rust|react|typescript|all)$ ]]; then
-    echo "ERROR: LANGUAGE must be one of: java, rust, react, typescript, all"
+if [[ ! "${LANGUAGE}" =~ ^(java|rust|react|typescript|cpp|csharp|all)$ ]]; then
+    echo "ERROR: LANGUAGE must be one of: java, rust, react, typescript, cpp, csharp, all"
     exit 1
 fi
 if [[ ! "${INTERNET}" =~ ^(true|false)$ ]]; then
@@ -135,6 +145,42 @@ review_react() {
         --timestamp="${TIMESTAMP}"
 }
 
+review_cpp() {
+    local agent="${AGENTS_DIR}/cpp-agent.js"
+    echo "▶ Launching C++ review agent..."
+
+    if [[ ! -f "${agent}" ]]; then
+        echo "  ERROR: C++ agent not found at ${agent}"
+        return 1
+    fi
+
+    node "${agent}" \
+        --language=cpp \
+        --internet="${INTERNET}" \
+        --deepseek="${DEEPSEEK}" \
+        --requirements-dir="${REQUIREMENTS_DIR}" \
+        --output-dir="${RUN_RESULTS_DIR}" \
+        --timestamp="${TIMESTAMP}"
+}
+
+review_csharp() {
+    local agent="${AGENTS_DIR}/csharp-agent.js"
+    echo "▶ Launching C# review agent..."
+
+    if [[ ! -f "${agent}" ]]; then
+        echo "  ERROR: C# agent not found at ${agent}"
+        return 1
+    fi
+
+    node "${agent}" \
+        --language=csharp \
+        --internet="${INTERNET}" \
+        --deepseek="${DEEPSEEK}" \
+        --requirements-dir="${REQUIREMENTS_DIR}" \
+        --output-dir="${RUN_RESULTS_DIR}" \
+        --timestamp="${TIMESTAMP}"
+}
+
 # ─── Main orchestration ──────────────────────────────────────────────────────
 
 run_reviews() {
@@ -151,11 +197,19 @@ run_reviews() {
         react)
             review_react
             ;;
+        cpp)
+            review_cpp
+            ;;
+        csharp)
+            review_csharp
+            ;;
         all)
             review_typescript && echo ""
             review_java && echo ""
             review_rust && echo ""
             review_react && echo ""
+            review_cpp && echo ""
+            review_csharp && echo ""
             ;;
     esac
 }

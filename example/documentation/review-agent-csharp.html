@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Tool - C# Agent</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>Code Review System - C# Agent</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Scope</h3>
+            <p>The C# agent scans <code>*.cs</code> source files and reads <code>*.csproj</code> project files to check nullable-reference configuration.</p>
+            <div class="code-block">LANGUAGE=csharp ./run-review.sh
+
+# Aliases
+LANGUAGE=c# ./run-review.sh
+LANGUAGE=cs ./run-review.sh</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Deterministic Checks</h3>
+            <ul>
+                <li><code>async void</code> methods, which should normally return <code>Task</code>.</li>
+                <li>Blocking asynchronous work through <code>.Result</code> or <code>.Wait()</code>.</li>
+                <li>SQL commands constructed through interpolation or concatenation.</li>
+                <li>Missing <code>&lt;Nullable&gt;enable&lt;/Nullable&gt;</code> project configuration.</li>
+                <li>Missing test/spec files or directories.</li>
+                <li>Evidence for the first five language-relevant functional requirements.</li>
+            </ul>
+            <p>These checks always run and do not require the .NET SDK.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Deepseek Review</h3>
+            <p>When enabled and available, Deepseek filters the requirements and reviews bounded code samples for correctness, security, resource management, and maintainability.</p>
+            <div class="code-block"># Offline through local Ollama
+LANGUAGE=csharp INTERNET=false DEEPSEEK=true ./run-review.sh
+
+# Online through the hosted API
+export DEEPSEEK_API_KEY='your-key'
+LANGUAGE=csharp INTERNET=true DEEPSEEK=true ./run-review.sh</div>
+            <div class="warning-box"><strong>Online data boundary:</strong> online mode sends requirement headings and sampled C# source to the hosted Deepseek API. Use offline or deterministic mode for code that must remain local.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Limitations</h3>
+            <ul>
+                <li>The agent does not run Roslyn analyzers, <code>dotnet build</code>, tests, or package vulnerability checks.</li>
+                <li><code>async void</code> event handlers can be legitimate and may require manual dismissal.</li>
+                <li>Deepseek findings are advisory until confirmed by a developer.</li>
+            </ul>
+        </section>
+    </div>
+</main>
+</body>
+</html>

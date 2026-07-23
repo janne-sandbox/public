@@ -16,12 +16,12 @@
             <h3>Review Project Changes Locally</h3>
             <p>
                 <span class="badge success">Automated</span>
-                <span class="badge info">4 Languages</span>
+                <span class="badge info">6 Languages</span>
                 <span class="badge">Local-First</span>
                 <span class="badge warn">Requirements-Driven</span>
             </p>
-            <p>The review tool scans Java, Rust, React, and TypeScript code against the project's functional and non-functional requirements. Each language-specific agent produces a Markdown report with findings, suggestions, and a final verdict.</p>
-            <div class="info-box"><strong>Default behavior:</strong> all four agents run without internet access. Deepseek analysis is enabled when a local Ollama service is available and otherwise falls back to deterministic checks.</div>
+            <p>The review tool scans Java, Rust, React, TypeScript, C++, and C# code against the project's functional and non-functional requirements. Each language-specific agent produces a Markdown report with findings, suggestions, and a final verdict.</p>
+            <div class="info-box"><strong>Default behavior:</strong> all six agents run offline. Deepseek uses local Ollama when available and otherwise falls back to deterministic checks. With <code>INTERNET=true</code>, Deepseek uses its hosted API and requires <code>DEEPSEEK_API_KEY</code>.</div>
         </section>
 
         <section class="content-section">
@@ -30,10 +30,12 @@
             <div class="code-block">./run-review.sh</div>
             <h4>Review one language</h4>
             <div class="code-block">LANGUAGE=java ./run-review.sh
-LANGUAGE=typescript ./run-review.sh</div>
+LANGUAGE=typescript ./run-review.sh
+LANGUAGE=cpp ./run-review.sh
+LANGUAGE=csharp ./run-review.sh</div>
             <h4>Use deterministic checks only</h4>
             <div class="code-block">DEEPSEEK=false ./run-review.sh</div>
-            <p>Reports are written to <code>review/results/&lt;timestamp&gt;/</code>. Set <code>LANGUAGE</code> to <code>java</code>, <code>rust</code>, <code>react</code>, <code>typescript</code>, or <code>all</code>.</p>
+            <p>Reports are written to <code>review/results/&lt;timestamp&gt;/</code>. Set <code>LANGUAGE</code> to <code>java</code>, <code>rust</code>, <code>react</code>, <code>typescript</code>, <code>cpp</code>, <code>csharp</code>, or <code>all</code>.</p>
         </section>
 
         <section class="content-section">
@@ -42,10 +44,13 @@ LANGUAGE=typescript ./run-review.sh</div>
                 <a class="chapter-card" href="review-overview.html"><h4>Overview</h4><p>Capabilities, verdicts, agents, configuration, and CI usage.</p></a>
                 <a class="chapter-card" href="review-instructions.html"><h4>Using the tool</h4><p>Commands, report interpretation, troubleshooting, and extension points.</p></a>
                 <a class="chapter-card" href="review-architecture.html"><h4>Architecture</h4><p>Components, analysis flow, file organization, and requirements mapping.</p></a>
+                <a class="chapter-card" href="review-samples.html"><h4>Sample applications</h4><p>Seven runnable fixtures and their expected review findings.</p></a>
                 <a class="chapter-card" href="review-agent-typescript.html"><h4>TypeScript agent</h4><p>Strict mode, type safety, tests, requirement coverage, and verdict logic.</p></a>
                 <a class="chapter-card" href="review-agent-java.html"><h4>Java agent</h4><p>Modern Java, Jackson, OWASP checks, tests, and verdict logic.</p></a>
                 <a class="chapter-card" href="review-agent-rust.html"><h4>Rust agent</h4><p>Memory safety, error handling, async patterns, tests, and requirements.</p></a>
                 <a class="chapter-card" href="review-agent-react.html"><h4>React agent</h4><p>Accessibility, browser security, performance, and component organization.</p></a>
+                <a class="chapter-card" href="review-agent-cpp.html"><h4>C++ agent</h4><p>Unsafe functions, ownership, casts, tests, and optional semantic review.</p></a>
+                <a class="chapter-card" href="review-agent-csharp.html"><h4>C# agent</h4><p>Async correctness, SQL safety, nullable references, tests, and semantic review.</p></a>
             </div>
         </section>
 
@@ -57,6 +62,26 @@ LANGUAGE=typescript ./run-review.sh</div>
                 <a class="chapter-card" href="process-pdca.html"><h4>PDCA delivery cycle</h4><p>Detailed activities, inputs, outputs, responsibilities, and feedback loops.</p></a>
                 <a class="chapter-card" href="process-governance.html"><h4>Governance and gates</h4><p>Readiness, review, release decisions, traceability, and quality evidence.</p></a>
                 <a class="chapter-card" href="process-milestones.html"><h4>Milestones and operations</h4><p>Delivery stages, framework alignment, go-live, and steady-state improvement.</p></a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>AI DEVELOPMENT</h3>
+            <p>Set up an AI-assisted development environment on macOS, native Windows, Windows with WSL, Ubuntu, or Red Hat Enterprise Linux.</p>
+            <div class="chapter-grid">
+                <a class="chapter-card" href="ai-development.html"><h4>Chapter overview</h4><p>Choose an assistant, understand local and hosted execution, and follow the learning path.</p></a>
+                <a class="chapter-card" href="ai-development-vscode.html"><h4>VS Code setup</h4><p>Platform-specific installation, WSL architecture, extensions, Git, and verification.</p></a>
+                <a class="chapter-card" href="ai-development-vscode-settings.html"><h4>VS Code JSON settings</h4><p>Understand setting scopes, profiles, shortcuts, AI permissions, and a reviewed macOS configuration.</p></a>
+                <a class="chapter-card" href="ai-development-codex.html"><h4>VS Code with Codex</h4><p>Install the Codex extension, authenticate, provide context, edit, and review safely.</p></a>
+                <a class="chapter-card" href="ai-development-copilot.html"><h4>VS Code with Copilot</h4><p>Set up GitHub Copilot and use Ask, Plan, Agent, and inline suggestions effectively.</p></a>
+                <a class="chapter-card" href="ai-development-claude.html"><h4>VS Code with Claude</h4><p>Install Claude Code for the editor or terminal across the supported platforms.</p></a>
+                <a class="chapter-card" href="ai-development-ollama.html"><h4>Local AI with Ollama</h4><p>Run models locally, understand hardware and storage needs, and verify the local API.</p></a>
+                <a class="chapter-card" href="ai-development-continue-vscode.html"><h4>Continue for VS Code</h4><p>Install Continue and configure local Ollama models alongside hosted Claude models.</p></a>
+                <a class="chapter-card" href="ai-development-models-modes.html"><h4>Models and operating modes</h4><p>Separate thinking models from Chat, Plan, and Agent modes and specialized model roles.</p></a>
+                <a class="chapter-card" href="ai-development-continue.html"><h4>Continue across chats</h4><p>Maintain a concise CONTINUE.md handoff and connect it to multiple coding assistants.</p></a>
+                <a class="chapter-card" href="ai-development-mcp.html"><h4>What MCP means</h4><p>Understand MCP hosts, clients, servers, capabilities, configuration, and trust boundaries.</p></a>
+                <a class="chapter-card" href="ai-development-temperature.html"><h4>What temperature means</h4><p>Learn how sampling temperature affects variation and configure it where supported.</p></a>
+                <a class="chapter-card" href="ai-development-workflow.html"><h4>Responsible workflow</h4><p>Protect data, constrain tasks, inspect diffs, run tests, and record evidence.</p></a>
             </div>
         </section>
 

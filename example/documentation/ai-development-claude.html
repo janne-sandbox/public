@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS Code with Claude - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / VS Code with Claude</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Use the VS Code extension</h3>
+            <p>The graphical Claude Code extension is the recommended Anthropic workflow in VS Code. It includes its own CLI for the chat panel; install the standalone CLI only if you also want to run <code>claude</code> in a terminal.</p>
+            <ol>
+                <li>Use VS Code 1.94 or newer and an account supported by Claude Code.</li>
+                <li>Open Extensions, search for <strong>Claude Code</strong>, and verify Anthropic as the publisher before installing.</li>
+                <li>Open a file and choose the Spark icon, then sign in.</li>
+                <li>Select code or mention a file or folder to provide focused context.</li>
+                <li>Keep Manual or Plan permission mode for the first tasks and inspect side-by-side diffs.</li>
+            </ol>
+            <p>The extension works across macOS, native Windows, Linux, and WSL. For a WSL project, open the folder through the VS Code WSL extension first.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Optional standalone CLI</h3>
+            <div class="warning-box"><strong>Installer scripts execute downloaded code.</strong> Use only the official Anthropic URLs, inspect scripts when policy requires it, or use the approved Homebrew, WinGet, apt, or dnf package channel.</div>
+
+            <h4>macOS</h4>
+            <div class="code-block">brew install --cask claude-code
+claude --version
+claude</div>
+            <p>The official native installer is also available if Homebrew is not used.</p>
+
+            <h4>Windows (native PowerShell)</h4>
+            <div class="code-block">winget install Anthropic.ClaudeCode
+claude --version
+claude</div>
+            <p>Native Windows is suitable for Windows-hosted projects. Git for Windows is optional; without it, Claude Code can use PowerShell for shell operations.</p>
+
+            <h4>Windows with WSL</h4>
+            <p>Install and launch Claude inside the WSL terminal—not PowerShell—when the project is stored in WSL:</p>
+            <div class="code-block">curl -fsSL https://claude.ai/install.sh | bash
+claude --version
+claude</div>
+
+            <h4>Ubuntu and Red Hat Enterprise Linux</h4>
+            <p>The same native installer supports Linux. Anthropic also publishes signed apt and dnf repositories for managed package updates.</p>
+            <div class="code-block">curl -fsSL https://claude.ai/install.sh | bash
+claude --version
+claude</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Plan, edit, and review</h3>
+            <p>Claude Code offers permission modes. Start in Plan when the task spans files or involves architecture; use Manual when you want approval before edits and most shell commands.</p>
+            <div class="code-block">Inspect the selected module and its tests.
+Create a plan to handle the timeout without changing the API.
+Call out concurrency and cleanup risks.
+Wait for plan approval before editing.</div>
+            <ul>
+                <li>Correct the plan before permitting edits.</li>
+                <li>Review each side-by-side change; accept, reject, or revise it.</li>
+                <li>Keep automatic-edit modes for low-risk, well-tested tasks only.</li>
+                <li>Run the repository checks outside the assistant session before commit.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://code.claude.com/docs/en/ide-integrations" target="_blank" rel="noopener">Claude Code in VS Code</a>
+                <a class="source-link" href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Claude Code setup</a>
+                <a class="source-link" href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permission modes</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

@@ -19,12 +19,12 @@
             <h3>Overview</h3>
             <p>
                 <span class="badge success">Automated</span>
-                <span class="badge info">4 Languages</span>
+                <span class="badge info">6 Languages</span>
                 <span class="badge">Local-First</span>
                 <span class="badge warn">Requirement-Driven</span>
             </p>
             <p>
-                The <strong>Example Code Review Tool</strong> is an automated review framework that evaluates codebase changes against project requirements. It supports four primary languages: <strong>TypeScript</strong>, <strong>Java</strong>, <strong>Rust</strong>, and <strong>React</strong>. Reviews run locally without internet access by default, making the system suitable for offline development and CI/CD pipelines.
+                The <strong>Example Code Review Tool</strong> is an automated review framework that evaluates codebase changes against project requirements. It supports six targets: <strong>TypeScript</strong>, <strong>Java</strong>, <strong>Rust</strong>, <strong>React</strong>, <strong>C++</strong>, and <strong>C#</strong>. Reviews run locally without internet access by default, while an explicit online mode can use the hosted Deepseek API.
             </p>
 
             <div class="info-box">
@@ -48,13 +48,14 @@
             <h4>Review all languages (default)</h4>
             <div class="code-block">./run-review.sh</div>
 
-            <h4>Review TypeScript only, with internet access</h4>
-            <div class="code-block">LANGUAGE=typescript INTERNET=true ./run-review.sh</div>
+            <h4>Review C++ offline</h4>
+            <div class="code-block">LANGUAGE=cpp INTERNET=false ./run-review.sh</div>
 
-            <h4>Review Java codebase, no internet</h4>
-            <div class="code-block">LANGUAGE=java ./run-review.sh</div>
+            <h4>Review C# with the online Deepseek API</h4>
+            <div class="code-block">export DEEPSEEK_API_KEY='your-key'
+LANGUAGE=csharp INTERNET=true DEEPSEEK=true ./run-review.sh</div>
 
-            <p>Results are written to a per-run folder at <code>./review/results/&lt;timestamp&gt;/</code>. Each run produces 1 to 4 report files depending on the selected <code>LANGUAGE</code> value. If another run starts within the same minute, the folder gets a numeric suffix such as <code>202605261955-1/</code>.</p>
+            <p>Results are written to a per-run folder at <code>./review/results/&lt;timestamp&gt;/</code>. Each run produces one to six report files depending on the selected <code>LANGUAGE</code> value. If another run starts within the same minute, the folder gets a numeric suffix such as <code>202605261955-1/</code>.</p>
 
             <h4>Review with optional Deepseek analysis</h4>
             <div class="code-block"># Default: DEEPSEEK=true, auto-uses Ollama if available
@@ -65,7 +66,7 @@ LANGUAGE=all DEEPSEEK=false ./run-review.sh</div>
         </section>
 
         <section class="content-section">
-            <h3>Four review agents</h3>
+            <h3>Six review agents</h3>
 
             <h4>① TypeScript Agent</h4>
             <ul>
@@ -94,6 +95,20 @@ LANGUAGE=all DEEPSEEK=false ./run-review.sh</div>
                 <li><strong>Checks:</strong> Accessibility (WCAG), security, performance, component organization</li>
                 <li><strong>Based on:</strong> REQ-011, WCAG-REQ, OWASP-REQ, REVIEW-003</li>
             </ul>
+
+            <h4>⑤ C++ Agent</h4>
+            <ul>
+                <li><strong>Scope:</strong> C/C++ source and header files</li>
+                <li><strong>Checks:</strong> Unsafe functions, raw ownership, casts, tests, and optional Deepseek semantic review</li>
+                <li><strong>Command:</strong> <code>LANGUAGE=cpp ./run-review.sh</code></li>
+            </ul>
+
+            <h4>⑥ C# Agent</h4>
+            <ul>
+                <li><strong>Scope:</strong> C# source and project files</li>
+                <li><strong>Checks:</strong> Async correctness, SQL construction, nullable references, tests, and optional Deepseek semantic review</li>
+                <li><strong>Command:</strong> <code>LANGUAGE=csharp ./run-review.sh</code></li>
+            </ul>
         </section>
 
         <section class="content-section">
@@ -104,9 +119,8 @@ LANGUAGE=all DEEPSEEK=false ./run-review.sh</div>
             </p>
 
             <ol>
-                <li><strong><code>./requirements/functional/</code></strong> — 75 functional requirements (REQ-003 through REQ-075)</li>
-                <li><strong><code>./requirements/non-functional/</code></strong> — Non-functional requirements (GDPR, OWASP, WCAG, EN 50518)</li>
-                <li><strong><code>./review/requirements/</code></strong> — Review system requirements (REVIEW-001 through REVIEW-005)</li>
+                <li><strong><code>./requirements/functional/</code></strong> — optional functional requirement Markdown files</li>
+                <li><strong><code>./requirements/non-functional/</code></strong> — non-functional, security, quality, and review-policy requirements</li>
             </ol>
 
             <p>
@@ -127,7 +141,9 @@ LANGUAGE=all DEEPSEEK=false ./run-review.sh</div>
 ├── review-typescript-approved-202605261949.md
 ├── review-java-approved-202605261949.md
 ├── review-react-approved-202605261949.md
-└── review-rust-approved-202605261949.md</div>
+├── review-rust-approved-202605261949.md
+├── review-cpp-approved-with-changes-202605261949.md
+└── review-csharp-approved-with-changes-202605261949.md</div>
 
             <p>Each report includes:</p>
             <ul>
@@ -145,14 +161,16 @@ LANGUAGE=all DEEPSEEK=false ./run-review.sh</div>
             <table>
                 <thead><tr><th>Parameter</th><th>Values</th><th>Default</th><th>Description</th></tr></thead>
                 <tbody>
-                    <tr><td><code>LANGUAGE</code></td><td><code>typescript|java|rust|react|all</code></td><td><code>all</code></td><td>Which language(s) to review</td></tr>
-                    <tr><td><code>INTERNET</code></td><td><code>true|false</code></td><td><code>false</code></td><td>Allow external lookups (CVE checks, dependencies)</td></tr>
-                    <tr><td><code>DEEPSEEK</code></td><td><code>true|false</code></td><td><code>true</code></td><td>Enable optional Ollama-backed semantic checks; falls back to regex if Ollama is unavailable</td></tr>
+                    <tr><td><code>LANGUAGE</code></td><td><code>typescript|java|rust|react|cpp|csharp|all</code></td><td><code>all</code></td><td>Which language(s) to review</td></tr>
+                    <tr><td><code>INTERNET</code></td><td><code>true|false</code></td><td><code>false</code></td><td>Select local Ollama (false) or the hosted Deepseek API (true)</td></tr>
+                    <tr><td><code>DEEPSEEK</code></td><td><code>true|false</code></td><td><code>true</code></td><td>Enable optional Deepseek analysis; unavailable providers fall back to deterministic checks</td></tr>
+                    <tr><td><code>DEEPSEEK_OLLAMA_MODEL</code></td><td>Ollama model name</td><td><code>deepseek-coder:1.3b-base</code></td><td>Offline model override</td></tr>
+                    <tr><td><code>DEEPSEEK_ONLINE_MODEL</code></td><td>Deepseek API model name</td><td><code>deepseek-v4-flash</code></td><td>Online model override</td></tr>
                 </tbody>
             </table>
 
             <div class="info-box">
-                <strong>Default behavior:</strong> Reviews run locally, offline, with <code>INTERNET=false</code>. This makes them fast and deterministic, suitable for pre-commit or CI/CD gates. Set <code>INTERNET=true</code> only if you need dependency CVE checks or internet-based validations.
+                <strong>Data boundary:</strong> <code>INTERNET=false</code> keeps analysis local and uses Ollama when available. <code>INTERNET=true</code> sends requirement headings and bounded source samples to the hosted Deepseek API when <code>DEEPSEEK_API_KEY</code> is configured.
             </div>
         </section>
 

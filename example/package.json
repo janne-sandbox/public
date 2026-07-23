@@ -1,0 +1,12 @@
+{
+  "name": "review-tool-example",
+  "version": "1.0.0",
+  "private": true,
+  "license": "LGPL-3.0-only",
+  "scripts": {
+    "test": "node --test review/tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -18,7 +18,7 @@
         <section class="content-section">
             <h3>System Architecture</h3>
             <p>
-                The review system consists of five components: a master orchestrator script, a shared base agent class, and four language-specific agent implementations.
+                The review system consists of a master orchestrator, a shared base agent, six language-specific agents, two optional Deepseek provider paths, requirement inputs, and Markdown report output.
             </p>
 
             <pre class="mermaid">
@@ -38,6 +38,8 @@ flowchart TB
         JV["② Java Agent<br/>(java-agent.js)"]
         RS["③ Rust Agent<br/>(rust-agent.js)"]
         RX["④ React Agent<br/>(react-agent.js)"]
+        CP["⑤ C++ Agent<br/>(cpp-agent.js)"]
+        CS["⑥ C# Agent<br/>(csharp-agent.js)"]
     end
 
     subgraph Base["Shared Base Class"]
@@ -47,7 +49,11 @@ flowchart TB
     subgraph Data["Data Sources"]
         REQ1["./requirements/functional/"]
         REQ2["./requirements/non-functional/"]
-        REQ3["./review/requirements/"]
+    end
+
+    subgraph Models["Optional Deepseek Providers"]
+        OL["Offline: Ollama<br/>127.0.0.1:11434"]
+        API["Online: Deepseek API<br/>api.deepseek.com"]
     end
 
     subgraph Scanning["Codebase Scanning"]
@@ -55,6 +61,8 @@ flowchart TB
         ScanJV["Scan *.java"]
         ScanRS["Scan *.rs"]
         ScanRX["Scan *.tsx, *.jsx"]
+        ScanCP["Scan C/C++ sources and headers"]
+        ScanCS["Scan *.cs and *.csproj"]
     end
 
     subgraph Output["Report Generation"]
@@ -64,18 +72,22 @@ flowchart TB
     CLI --> Parse
     Parse --> Validate
     Validate --> Create
-    Create --> TS & JV & RS & RX
+    Create --> TS & JV & RS & RX & CP & CS
 
-    TS & JV & RS & RX -.-> BASE
+    TS & JV & RS & RX & CP & CS -.-> BASE
 
-    REQ1 & REQ2 & REQ3 --> TS & JV & RS & RX
+    REQ1 & REQ2 --> TS & JV & RS & RX & CP & CS
+    BASE -. INTERNET=false .-> OL
+    BASE -. INTERNET=true .-> API
 
     TS --> ScanTS
     JV --> ScanJV
     RS --> ScanRS
     RX --> ScanRX
+    CP --> ScanCP
+    CS --> ScanCS
 
-    ScanTS & ScanJV & ScanRS & ScanRX --> Report
+    ScanTS & ScanJV & ScanRS & ScanRX & ScanCP & ScanCS --> Report
             </pre>
         </section>
 
@@ -92,33 +104,32 @@ flowchart TB
                 <li><strong>Performance:</strong> 3-10 seconds per language</li>
             </ul>
 
-            <h4>2. Deepseek LLM Analysis (Optional, Offline, via Ollama)</h4>
-            <p>When available, the system uses Deepseek Coder for semantic code analysis:</p>
+            <h4>2. Deepseek LLM Analysis (Optional, Offline or Online)</h4>
+            <p><code>INTERNET</code> selects one of two explicit provider paths:</p>
             <ul>
-                <li><strong>Method:</strong> Local LLM inference using Ollama</li>
-                <li><strong>Activation:</strong> Enabled when <code>DEEPSEEK=true</code> and Ollama is available on localhost:11434</li>
-                <li><strong>Model:</strong> <code>deepseek-coder:1.3b-base</code> (lightweight) or <code>6.7b-base</code> (better quality)</li>
-                <li><strong>Pros:</strong> Semantic understanding, context-aware, fewer false positives</li>
-                <li><strong>Cons:</strong> Slower (30s per semantic check), requires Ollama installation</li>
-                <li><strong>Use cases:</strong> Language-appropriate requirement filtering, semantic requirement matching</li>
+                <li><strong>Offline:</strong> <code>INTERNET=false DEEPSEEK=true</code> uses local Ollama and verifies that <code>DEEPSEEK_OLLAMA_MODEL</code> is installed.</li>
+                <li><strong>Online:</strong> <code>INTERNET=true DEEPSEEK=true</code> uses <code>https://api.deepseek.com/chat/completions</code> and requires <code>DEEPSEEK_API_KEY</code>.</li>
+                <li><strong>Fallback:</strong> Missing credentials, models, or providers produce an explicit report status and retain deterministic checks.</li>
+                <li><strong>C++/C# semantics:</strong> Up to six bounded code samples are reviewed; at most ten validated JSON findings are accepted.</li>
             </ul>
 
             <div class="info-box">
-                <strong>Deepseek Setup (Optional):</strong> Download and install Ollama from https://ollama.ai, then run:
+                <strong>Offline setup:</strong>
                 <div class="code-block">ollama pull deepseek-coder:1.3b-base
 ollama serve  # Starts on localhost:11434</div>
-                The review system will automatically detect and use it when <code>DEEPSEEK=true</code>. Use <code>DEEPSEEK=false</code> to force regex-only mode.
+                <strong>Online setup:</strong>
+                <div class="code-block">export DEEPSEEK_API_KEY='your-key'
+LANGUAGE=cpp INTERNET=true DEEPSEEK=true ./run-review.sh</div>
             </div>
 
             <h4>Hybrid Strategy</h4>
             <table>
-                <thead><tr><th>Analysis Type</th><th>Method</th><th>Speed</th><th>Accuracy</th></tr></thead>
+                <thead><tr><th>Analysis Type</th><th>Method</th><th>Availability</th></tr></thead>
                 <tbody>
-                    <tr><td>Test coverage ratio</td><td>Regex (count files)</td><td>Instant</td><td>100%</td></tr>
-                    <tr><td>Pattern detection (localStorage, SQL string concat)</td><td>Regex</td><td>Instant</td><td>95%</td></tr>
-                    <tr><td>Language-appropriate requirement filtering</td><td>Deepseek (if available)</td><td>Slow (30s)</td><td>95%+</td></tr>
-                    <tr><td>Semantic requirement matching</td><td>Deepseek (if available)</td><td>Slow (30s)</td><td>90%+</td></tr>
-                    <tr><td>Code organization/naming</td><td>Regex + Deepseek</td><td>Mixed</td><td>85%+</td></tr>
+                    <tr><td>File/test heuristics</td><td>Deterministic JavaScript</td><td>Always</td></tr>
+                    <tr><td>Unsafe language patterns</td><td>Deterministic JavaScript</td><td>Always</td></tr>
+                    <tr><td>Language-appropriate requirement filtering</td><td>Deepseek</td><td>When the selected provider is available</td></tr>
+                    <tr><td>C++/C# semantic code review</td><td>Deepseek plus validated JSON ingestion</td><td>When the selected provider is available</td></tr>
                 </tbody>
             </table>
 
@@ -142,6 +153,8 @@ ollama serve  # Starts on localhost:11434</div>
             <ul>
                 <li><code>loadRequirements()</code> — loads .md files from <code>./requirements/</code></li>
                 <li><code>scanProjectFiles()</code> — recursively scans for language-specific files</li>
+                <li><code>initializeDeepseek()</code> — selects offline Ollama or the hosted API</li>
+                <li><code>reviewCodeWithDeepseek()</code> — performs bounded semantic review for C++ and C#</li>
                 <li><code>extractRequirementCheckpoints()</code> — parses requirement text for validation points</li>
                 <li><code>evaluateAgainstRequirement()</code> — matches code against requirements</li>
                 <li><code>generateVerdict()</code> — computes APPROVED|APPROVED WITH CHANGES|DENIED based on findings</li>
@@ -158,15 +171,16 @@ ollama serve  # Starts on localhost:11434</div>
                     <tr><td><strong>Java</strong></td><td>Spring 3.2, Jackson, SQL injection, tests</td><td><code>*.java</code></td><td>~5-10s</td></tr>
                     <tr><td><strong>Rust</strong></td><td>Memory safety, error handling, async patterns, tests</td><td><code>*.rs</code></td><td>~3-5s</td></tr>
                     <tr><td><strong>React</strong></td><td>Accessibility, security, performance, component org</td><td><code>*.tsx, *.jsx</code></td><td>~5-10s</td></tr>
+                    <tr><td><strong>C++</strong></td><td>Unsafe functions, ownership, casts, tests, semantic review</td><td>C/C++ sources and headers</td><td>Provider-dependent</td></tr>
+                    <tr><td><strong>C#</strong></td><td>Async blocking, SQL safety, nullable context, tests, semantic review</td><td><code>*.cs, *.csproj</code></td><td>Provider-dependent</td></tr>
                 </tbody>
             </table>
 
             <h4>4. Requirement Files</h4>
-            <p>Agents load requirements from three locations:</p>
+            <p>Agents load requirements from two locations:</p>
             <ul>
-                <li><code>./requirements/functional/REQ-*.md</code> — 75 functional requirements</li>
+                <li><code>./requirements/functional/*.md</code> — optional functional requirements</li>
                 <li><code>./requirements/non-functional/*.md</code> — GDPR, OWASP, WCAG, EN 50518 reqs</li>
-                <li><code>./review/requirements/REVIEW-*.md</code> — Review-specific standards</li>
             </ul>
 
             <h4>5. Finding Classification</h4>
@@ -208,7 +222,7 @@ sequenceDiagram
     S->>S: create ./review/results/&lt;timestamp&gt;/
     S->>T: spawn typescript-agent.js
     T->>REQ: load requirements/
-    REQ-->>T: 75 functional + NF reqs
+    REQ-->>T: configured functional + non-functional requirements
     T->>CODE: scan *.ts, *.tsx files
     CODE-->>T: file list
     T->>T: extract checkpoints from reqs
@@ -230,19 +244,19 @@ sequenceDiagram
 │   ├── typescript-agent.js     # TypeScript-specific checks
 │   ├── java-agent.js           # Java-specific checks
 │   ├── rust-agent.js           # Rust-specific checks
-│   └── react-agent.js          # React-specific checks
-├── requirements/
-│   ├── REVIEW-001-typescript-standards.md
-│   ├── REVIEW-002-java-standards.md
-│   ├── REVIEW-003-react-standards.md
-│   ├── REVIEW-004-rust-standards.md
-│   └── REVIEW-005-system-requirements.md
+│   ├── react-agent.js          # React-specific checks
+│   ├── cpp-agent.js            # C/C++ checks and semantic review
+│   └── csharp-agent.js         # C# checks and semantic review
+├── tests/
+│   └── review-agents.test.js
 └── results/
     └── 202605261949/
         ├── review-typescript-approved-202605261949.md
         ├── review-java-approved-202605261949.md
         ├── review-react-approved-202605261949.md
-        └── review-rust-approved-202605261949.md</div>
+        ├── review-rust-approved-202605261949.md
+        ├── review-cpp-approved-with-changes-202605261949.md
+        └── review-csharp-approved-with-changes-202605261949.md</div>
         </section>
 
         <section class="content-section">
@@ -252,7 +266,8 @@ sequenceDiagram
                 <li><strong>Load requirements</strong> — read all .md files from <code>./requirements/</code></li>
                 <li><strong>Scan project</strong> — recursively find all files matching language pattern (e.g., <code>*.ts</code>)</li>
                 <li><strong>Extract checkpoints</strong> — parse requirement text for validation points</li>
-                <li><strong>Evaluate code</strong> — match codebase against each requirement checkpoint</li>
+                <li><strong>Initialize provider</strong> — select local Ollama or hosted Deepseek when requested</li>
+                <li><strong>Evaluate code</strong> — run deterministic checks and optional semantic C++/C# review</li>
                 <li><strong>Classify issues</strong> — categorize findings by severity</li>
                 <li><strong>Suggest changes</strong> — provide code fixes for identified issues</li>
                 <li><strong>Generate verdict</strong> — compute final APPROVED|APPROVED WITH CHANGES|DENIED</li>
@@ -287,15 +302,15 @@ sequenceDiagram
             <p>Agents support two modes:</p>
 
             <table>
-                <thead><tr><th>Mode</th><th>Enabled Checks</th><th>Offline Performance</th><th>Use Case</th></tr></thead>
+                <thead><tr><th>Mode</th><th>Deepseek Provider</th><th>Data Boundary</th><th>Required Setup</th></tr></thead>
                 <tbody>
-                    <tr><td><code>INTERNET=false</code> (default)</td><td>Local code review, pattern matching, requirement coverage</td><td>✓ 30-60s total</td><td>Pre-commit hooks, CI gates</td></tr>
-                    <tr><td><code>INTERNET=true</code></td><td>+ CVE database lookups, dependency resolution, registry checks</td><td>✗ 2-5 minutes</td><td>Scheduled reviews, manual deep dives</td></tr>
+                    <tr><td><code>INTERNET=false</code> (default)</td><td>Local Ollama</td><td>Source stays on the workstation</td><td>Ollama and configured model</td></tr>
+                    <tr><td><code>INTERNET=true</code></td><td>Hosted Deepseek API</td><td>Requirement headings and bounded source samples leave the workstation</td><td><code>DEEPSEEK_API_KEY</code></td></tr>
                 </tbody>
             </table>
 
             <div class="warning-box">
-                <strong>Default offline mode ensures:</strong> Fast execution suitable for CI/CD pipelines, deterministic results, no network dependencies, works in restricted environments.
+                <strong>Deterministic-only mode:</strong> Set <code>DEEPSEEK=false</code>. No model provider is contacted regardless of the <code>INTERNET</code> value.
             </div>
         </section>
 

@@ -7,7 +7,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const http = require('http');
+const https = require('https');
 
 class ReviewAgent {
   constructor(language, internetEnabled = false, deepseekEnabled = false) {
@@ -15,34 +16,74 @@ class ReviewAgent {
     this.internetEnabled = internetEnabled;
     this.deepseekEnabled = deepseekEnabled;
     this.deepseekAvailable = false;
+    this.deepseekProvider = 'none';
+    this.deepseekModel = null;
+    this.deepseekStatus = deepseekEnabled ? 'Unavailable' : 'Disabled';
     this.requirementsByCategory = {};
     this.findings = [];
     this.verdict = 'APPROVED';
     this.changes = [];
     this.analysisMethod = 'regex';  // Track which method was used
-    
-    // Check if Deepseek is available
-    if (deepseekEnabled) {
-      this._checkDeepseekAvailability();
-    }
   }
 
   /**
-   * Check if Deepseek (via Ollama) is available
+   * Select the Deepseek provider. Offline mode uses local Ollama only; online
+   * mode uses the hosted Deepseek API only when an API key is configured.
    */
-  _checkDeepseekAvailability() {
-    try {
-      // Try to connect to Ollama on localhost:11434
-      const http = require('http');
-      const req = http.get('http://localhost:11434/api/tags', (res) => {
-        this.deepseekAvailable = (res.statusCode === 200);
-      });
-      req.on('error', () => {
-        this.deepseekAvailable = false;
-      });
-      req.setTimeout(1000);
-    } catch (e) {
+  async initializeDeepseek() {
+    if (!this.deepseekEnabled) {
       this.deepseekAvailable = false;
+      this.deepseekStatus = 'Disabled';
+      return false;
+    }
+
+    if (this.internetEnabled) {
+      if (!process.env.DEEPSEEK_API_KEY) {
+        this.deepseekAvailable = false;
+        this.deepseekStatus = 'Unavailable (missing DEEPSEEK_API_KEY)';
+        console.warn('  Online Deepseek unavailable: DEEPSEEK_API_KEY is not set; using deterministic checks');
+        return false;
+      }
+
+      this.deepseekProvider = 'online';
+      this.deepseekModel = process.env.DEEPSEEK_ONLINE_MODEL || 'deepseek-v4-flash';
+      this.deepseekAvailable = true;
+      this.deepseekStatus = `Enabled (online API: ${this.deepseekModel})`;
+      console.log(`  Deepseek provider: online API (${this.deepseekModel})`);
+      return true;
+    }
+
+    this.deepseekProvider = 'offline';
+    this.deepseekModel = process.env.DEEPSEEK_OLLAMA_MODEL || 'deepseek-coder:1.3b-base';
+
+    try {
+      const tags = await this._requestJson(http, {
+        hostname: '127.0.0.1',
+        port: 11434,
+        path: '/api/tags',
+        method: 'GET'
+      }, null, 1500);
+      const models = Array.isArray(tags.models) ? tags.models : [];
+      const modelAvailable = models.some(model =>
+        model.name === this.deepseekModel || model.model === this.deepseekModel
+      );
+
+      if (!modelAvailable) {
+        this.deepseekAvailable = false;
+        this.deepseekStatus = `Unavailable (Ollama model ${this.deepseekModel} not installed)`;
+        console.warn(`  Offline Deepseek unavailable: run "ollama pull ${this.deepseekModel}"; using deterministic checks`);
+        return false;
+      }
+
+      this.deepseekAvailable = true;
+      this.deepseekStatus = `Enabled (offline Ollama: ${this.deepseekModel})`;
+      console.log(`  Deepseek provider: offline Ollama (${this.deepseekModel})`);
+      return true;
+    } catch {
+      this.deepseekAvailable = false;
+      this.deepseekStatus = 'Unavailable (Ollama not reachable)';
+      console.warn('  Offline Deepseek unavailable: Ollama is not reachable on 127.0.0.1:11434; using deterministic checks');
+      return false;
     }
   }
 
@@ -50,6 +91,9 @@ class ReviewAgent {
    * Use Deepseek to filter language-appropriate requirements
    */
   async filterLanguageAppropriateRequirements(requirements) {
+    if (requirements.length === 0) {
+      return [];
+    }
     if (!this.deepseekAvailable) {
       return requirements;  // Fallback: return all requirements
     }
@@ -71,10 +115,15 @@ REQ-005`;
 
     try {
       const filtered = await this._callDeepseek(prompt);
-      const relevantIds = filtered.split('\n').filter(line => line.trim().match(/^REQ-/));
-      return requirements.filter(r => relevantIds.includes(r.id));
+      const relevantIds = new Set(
+        requirements
+          .filter(requirement => filtered.includes(requirement.id))
+          .map(requirement => requirement.id)
+      );
+      return requirements.filter(requirement => relevantIds.has(requirement.id));
     } catch (e) {
       console.warn('  Deepseek filtering failed, using all requirements');
+      this._markDeepseekUnavailable('provider request failed');
       return requirements;
     }
   }
@@ -111,49 +160,167 @@ Respond with YES or NO, followed by brief explanation.`;
         score: matched ? 1 : 0 
       };
     } catch (e) {
+      this._markDeepseekUnavailable('provider request failed');
       return { matched: [], missing: [], score: 0 };
     }
   }
 
   /**
-   * Call Deepseek API via Ollama
+   * Ask Deepseek for additional semantic findings. Deterministic findings
+   * remain available when the provider cannot be used.
+   */
+  async reviewCodeWithDeepseek(codeFiles) {
+    if (!this.deepseekAvailable || codeFiles.length === 0) {
+      return;
+    }
+
+    const codeSample = codeFiles.slice(0, 6)
+      .map(file => `--- ${path.relative(process.cwd(), file)} ---\n${fs.readFileSync(file, 'utf-8').slice(0, 1600)}`)
+      .join('\n\n');
+
+    const prompt = `Review this ${this.language} code for correctness, security, resource management, and maintainability.
+Return ONLY a JSON array. Each item must have exactly these string fields:
+"severity" ("critical", "major", or "minor"), "title", "file", and "description".
+Return [] when there are no findings. Do not use Markdown.
+
+Code:
+${codeSample}`;
+
+    try {
+      const response = await this._callDeepseek(prompt);
+      this.findings.push(...this._parseDeepseekFindings(response));
+    } catch (error) {
+      console.warn(`  Deepseek code review failed (${error.message}); deterministic checks remain in effect`);
+      this._markDeepseekUnavailable('code review request failed');
+    }
+  }
+
+  _markDeepseekUnavailable(reason) {
+    this.deepseekAvailable = false;
+    this.deepseekStatus = `Unavailable (${reason})`;
+  }
+
+  _parseDeepseekFindings(response) {
+    const text = String(response || '').trim()
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/, '');
+    const start = text.indexOf('[');
+    const end = text.lastIndexOf(']');
+    if (start < 0 || end < start) {
+      throw new Error('Deepseek did not return a JSON array');
+    }
+
+    const parsed = JSON.parse(text.slice(start, end + 1));
+    if (!Array.isArray(parsed)) {
+      throw new Error('Deepseek findings were not an array');
+    }
+
+    const allowedSeverities = new Set(['critical', 'major', 'minor']);
+    return parsed.slice(0, 10).flatMap(item => {
+      if (!item || !allowedSeverities.has(item.severity)) {
+        return [];
+      }
+
+      const title = this._cleanModelText(item.title, 160);
+      const file = this._cleanModelText(item.file, 260);
+      const description = this._cleanModelText(item.description, 1000);
+      if (!title || !file || !description) {
+        return [];
+      }
+
+      return [{
+        severity: item.severity,
+        title,
+        file,
+        description,
+        requirement: 'Deepseek semantic review'
+      }];
+    });
+  }
+
+  _cleanModelText(value, maxLength) {
+    return String(value || '')
+      .replace(/[\r\n]+/g, ' ')
+      .replace(/`/g, "'")
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .trim()
+      .slice(0, maxLength);
+  }
+
+  /**
+   * Call the hosted Deepseek API or local Ollama according to the selected
+   * internet mode.
    */
   async _callDeepseek(prompt) {
-    return new Promise((resolve, reject) => {
-      const postData = JSON.stringify({
-        model: 'deepseek-coder:1.3b-base',
-        prompt: prompt,
-        stream: false
-      });
+    if (!this.deepseekAvailable) {
+      throw new Error('Deepseek is unavailable');
+    }
 
-      const options = {
-        hostname: 'localhost',
-        port: 11434,
-        path: '/api/generate',
+    if (this.deepseekProvider === 'online') {
+      const postData = JSON.stringify({
+        model: this.deepseekModel,
+        messages: [{ role: 'user', content: prompt }],
+        stream: false,
+        max_tokens: 2048
+      });
+      const response = await this._requestJson(https, {
+        hostname: 'api.deepseek.com',
+        port: 443,
+        path: '/chat/completions',
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(postData)
         }
-      };
+      }, postData, 60000);
+      return response.choices?.[0]?.message?.content || '';
+    }
 
-      const http = require('http');
-      const req = http.request(options, (res) => {
+    const postData = JSON.stringify({
+      model: this.deepseekModel,
+      prompt,
+      stream: false
+    });
+    const response = await this._requestJson(http, {
+      hostname: '127.0.0.1',
+      port: 11434,
+      path: '/api/generate',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(postData)
+      }
+    }, postData, 60000);
+    return response.response || '';
+  }
+
+  _requestJson(transport, options, postData, timeoutMs) {
+    return new Promise((resolve, reject) => {
+      const req = transport.request(options, (res) => {
         let data = '';
+        res.setEncoding('utf-8');
         res.on('data', chunk => data += chunk);
         res.on('end', () => {
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            reject(new Error(`Deepseek provider returned HTTP ${res.statusCode}`));
+            return;
+          }
+
           try {
-            const parsed = JSON.parse(data);
-            resolve(parsed.response || '');
+            resolve(JSON.parse(data.trim()));
           } catch {
-            reject(new Error('Invalid Deepseek response'));
+            reject(new Error('Deepseek provider returned invalid JSON'));
           }
         });
       });
 
       req.on('error', reject);
-      req.setTimeout(30000);  // 30 second timeout
-      req.write(postData);
+      req.setTimeout(timeoutMs, () => req.destroy(new Error('Deepseek provider timed out')));
+      if (postData) {
+        req.write(postData);
+      }
       req.end();
     });
   }
@@ -314,7 +481,7 @@ Respond with YES or NO, followed by brief explanation.`;
     let md = `# Code Review Report — ${this.language.toUpperCase()}\n\n`;
     md += `**Timestamp:** ${new Date().toISOString()}\n`;
     md += `**Internet Access:** ${this.internetEnabled ? 'Enabled' : 'Disabled'}\n`;
-    md += `**Deepseek Analysis:** ${this.deepseekAvailable ? 'Enabled (Ollama)' : 'Disabled'}\n`;
+    md += `**Deepseek Analysis:** ${this.deepseekStatus}\n`;
     md += `**Analysis Method:** ${this.deepseekAvailable ? 'Hybrid (Regex + Deepseek)' : 'Regex'}\n`;
     md += `**Verdict:** \`${this.verdict}\`\n\n`;
 

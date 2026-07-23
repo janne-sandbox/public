@@ -1,0 +1,15 @@
+{
+  "name": "review-sample-angular",
+  "version": "1.0.0",
+  "private": true,
+  "license": "LGPL-3.0-only",
+  "scripts": {
+    "review": "DEEPSEEK=false LANGUAGE=typescript ../../run-review.sh"
+  },
+  "dependencies": {
+    "@angular/core": ">=20"
+  },
+  "devDependencies": {
+    "typescript": ">=5.8"
+  }
+}

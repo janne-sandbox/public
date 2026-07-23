@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continue Across Chats - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / Continue across chats</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Use a repository handoff, not chat history</h3>
+            <p>A new chat does not automatically have the reliable working state of an old chat, and different assistants do not share conversation memory. Keep a short <code>CONTINUE.md</code> at the repository root as the reviewed handoff between people, chats, IDEs, and assistants.</p>
+            <div class="info-box"><strong>CONTINUE.md is project state, not permanent policy.</strong> Put durable commands and conventions in <code>AGENTS.md</code>; put the current goal, verified progress, blockers, and next actions in <code>CONTINUE.md</code>.</div>
+            <p>Commit the handoff when it should travel with the branch. Keep it untracked only when it contains personal scratch notes. Never put credentials, tokens, personal data, production records, or confidential logs in it.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Recommended CONTINUE.md template</h3>
+            <div class="code-block"># Continuation
+
+Last updated: YYYY-MM-DD HH:MM UTC
+Branch or worktree: feature/example
+
+## Goal
+One observable outcome and its acceptance criteria.
+
+## Current status
+- Completed: ...
+- In progress: ...
+- Not started: ...
+
+## Decisions
+- Decision: ...
+  Reason: ...
+
+## Changed files
+- `path/to/file`: why it changed
+
+## Verification
+- PASS — `exact command`
+- FAIL — `exact command`
+  Error: concise, relevant error
+- NOT RUN — `command`
+  Reason: ...
+
+## Blockers and risks
+- ...
+
+## Next actions
+1. The smallest concrete next action.
+2. The validation that follows it.
+
+## Do not do
+- Scope boundaries and rejected approaches.</div>
+            <p>Use explicit states such as <code>PASS</code>, <code>FAIL</code>, and <code>NOT RUN</code>. “Tests look good” is not reproducible evidence. Remove obsolete statements instead of appending an endless diary.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Shared configuration for multiple tools</h3>
+            <p>Keep the detailed rule once in <code>AGENTS.md</code>, then add the smallest adapter each tool understands.</p>
+
+            <h4>Codex: AGENTS.md</h4>
+            <div class="code-block"># Working agreement
+
+- At the start of a task, read `CONTINUE.md` when it exists.
+- Verify its branch, file, and test claims against the current worktree.
+- Continue from the first incomplete action; do not redo completed work.
+- Before ending substantive work, update `CONTINUE.md` with exact
+  commands, results, blockers, changed files, and the next action.
+- Never record secrets or sensitive data in the handoff.</div>
+
+            <h4>Claude Code: CLAUDE.md</h4>
+            <p>Claude Code can import the shared instructions, avoiding a duplicated rule set:</p>
+            <div class="code-block">@AGENTS.md
+
+## Claude Code
+
+Use Plan mode before changing the continuation goal or scope.</div>
+
+            <h4>GitHub Copilot: .github/copilot-instructions.md</h4>
+            <div class="code-block">Before editing, read `AGENTS.md` and `CONTINUE.md`.
+Treat `CONTINUE.md` as a fallible handoff: confirm its claims with Git
+status, the current files, and the listed verification commands.
+Update it after substantive work with exact results and next actions.</div>
+
+            <h4>Any other assistant</h4>
+            <p>Start the chat with an explicit prompt when the tool does not discover repository instructions automatically:</p>
+            <div class="code-block">Read AGENTS.md and CONTINUE.md first.
+Verify the handoff against this worktree.
+Summarize the goal, current status, first incomplete action, and risks.
+Do not edit until the summary is correct.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>End and resume a session</h3>
+            <h4>Before ending</h4>
+            <ol>
+                <li>Run <code>git status</code> and inspect the diff.</li>
+                <li>Record exact commands and outcomes, including skipped checks.</li>
+                <li>State the first next action so the new chat does not need to infer it.</li>
+                <li>Remove stale paths, decisions, and completed temporary steps.</li>
+            </ol>
+            <h4>At the start of the next chat</h4>
+            <ol>
+                <li>Read the repository instructions and handoff.</li>
+                <li>Compare the named branch, files, and status with the current worktree.</li>
+                <li>Re-run cheap, drift-prone checks rather than trusting old output.</li>
+                <li>Ask for clarification if the handoff conflicts with code or requirements.</li>
+            </ol>
+            <div class="warning-box"><strong>Do not let an assistant certify its own history.</strong> The next session should verify important claims independently, especially security, migrations, external state, and tests that may depend on services.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://learn.chatgpt.com/docs/agent-configuration/agents-md" target="_blank" rel="noopener">Codex AGENTS.md</a>
+                <a class="source-link" href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code project instructions</a>
+                <a class="source-link" href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions" target="_blank" rel="noopener">Copilot repository instructions</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

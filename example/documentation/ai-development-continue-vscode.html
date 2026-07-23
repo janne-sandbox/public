@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continue for VS Code - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / Continue for VS Code</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>One extension, multiple model providers</h3>
+            <p><a href="https://www.continue.dev/" target="_blank" rel="noopener">Continue</a> is an AI coding assistant for VS Code and JetBrains IDEs. Its local YAML configuration can assign different models to chat, editing, applying changes, autocomplete, embeddings, and reranking.</p>
+            <div class="info-box"><strong>Different from CONTINUE.md:</strong> Continue is the VS Code extension described on this page. <a href="ai-development-continue.html">Continue across chats</a> describes a project handoff file that can be used with any assistant.</div>
+            <p>See <a href="ai-development-models-modes.html">Models and operating modes</a> for the difference between thinking models, configured roles, and Continue's Chat, Plan, and Agent modes.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Install and open the configuration</h3>
+            <ol>
+                <li>Open VS Code Extensions and install <strong>Continue</strong> from Continue.dev. Verify the publisher before installation.</li>
+                <li>Open the Continue sidebar and complete its sign-in or onboarding flow.</li>
+                <li>Open the configuration selector above the chat input, hover over <strong>Local Config</strong>, and choose the gear icon.</li>
+                <li>Edit and save <code>config.yaml</code>. Continue normally reloads a saved configuration automatically.</li>
+            </ol>
+            <table>
+                <thead><tr><th>Environment</th><th>Default local configuration</th></tr></thead>
+                <tbody>
+                    <tr><td>macOS, Ubuntu, RHEL, WSL</td><td><code>~/.continue/config.yaml</code></td></tr>
+                    <tr><td>Native Windows</td><td><code>%USERPROFILE%\.continue\config.yaml</code></td></tr>
+                </tbody>
+            </table>
+            <p>When VS Code is connected to WSL, use the gear icon to confirm which extension host and configuration file are active. The model endpoint must be reachable from that environment.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Prepare Ollama models</h3>
+            <p>Install and start Ollama as described in <a href="ai-development-ollama.html">Local AI with Ollama</a>. Check available memory and disk space before downloading: the Coder V2 and 30B configurations can be demanding.</p>
+            <div class="code-block">ollama pull deepseek-coder-v2
+ollama pull deepseek-r1:8b
+ollama pull qwen3-coder:30b
+
+ollama list
+curl http://localhost:11434</div>
+            <p>The value of each YAML <code>model</code> field must match the tag shown by <code>ollama list</code>. If Ollama runs on a different host, replace <code>localhost</code> with the approved reachable address and secure the connection.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Main Config sample</h3>
+            <p>This version preserves the requested five models, fixes YAML nesting, and keeps the Anthropic key outside the configuration file.</p>
+            <div class="code-block">name: Main Config
+version: 1.0.0
+schema: v1
+
+models:
+  - name: DeepSeek Coder V2 (Local)
+    provider: ollama
+    model: deepseek-coder-v2
+    apiBase: http://localhost:11434
+    roles:
+      - chat
+      - edit
+      - apply
+
+  - name: DeepSeek R1 8B (Local)
+    provider: ollama
+    model: deepseek-r1:8b
+    apiBase: http://localhost:11434
+    roles:
+      - chat
+      - edit
+      - apply
+
+  - name: Claude Sonnet 4.6
+    provider: anthropic
+    model: claude-sonnet-4-6
+    apiKey: ${{ secrets.ANTHROPIC_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 200000
+      maxTokens: 64000
+    capabilities:
+      - tool_use
+      - image_input
+
+  - name: Claude Opus 4.6
+    provider: anthropic
+    model: claude-opus-4-6
+    apiKey: ${{ secrets.ANTHROPIC_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 200000
+      maxTokens: 64000
+    capabilities:
+      - tool_use
+      - image_input
+
+  - name: Qwen3 Coder Local
+    provider: ollama
+    model: qwen3-coder:30b
+    apiBase: http://localhost:11434
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+      - image_input
+    defaultCompletionOptions:
+      contextLength: 32768
+      maxTokens: 8192</div>
+            <div class="warning-box"><strong>Verify declared capabilities.</strong> Adding <code>tool_use</code> or <code>image_input</code> tells Continue to enable corresponding behavior; it does not add that capability to the underlying model. Remove a declaration when the exact Ollama model cannot perform it. Agent mode requires working tool support.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Store the Anthropic key safely</h3>
+            <p>Do not use a literal value such as <code>sk-ant-api03-...</code> in <code>config.yaml</code>. Put the real key in a local <code>.env</code> file that is excluded from version control:</p>
+            <table>
+                <thead><tr><th>Environment</th><th>Recommended global secret file</th></tr></thead>
+                <tbody>
+                    <tr><td>macOS, Ubuntu, RHEL, WSL</td><td><code>~/.continue/.env</code></td></tr>
+                    <tr><td>Native Windows</td><td><code>%USERPROFILE%\.continue\.env</code></td></tr>
+                </tbody>
+            </table>
+            <div class="code-block">ANTHROPIC_API_KEY=replace-with-the-real-key</div>
+            <p>Continue can also resolve a workspace <code>.env</code> or <code>.continue/.env</code>, but those files must be ignored by Git. Restart or reload VS Code after adding or changing IDE secrets.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Understand roles and costs</h3>
+            <table>
+                <thead><tr><th>Role or capability</th><th>Meaning</th></tr></thead>
+                <tbody>
+                    <tr><td><code>chat</code></td><td>The model appears for conversations and Agent/Plan workflows.</td></tr>
+                    <tr><td><code>edit</code></td><td>The model can produce targeted editor changes.</td></tr>
+                    <tr><td><code>apply</code></td><td>The model can apply generated changes to files.</td></tr>
+                    <tr><td><code>tool_use</code></td><td>Continue may offer tools to the model for Agent mode.</td></tr>
+                    <tr><td><code>image_input</code></td><td>Continue may send supported image context to the model.</td></tr>
+                </tbody>
+            </table>
+            <ul>
+                <li>Local Ollama requests stay local when the configured endpoint is local, but model downloads and extension services may still use the network.</li>
+                <li>Anthropic requests send selected prompts and context to the hosted API and incur API usage charges.</li>
+                <li>Large context and output limits increase latency, memory use, and hosted cost. Lower them when the task does not need them.</li>
+                <li>Start in Chat or Plan mode, inspect context and commands, and review every diff before accepting it.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h3>Troubleshooting</h3>
+            <table>
+                <thead><tr><th>Symptom</th><th>Check</th></tr></thead>
+                <tbody>
+                    <tr><td>Ollama model not found</td><td>Run <code>ollama list</code> and make the YAML tag match exactly.</td></tr>
+                    <tr><td>Cannot reach Ollama</td><td>Run <code>curl http://localhost:11434</code> from the same environment as Continue.</td></tr>
+                    <tr><td>Anthropic authentication fails</td><td>Check the secret name, <code>.env</code> location, key status, and reload VS Code.</td></tr>
+                    <tr><td>Agent mode unsupported</td><td>Confirm real tool support; remove incorrect capabilities or select another model.</td></tr>
+                    <tr><td>Configuration does not load</td><td>Check YAML indentation and use <strong>Developer: Reload Window</strong>.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://docs.continue.dev/getting-started/install" target="_blank" rel="noopener">Install Continue</a>
+                <a class="source-link" href="https://docs.continue.dev/guides/understanding-configs" target="_blank" rel="noopener">Continue configuration</a>
+                <a class="source-link" href="https://docs.continue.dev/reference" target="_blank" rel="noopener">config.yaml reference</a>
+                <a class="source-link" href="https://docs.continue.dev/guides/ollama-guide" target="_blank" rel="noopener">Continue with Ollama</a>
+                <a class="source-link" href="https://docs.continue.dev/customize/model-providers/top-level/anthropic" target="_blank" rel="noopener">Continue with Anthropic</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

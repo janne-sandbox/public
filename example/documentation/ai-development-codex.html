@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS Code with Codex - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / VS Code with Codex</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Install and sign in</h3>
+            <ol>
+                <li>Complete the <a href="ai-development-vscode.html">VS Code setup</a>.</li>
+                <li>Open Extensions and install <a href="https://marketplace.visualstudio.com/items?itemName=openai.chatgpt" target="_blank" rel="noopener">Codex – OpenAI's coding agent</a>. Verify that OpenAI is the publisher.</li>
+                <li>Choose the Codex icon. If it is hidden, use the Command Palette and run <code>Codex: Open Codex Sidebar</code>.</li>
+                <li>Sign in with ChatGPT, or select API-key authentication when that is the approved account model.</li>
+                <li>Open a project folder and start with an explanation or a small, reversible edit.</li>
+            </ol>
+            <p>The same extension workflow applies on macOS, native Windows, Ubuntu, and RHEL. For WSL, open a WSL window first with <code>code .</code> and install/enable the extension for that remote environment if VS Code prompts.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Give useful context</h3>
+            <p>Codex can work with open files and selected code. State the desired behavior, constraints, files in scope, and validation command. Point it to repository instruction files before requesting edits.</p>
+            <div class="code-block">Read README.md and the repository instructions.
+Explain how authentication reaches the selected endpoint.
+Do not edit anything yet. Identify the relevant files, tests,
+security boundary, and the command that validates this path.</div>
+            <p>After the explanation is correct, request one change:</p>
+            <div class="code-block">Add the missing unauthorized-response test.
+Keep production behavior and public APIs unchanged.
+Run only the focused test first, then report changed files and results.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Review and permissions</h3>
+            <ul>
+                <li>Inspect every proposed diff; do not approve based only on the summary.</li>
+                <li>Use the narrowest filesystem and command permissions that complete the task.</li>
+                <li>Keep network access off unless downloads or current external information are required and approved.</li>
+                <li>Never paste secrets into chat. Use the project's secret-management mechanism.</li>
+                <li>Run tests, linters, and security checks independently before committing.</li>
+            </ul>
+            <div class="warning-box"><strong>Authentication choice matters:</strong> ChatGPT subscription access and API-key usage can have different billing and administrative controls. Follow the organization's account and cost policy.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Platform notes</h3>
+            <table>
+                <thead><tr><th>Platform</th><th>Recommended editor context</th><th>Command isolation note</th></tr></thead>
+                <tbody>
+                    <tr><td>macOS</td><td>Open the native project directory.</td><td>Codex uses the platform sandbox when available; still review requested permissions.</td></tr>
+                    <tr><td>Windows</td><td>Use native VS Code for Windows toolchains.</td><td>Native Windows sandboxing differs from Linux; keep permissions narrow.</td></tr>
+                    <tr><td>Windows + WSL 2</td><td>Store the project in WSL and open it with <code>code .</code>.</td><td>Use WSL 2 for Linux tooling and Linux sandbox support.</td></tr>
+                    <tr><td>Ubuntu / RHEL</td><td>Open the native Linux project directory.</td><td>Codex sandbox support may require <code>bubblewrap</code>, installed through apt or dnf.</td></tr>
+                </tbody>
+            </table>
+            <div class="code-block"># Ubuntu or WSL Ubuntu
+sudo apt install bubblewrap
+
+# RHEL
+sudo dnf install bubblewrap</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://learn.chatgpt.com/docs/codex/ide" target="_blank" rel="noopener">Codex IDE extension</a>
+                <a class="source-link" href="https://learn.chatgpt.com/docs/auth.md" target="_blank" rel="noopener">Codex authentication</a>
+                <a class="source-link" href="https://learn.chatgpt.com/docs/sandboxing.md" target="_blank" rel="noopener">Codex sandboxing</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What MCP Means - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / What MCP means</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Model Context Protocol</h3>
+            <p>MCP is an open standard for connecting an AI application to external data and actions. It lets an assistant discover capabilities through a consistent protocol instead of every assistant needing a custom integration for every service.</p>
+            <table>
+                <thead><tr><th>Part</th><th>Meaning</th><th>Example</th></tr></thead>
+                <tbody>
+                    <tr><td>Host</td><td>The AI application the user operates.</td><td>Codex, Claude Code, or VS Code chat.</td></tr>
+                    <tr><td>Client</td><td>The connection maintained by the host for one server.</td><td>The MCP connection and negotiated session inside the host.</td></tr>
+                    <tr><td>Server</td><td>A program or service exposing selected capabilities.</td><td>A documentation search service or issue tracker gateway.</td></tr>
+                </tbody>
+            </table>
+            <p>MCP does not provide a model and is not itself a database. It is the connection contract between the AI host and a capability provider.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>What a server can expose</h3>
+            <table>
+                <thead><tr><th>Primitive</th><th>Purpose</th><th>Risk example</th></tr></thead>
+                <tbody>
+                    <tr><td>Tools</td><td>Actions the model may request, such as searching issues or creating a ticket.</td><td>A write tool can change external state.</td></tr>
+                    <tr><td>Resources</td><td>Readable context such as a schema, document, or issue.</td><td>Returned data may be confidential or contain malicious instructions.</td></tr>
+                    <tr><td>Prompts</td><td>Reusable workflow templates supplied by the server.</td><td>A template may conflict with project policy.</td></tr>
+                </tbody>
+            </table>
+            <p>A local <strong>stdio</strong> server is started as a process by the host. A remote <strong>Streamable HTTP</strong> server is reached at a URL and commonly uses OAuth or bearer-token authentication.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Same server, different clients</h3>
+            <p>These fictional examples connect a read-only documentation server at <code>https://mcp.example.invalid/mcp</code>. Replace it with an approved real service. Store the token in the environment—never in a committed configuration.</p>
+
+            <h4>Codex: .codex/config.toml</h4>
+            <div class="code-block">[mcp_servers.project_docs]
+url = "https://mcp.example.invalid/mcp"
+bearer_token_env_var = "PROJECT_DOCS_TOKEN"
+enabled_tools = ["search", "read"]
+default_tools_approval_mode = "prompt"</div>
+            <p>The Codex desktop app, CLI, and IDE extension share Codex MCP configuration. Project-scoped configuration applies only in a trusted project.</p>
+
+            <h4>VS Code and Copilot: .vscode/mcp.json</h4>
+            <div class="code-block">{
+  "servers": {
+    "project-docs": {
+      "type": "http",
+      "url": "https://mcp.example.invalid/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:projectDocsToken}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "projectDocsToken",
+      "type": "promptString",
+      "description": "Project documentation token",
+      "password": true
+    }
+  ]
+}</div>
+
+            <h4>Claude Code: .mcp.json</h4>
+            <div class="code-block">{
+  "mcpServers": {
+    "project-docs": {
+      "type": "http",
+      "url": "https://mcp.example.invalid/mcp",
+      "headers": {
+        "Authorization": "Bearer ${PROJECT_DOCS_TOKEN}"
+      }
+    }
+  }
+}</div>
+            <p>Claude prompts before first use of a project-scoped MCP configuration. Personal or experimental servers should use local/user scope rather than a committed file.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Security checklist</h3>
+            <ul>
+                <li>Trust the server operator, package publisher, executable, and endpoint—not just the displayed server name.</li>
+                <li>Grant the minimum tools and OAuth scopes. Prefer read-only capabilities until a write action is necessary.</li>
+                <li>Keep secrets in an approved secret store or environment variable and out of Git.</li>
+                <li>Review every write action, including its resolved target and parameters.</li>
+                <li>Treat resource and tool output as untrusted input that may contain prompt injection.</li>
+                <li>Check whether data leaves the workstation and whether the server retains requests.</li>
+                <li>Remove unused servers and revoke their tokens.</li>
+            </ul>
+            <div class="warning-box"><strong>Local does not mean harmless.</strong> A stdio MCP server is executable code running with the permissions the host gives it. Review its command, package, version, filesystem access, and network access before starting it.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noopener">MCP introduction</a>
+                <a class="source-link" href="https://learn.chatgpt.com/docs/extend/mcp" target="_blank" rel="noopener">MCP in Codex</a>
+                <a class="source-link" href="https://code.visualstudio.com/docs/agent-customization/mcp-servers" target="_blank" rel="noopener">MCP in VS Code</a>
+                <a class="source-link" href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">MCP in Claude Code</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

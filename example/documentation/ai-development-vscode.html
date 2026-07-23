@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS Code Setup - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / VS Code setup</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Install the editor</h3>
+            <p>Use the official <a href="https://code.visualstudio.com/download" target="_blank" rel="noopener">VS Code download</a>. Keep VS Code, its extensions, Git, and the project toolchain updated through the organization's approved software channel.</p>
+
+            <h4>macOS</h4>
+            <ol>
+                <li>Download the macOS <code>.dmg</code>, open it, and drag Visual Studio Code to Applications.</li>
+                <li>Open VS Code. In the Command Palette, run <code>Shell Command: Install 'code' command in PATH</code>.</li>
+                <li>Restart the terminal and verify with <code>code --version</code>.</li>
+            </ol>
+
+            <h4>Windows (native development)</h4>
+            <ol>
+                <li>Download and run the Windows User Setup installer.</li>
+                <li>Open a new PowerShell window and verify with <code>code --version</code>.</li>
+                <li>Keep native Windows projects in a Windows directory such as <code>C:\src</code>.</li>
+            </ol>
+
+            <h4>Ubuntu</h4>
+            <p>Download the current Debian package, then install the downloaded file from its directory:</p>
+            <div class="code-block">sudo apt install ./code_*.deb
+code --version</div>
+
+            <h4>Red Hat Enterprise Linux</h4>
+            <p>Download the current RPM matching the machine architecture, then install it from its directory:</p>
+            <div class="code-block">sudo dnf install ./code-*.rpm
+code --version</div>
+            <p>For managed fleets or repeatable updates, use Microsoft's documented apt or yum repository instead of manually replacing packages.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Windows with WSL 2</h3>
+            <div class="info-box"><strong>Architecture:</strong> install the VS Code desktop application on Windows, not inside the WSL distribution. The WSL extension installs a small server in Linux so terminals, source control, debuggers, and workspace extensions operate against the Linux project.</div>
+            <ol>
+                <li>Open PowerShell as Administrator, run <code>wsl --install</code>, and restart Windows when requested.</li>
+                <li>Launch the installed distribution once and create its Linux user.</li>
+                <li>Install VS Code on Windows and install Microsoft's <strong>WSL</strong> extension.</li>
+                <li>Keep Linux projects in the WSL filesystem, for example <code>~/src/example</code>, rather than under <code>/mnt/c</code>.</li>
+                <li>From the WSL terminal, open the project with <code>code .</code>. Confirm the lower-left remote indicator shows the WSL distribution.</li>
+            </ol>
+            <div class="code-block"># PowerShell (Administrator)
+wsl --install
+
+# After restart, inside the WSL terminal
+mkdir -p ~/src
+cd ~/src
+code .</div>
+            <p>Install language extensions in the WSL environment when VS Code offers <strong>Install in WSL</strong>. User-interface extensions can remain on the Windows side.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Baseline configuration</h3>
+            <ul>
+                <li>Install Git and set a name and email appropriate for the repository.</li>
+                <li>Enable format-on-save only when the project already defines a formatter.</li>
+                <li>Enable workspace trust and inspect a repository before trusting it.</li>
+                <li>Install only verified extensions from publishers you recognize.</li>
+                <li>Open the repository root so assistants can find its instructions, build files, and tests.</li>
+            </ul>
+            <div class="code-block">git --version
+code --version
+git status</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Official references</h3>
+            <div class="source-links">
+                <a class="source-link" href="https://code.visualstudio.com/docs/setup/setup-overview" target="_blank" rel="noopener">VS Code setup</a>
+                <a class="source-link" href="https://code.visualstudio.com/docs/setup/linux" target="_blank" rel="noopener">VS Code on Linux</a>
+                <a class="source-link" href="https://code.visualstudio.com/docs/remote/wsl" target="_blank" rel="noopener">VS Code with WSL</a>
+                <a class="source-link" href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank" rel="noopener">Install WSL</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

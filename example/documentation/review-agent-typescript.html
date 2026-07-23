@@ -86,9 +86,9 @@
             <p><strong>Technology Stack:</strong> Node.js 20 + regex-based pattern matching + optional Deepseek LLM</p>
             <ul>
                 <li><strong>Default (Regex):</strong> Fast pattern matching (instant, no dependencies)</li>
-                <li><strong>Enhanced (Deepseek):</strong> Offline LLM analysis via Ollama (if available on localhost:11434)</li>
+                <li><strong>Enhanced (Deepseek):</strong> Offline through Ollama or online through the hosted API</li>
                 <li><strong>Engine:</strong> Regex for speed + Deepseek for semantic understanding (hybrid approach)</li>
-                <li><strong>No internet required:</strong> Deepseek runs locally via Ollama, no cloud API calls</li>
+                <li><strong>Provider choice:</strong> <code>INTERNET=false</code> keeps analysis local; <code>INTERNET=true</code> requires <code>DEEPSEEK_API_KEY</code></li>
             </ul>
 
             <h4>Analysis Method</h4>

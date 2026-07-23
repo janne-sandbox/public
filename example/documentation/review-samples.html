@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Tool - Sample Applications</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>Code Review System - Sample Applications</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Purpose</h3>
+            <p>The <code>sample-apps/</code> directory contains seven small applications used as end-to-end review fixtures. Each project has an intentional finding that proves its matching agent scanned and evaluated real source files.</p>
+            <div class="warning-box"><strong>Educational fixtures:</strong> Several samples deliberately contain insecure or discouraged code. They exist to test findings and must not be treated as production examples.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Samples and Expected Findings</h3>
+            <table>
+                <thead><tr><th>Sample</th><th>Review Agent</th><th>Expected Finding</th></tr></thead>
+                <tbody>
+                    <tr><td><code>cpp-console</code></td><td>C++</td><td>Unsafe string function, raw ownership, and C-style cast</td></tr>
+                    <tr><td><code>csharp-console</code></td><td>C#</td><td><code>async void</code>, blocking asynchronous result, and interpolated SQL</td></tr>
+                    <tr><td><code>angular-typescript</code></td><td>TypeScript</td><td>Strict mode disabled in the root <code>tsconfig.json</code></td></tr>
+                    <tr><td><code>javascript-browser</code></td><td>React/JavaScript</td><td>Authentication token written to <code>localStorage</code></td></tr>
+                    <tr><td><code>java-console</code></td><td>Java</td><td>Manual <code>JSONObject</code> construction</td></tr>
+                    <tr><td><code>rust-cli</code></td><td>Rust</td><td>Excessive <code>unwrap()</code> usage</td></tr>
+                    <tr><td><code>react-ui</code></td><td>React</td><td>Image without alternative text</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h3>Run Verification</h3>
+            <p>The Node integration suite invokes the appropriate agent directly for each isolated sample and asserts both the finding title and generated Markdown report.</p>
+            <div class="code-block">npm test</div>
+
+            <p>To scan all samples together through the shell orchestrator:</p>
+            <div class="code-block">DEEPSEEK=false INTERNET=false LANGUAGE=all ./run-review.sh</div>
+
+            <p>Use one agent for a focused run:</p>
+            <div class="code-block">DEEPSEEK=false LANGUAGE=cpp ./run-review.sh
+DEEPSEEK=false LANGUAGE=csharp ./run-review.sh
+DEEPSEEK=false LANGUAGE=typescript ./run-review.sh</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Application-Level Checks</h3>
+            <p>The samples are deliberately dependency-light. Local verification covers:</p>
+            <ul>
+                <li>C++ configure, compile, and execution with CMake.</li>
+                <li>C# restore, compile, and execution with the .NET 8 SDK.</li>
+                <li>Java compilation and execution with <code>javac</code>.</li>
+                <li>Rust compilation and tests with Cargo.</li>
+                <li>Browser JavaScript and React fixture tests with Node's built-in test runner.</li>
+                <li>Angular package and TypeScript configuration parsing; the review integration validates its TypeScript sources without installing Angular packages.</li>
+            </ul>
+        </section>
+    </div>
+</main>
+</body>
+</html>
