@@ -12,6 +12,14 @@
     <name>Math2</name>
     <description>Arbitrary-precision calculations and REST API</description>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <modules>
         <module>java-api</module>
         <module>java-rest-service</module>

@@ -114,6 +114,7 @@ All tracked delivery work is implemented and verified. Future work is optional h
 - 2026-07-21: `mvn -q -pl java-rest-service -am test -Ddebug=false` passes 39/39 tests with 0 failures, 0 errors, and 0 skipped. A local-link audit resolves every relative `href` in the expanded documentation. Root `README.md` links all chapters and the reproducible H2 collection command.
 - 2026-07-21: Added opt-in live-service cases to JavaScript, TypeScript, C++, .NET, and Rust and added `test-client-integration.sh`. The runner starts the current packaged service with cache disabled on isolated loopback port 18080, verifies `sqrt(9)+2^3 = 11` and the ordered batch `1+1,max(2,3),sqrt(16) = [2,3,4]` through every native client, and always stops its child service.
 - 2026-07-21: The updated `./test-all.sh` passes end-to-end with live REST transport: Java API/service 39/39, JavaScript 5/5, TypeScript 3/3, C++ 1/1, .NET 3/3, and Rust 2/2, with no failures or skipped tests. The restricted sandbox run required loopback permission; the approved loopback run completed successfully and left port 18080 closed.
+- 2026-07-23: Replaced Math2's proprietary license with the canonical Apache License 2.0 text and aligned Maven, npm, Cargo, and NuGet package metadata on the `Apache-2.0` identifier. Repository-level licensing now maps Math2 to Apache-2.0 and the example project to LGPL-3.0-only, with a repository-wide `WARRANTY` disclaimer. License and metadata consistency checks passed; no behavioral tests were needed because runtime code was unchanged.
 
 ## Blockers
 
