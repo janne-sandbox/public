@@ -67,6 +67,8 @@ On the recorded Apple-arm64 development environment, representative 1,000-digit 
 
 ## Documentation
 
+[Math2](https://janne-sandbox.github.io/public/math2/documentation/)
+
 - [Getting started](documentation/getting-started.html)
 - [Architecture overview](documentation/architecture.html), [calculation engine](documentation/architecture-engine.html), and [REST/cache](documentation/architecture-service.html)
 - [Operations and precision](documentation/operations.html)

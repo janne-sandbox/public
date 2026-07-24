@@ -165,6 +165,8 @@ not copy those patterns into production code.
 
 ## Documentation
 
+[Example](https://janne-sandbox.github.io/public/example/documentation/)
+
 Open [`documentation/index.html`](documentation/index.html) in a browser for the complete guide:
 
 - [Overview](documentation/review-overview.html)
