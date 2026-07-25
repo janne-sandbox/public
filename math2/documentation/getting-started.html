@@ -4,9 +4,9 @@
 <body>
 <nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a aria-current="page" href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
 <main><header class="page-header"><p class="eyebrow">Chapter 01 · Guide</p><h1>Choose the shortest path to a result.</h1><p class="lede">Use the Java library directly when calculation lives in the JVM. Run the REST service when several languages need the same engine and cache.</p></header>
-<div class="page-layout"><aside class="chapter-nav"><strong>In this chapter</strong><a href="#requirements">Requirements</a><a href="#service">Local service</a><a href="#java">Java library</a><a href="#docker">Docker</a><a href="#verify">Verification</a></aside>
+<div class="page-layout"><aside class="chapter-nav"><strong>In this chapter</strong><a href="#requirements">Requirements</a><a href="#service">Local service</a><a href="#java">Java library</a><a href="#docker">Docker</a><a href="#verify">Verification</a><a href="installation.html">Full installation →</a></aside>
 <article class="prose">
-<h2 id="requirements">Requirements</h2><p>Java 21 or newer and Maven 3.9 or newer are sufficient for the Java modules and service. Client toolchains are only needed for the corresponding language.</p>
+<h2 id="requirements">Requirements</h2><p>Java 21 and Maven 3.9 are sufficient for the Java modules and service. Language client toolchains are only needed for their corresponding client. See the <a href="installation.html">installation guide</a> for per-platform setup instructions (macOS, Ubuntu, RHEL, Windows).</p>
 <div class="note"><strong>Precision model.</strong> The default maximum is 1,000 significant digits. Change it in-process with <code>Number.setMaxLength</code> or for the service with <code>MATH2_MAX_LENGTH</code>.</div>
 <h2 id="service">Start the local service</h2>
 <pre><code>./run-dev-local.sh

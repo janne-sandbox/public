@@ -14,6 +14,21 @@ public final class Number implements Comparable<Number> {
     private static final AtomicInteger MAX_LENGTH = new AtomicInteger(DEFAULT_MAX_LENGTH);
     private static final Number ZERO = new Number("0");
 
+    /** Number of rounding mode codes supported (codes 0 through {@value} − 1 inclusive). */
+    public static final int ROUNDING_MODE_COUNT = 7;
+
+    private static final String[] ROUNDING_MODE_NAMES = {
+        "HALF_EVEN",  // 0 — banker's rounding (default)
+        "HALF_UP",    // 1 — round half away from zero
+        "HALF_DOWN",  // 2 — round half toward zero
+        "CEILING",    // 3 — toward positive infinity
+        "FLOOR",      // 4 — toward negative infinity
+        "UP",         // 5 — always away from zero
+        "DOWN",       // 6 — always toward zero (truncate)
+    };
+
+    private static final AtomicInteger DEFAULT_ROUNDING_MODE_CODE = new AtomicInteger(0);
+
     private final String value;
 
     private Number(String value) {
@@ -72,6 +87,44 @@ public final class Number implements Comparable<Number> {
             throw new IllegalArgumentException("Maximum length must be at least 1");
         }
         MAX_LENGTH.set(maxLength);
+    }
+
+    /**
+     * Returns the current default rounding mode code used by {@code round()} when no explicit
+     * mode argument is given.  The code maps as: 0 HALF_EVEN, 1 HALF_UP, 2 HALF_DOWN,
+     * 3 CEILING, 4 FLOOR, 5 UP, 6 DOWN.
+     */
+    public static int getDefaultRoundingModeCode() {
+        return DEFAULT_ROUNDING_MODE_CODE.get();
+    }
+
+    /**
+     * Sets the default rounding mode code (valid range 0 to {@value ROUNDING_MODE_COUNT} − 1).
+     * The new value is captured by the parser the next time {@code round(x)} or
+     * {@code round(x, scale)} is parsed without an explicit mode argument.
+     *
+     * @throws IllegalArgumentException when {@code code} is outside the valid range
+     */
+    public static void setDefaultRoundingModeCode(int code) {
+        if (code < 0 || code >= ROUNDING_MODE_COUNT) {
+            throw new IllegalArgumentException(
+                    "Rounding mode code must be 0\u2013" + (ROUNDING_MODE_COUNT - 1) + ", got " + code);
+        }
+        DEFAULT_ROUNDING_MODE_CODE.set(code);
+    }
+
+    /**
+     * Returns the display name for the given rounding mode code (e.g. {@code "HALF_EVEN"} for
+     * code 0).
+     *
+     * @throws IllegalArgumentException when {@code code} is outside the valid range
+     */
+    public static String getRoundingModeName(int code) {
+        if (code < 0 || code >= ROUNDING_MODE_COUNT) {
+            throw new IllegalArgumentException(
+                    "Rounding mode code must be 0\u2013" + (ROUNDING_MODE_COUNT - 1) + ", got " + code);
+        }
+        return ROUNDING_MODE_NAMES[code];
     }
 
     /** Starts an immutable equation with this number as its first operand. */

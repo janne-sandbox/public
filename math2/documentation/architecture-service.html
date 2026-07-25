@@ -5,8 +5,10 @@
 <div class="page-layout"><aside class="chapter-nav"><strong>Architecture</strong><a href="architecture.html">System view</a><a href="architecture-engine.html">Calculation engine</a><a aria-current="page" href="architecture-service.html">REST and cache</a></aside><article class="prose">
 <h2>Service components</h2><pre class="mermaid">flowchart LR
   HTTP[Loopback HTTP] --> CTRL[CalculationController]
+  HTTP --> RCTL[RoundingController]
   CTRL --> LIMITS[Math2Properties limits]
   CTRL --> SERVICE[CalculationService]
+  RCTL --> NUM[Number.defaultRoundingModeCode]
   SERVICE --> PARSER[Equation parser]
   SERVICE --> REPO[CalculationCacheRepository]
   REPO --> JPA[Hibernate / JPA]
@@ -14,6 +16,7 @@
   LIQ[Liquibase] --> DB
   SERVICE --> ENGINE[java-api engine]
   OPENAPI[Springdoc OpenAPI] -. describes .-> CTRL</pre>
+<h2>Default rounding mode</h2><p><code>Number.getDefaultRoundingModeCode()</code> and <code>Number.setDefaultRoundingModeCode(int)</code> control the rounding mode that <code>round(x)</code> and <code>round(x,&nbsp;scale)</code> use when no explicit mode argument is present.  The mode is captured at parse time and embedded in the canonical expression (e.g.&nbsp;<code>round(x,0,1)</code>), so cache keys correctly reflect the mode that was active when the expression was parsed.</p><p>Configured via <code>math2.rounding.default-mode-code=0</code> (default&nbsp;0&nbsp;=&nbsp;HALF_EVEN). Changed at runtime via <code>POST /api/v1/rounding/{code}</code> and read via <code>GET /api/v1/rounding</code>.</p>
 <h2>Cache identity</h2><p>The key is SHA-256 over engine version, requested precision, and canonical expression. Equivalent whitespace produces the same expression. Changing engine behavior increments the version and prevents stale results from crossing implementations.</p><pre><code>SHA-256(engineVersion + "\n" + precision + "\n" + canonicalExpression)</code></pre>
 <h2>Stored evidence</h2><p>Each entry records the canonical expression, precision, engine version, unbounded result text, creation/access timestamps, and calculation duration in milliseconds. Indexes support canonical-expression lookup and least-recently-used ordering.</p>
 <h2>Optional cache</h2><p>Set <code>MATH2_CACHE_ENABLED=false</code> to calculate without initializing or using the datasource, Hibernate repositories, or Liquibase. A positive <code>MATH2_CACHE_MAX_ENTRIES</code> bounds persistent entries; excess rows are evicted by oldest access and creation time.</p>

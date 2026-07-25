@@ -17,6 +17,8 @@ public class Math2Properties {
     private final Request request = new Request();
     @Valid
     private final Precision precision = new Precision();
+    @Valid
+    private final Rounding rounding = new Rounding();
 
     public Cache getCache() {
         return cache;
@@ -30,9 +32,14 @@ public class Math2Properties {
         return precision;
     }
 
+    public Rounding getRounding() {
+        return rounding;
+    }
+
     @PostConstruct
-    void configureNumberPrecision() {
+    void configureNumber() {
         Number.setMaxLength(precision.getMaxLength());
+        Number.setDefaultRoundingModeCode(rounding.getDefaultModeCode());
     }
 
     public static class Cache {
@@ -93,6 +100,20 @@ public class Math2Properties {
 
         public void setMaxLength(int maxLength) {
             this.maxLength = maxLength;
+        }
+    }
+
+    public static class Rounding {
+        @Min(0)
+        @Max(6)
+        private int defaultModeCode = 0;
+
+        public int getDefaultModeCode() {
+            return defaultModeCode;
+        }
+
+        public void setDefaultModeCode(int defaultModeCode) {
+            this.defaultModeCode = defaultModeCode;
         }
     }
 }

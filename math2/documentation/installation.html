@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Installation · Math2</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a aria-current="page" href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 01.1 · Guide</p><h1>Installation and setup.</h1><p class="lede">Java 21 and Maven are the only hard requirements. Everything else is optional and only needed for its corresponding language client.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Guide</strong><a href="getting-started.html">Quick start</a><a aria-current="page" href="installation.html">Installation</a></aside><article class="prose">
+
+<!-- ── Prerequisites ── -->
+<h2 id="prerequisites">Prerequisites</h2>
+<div class="table-wrap"><table><thead><tr><th>Toolchain</th><th>Minimum version</th><th>Required for</th></tr></thead><tbody>
+<tr><td>Java JDK</td><td>21</td><td>All Java modules and the REST service</td></tr>
+<tr><td>Apache Maven</td><td>3.9</td><td>All Java modules and the REST service</td></tr>
+<tr><td>CMake + C++ compiler</td><td>CMake 3.20, GCC 12 / Clang 14 / MSVC 17</td><td><code>cpp-api</code> only</td></tr>
+<tr><td>Rust (via rustup)</td><td>1.75</td><td><code>rust-api</code> only</td></tr>
+<tr><td>.NET SDK</td><td>8</td><td><code>dotnet-api</code> only</td></tr>
+<tr><td>Node.js + npm</td><td>Node 22</td><td><code>js-api</code> and <code>ts-api</code> only</td></tr>
+<tr><td>Docker (optional)</td><td>24</td><td>Container image build and run</td></tr>
+</tbody></table></div>
+
+<!-- ── macOS ── -->
+<h2 id="macos">macOS</h2>
+<p>The fastest path on macOS is <a href="https://brew.sh">Homebrew</a>. Install Homebrew first if you do not have it, then install the tools you need.</p>
+
+<h3>Java 21 and Maven</h3>
+<pre><code>brew install openjdk@21 maven
+
+# Homebrew may require this symlink for the system Java wrapper:
+sudo ln -sfn $(brew --prefix)/opt/openjdk@21/libexec/openjdk.jdk \
+    /Library/Java/JavaVirtualMachines/openjdk-21.jdk</code></pre>
+<p>Alternative: <a href="https://sdkman.io">SDKMAN!</a> lets you manage multiple JDK versions side by side:</p>
+<pre><code>curl -s "https://get.sdkman.io" | bash
+sdk install java 21.0.7-tem   # Eclipse Temurin build
+sdk install maven</code></pre>
+
+<h3>C++ (cpp-api)</h3>
+<pre><code>xcode-select --install   # installs Apple Clang
+brew install cmake</code></pre>
+
+<h3>Rust (rust-api)</h3>
+<pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# follow the on-screen prompts; reload your shell or run:
+source "$HOME/.cargo/env"</code></pre>
+
+<h3>.NET 8 (dotnet-api)</h3>
+<pre><code>brew install dotnet@8
+# Add the SDK to your PATH (add this line to ~/.zshrc or ~/.bash_profile):
+export PATH="/opt/homebrew/opt/dotnet@8/bin:$PATH"</code></pre>
+<p>Alternative: download the macOS installer from <a href="https://dotnet.microsoft.com/download/dotnet/8.0">dotnet.microsoft.com</a>.</p>
+
+<h3>Node.js / npm (js-api, ts-api)</h3>
+<pre><code>brew install node   # includes npm</code></pre>
+
+<!-- ── Linux Ubuntu ── -->
+<h2 id="ubuntu">Linux — Ubuntu 24.04 LTS</h2>
+
+<h3>Java 21 and Maven</h3>
+<pre><code>sudo apt update
+sudo apt install openjdk-21-jdk maven</code></pre>
+<p>For Ubuntu 22.04 and earlier, add the <a href="https://adoptium.net/installation/linux/">Eclipse Adoptium package feed</a> first, then install <code>temurin-21-jdk</code>.</p>
+
+<h3>C++ (cpp-api)</h3>
+<pre><code>sudo apt install cmake build-essential</code></pre>
+
+<h3>Rust (rust-api)</h3>
+<pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source "$HOME/.cargo/env"</code></pre>
+
+<h3>.NET 8 (dotnet-api)</h3>
+<pre><code>sudo apt install dotnet-sdk-8.0</code></pre>
+<p>If the package is not found, follow the <a href="https://learn.microsoft.com/dotnet/core/install/linux-ubuntu">Microsoft .NET on Ubuntu</a> guide to add the Microsoft package feed.</p>
+
+<h3>Node.js / npm (js-api, ts-api)</h3>
+<pre><code>sudo apt install nodejs npm</code></pre>
+<p>For Node 22, use the <a href="https://github.com/nodesource/distributions">NodeSource installer</a> or <a href="https://github.com/nvm-sh/nvm">nvm</a>.</p>
+
+<!-- ── Linux RHEL ── -->
+<h2 id="rhel">Linux — RHEL 9 / CentOS Stream 9 / Fedora</h2>
+
+<h3>Java 21 and Maven</h3>
+<pre><code>sudo dnf install java-21-openjdk-devel maven</code></pre>
+
+<h3>C++ (cpp-api)</h3>
+<pre><code>sudo dnf install cmake gcc-c++</code></pre>
+
+<h3>Rust (rust-api)</h3>
+<pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source "$HOME/.cargo/env"</code></pre>
+
+<h3>.NET 8 (dotnet-api)</h3>
+<pre><code>sudo dnf install dotnet-sdk-8.0</code></pre>
+<p>If the package is not available, follow the <a href="https://learn.microsoft.com/dotnet/core/install/linux-rhel">Microsoft .NET on RHEL</a> guide to add the Microsoft package feed.</p>
+
+<h3>Node.js / npm (js-api, ts-api)</h3>
+<pre><code>sudo dnf install nodejs npm</code></pre>
+
+<!-- ── Windows ── -->
+<h2 id="windows">Windows 11 / Windows 10</h2>
+<p>Use <strong>winget</strong> (Windows Package Manager, built into Windows 11 and available for Windows 10 via the Microsoft Store) or download installers directly. The shell scripts require <a href="https://gitforwindows.org">Git Bash</a> or <a href="https://learn.microsoft.com/windows/wsl/install">WSL 2</a>.</p>
+
+<h3>Java 21 and Maven</h3>
+<pre><code># PowerShell or Command Prompt
+winget install Microsoft.OpenJDK.21
+winget install Apache.Maven</code></pre>
+<p>Alternative: download the Windows MSI from <a href="https://adoptium.net">Eclipse Adoptium</a>. Add <code>JAVA_HOME</code> to your environment variables and append <code>%JAVA_HOME%\bin</code> to <code>PATH</code>.</p>
+
+<h3>C++ (cpp-api)</h3>
+<pre><code>winget install Kitware.CMake
+# Also install Visual Studio Build Tools (Desktop development with C++ workload):
+winget install Microsoft.VisualStudio.2022.BuildTools</code></pre>
+<p>Alternatively, <a href="https://www.msys2.org">MSYS2</a> with MinGW-w64 provides GCC on Windows.</p>
+
+<h3>Rust (rust-api)</h3>
+<pre><code>winget install Rustlang.Rustup</code></pre>
+<p>Or download <code>rustup-init.exe</code> from <a href="https://rustup.rs">rustup.rs</a> and run it. Visual Studio Build Tools or the C++ toolchain is required before installing Rust on Windows.</p>
+
+<h3>.NET 8 (dotnet-api)</h3>
+<pre><code>winget install Microsoft.DotNet.SDK.8</code></pre>
+
+<h3>Node.js / npm (js-api, ts-api)</h3>
+<pre><code>winget install OpenJS.NodeJS.LTS</code></pre>
+
+<div class="note"><strong>Shell scripts on Windows.</strong> <code>build-all.sh</code>, <code>test-all.sh</code>, and the other convenience scripts are Bash scripts. Run them inside Git Bash (<code>bash build-all.sh</code>) or WSL 2. Maven, cargo, dotnet, and cmake can be used directly from PowerShell without Bash.</div>
+
+<!-- ── Build from source ── -->
+<h2 id="build">Build from source</h2>
+<p>After installing the prerequisites, build the components you need with <code>build-all.sh</code>.</p>
+<pre><code># Build everything (Java library, REST service, and all clients)
+./build-all.sh
+
+# Build specific targets
+./build-all.sh java-api              # Java library only
+./build-all.sh java                  # Java library + REST service
+./build-all.sh java cpp-api          # Java modules and C++ client
+./build-all.sh rust-api dotnet-api   # two clients
+
+# Show available targets
+./build-all.sh --help</code></pre>
+<p>Missing toolchains are skipped with a notice rather than failing the entire build. Java is the only required component.</p>
+
+<!-- ── Bind address ── -->
+<h2 id="bind">Bind address and port</h2>
+<p>The REST service listens on <code>127.0.0.1:8080</code> by default. <code>127.0.0.1</code> is the <em>loopback address</em> — connections are only accepted from the same machine. No other host on the network can reach the service unless you explicitly change this.</p>
+<div class="note"><strong>Why loopback by default?</strong> Binding to loopback means the service is unreachable over the network without additional configuration. This limits the attack surface: authentication, TLS, and rate limiting belong at a reverse proxy or API gateway placed in front of Math2, not inside the service itself.</div>
+
+<h3>Changing the address and port</h3>
+<p>Pass environment variables before the JAR or export them before running <code>run-dev-local.sh</code>:</p>
+<pre><code># Accept connections from any network interface on port 9090:
+MATH2_SERVER_ADDRESS=0.0.0.0 MATH2_SERVER_PORT=9090 java -jar math2-rest-service-*.jar
+
+# Bind to a specific interface only (e.g. a private LAN address):
+MATH2_SERVER_ADDRESS=192.168.1.10 java -jar math2-rest-service-*.jar</code></pre>
+<p>The same variables work as Docker <code>-e</code> flags:</p>
+<pre><code>docker run --rm \
+  -e MATH2_SERVER_ADDRESS=0.0.0.0 \
+  -e MATH2_SERVER_PORT=9090 \
+  -p 9090:9090 \
+  math2:local</code></pre>
+<p>Alternatively, create an <code>application.properties</code> file next to the JAR:</p>
+<pre><code>server.address=0.0.0.0
+server.port=9090</code></pre>
+<div class="warning"><strong>Security note.</strong> Binding to <code>0.0.0.0</code> exposes the service on every network interface, including public ones. Add a reverse proxy (nginx, Caddy, Traefik) with TLS and authentication in front of Math2 before exposing it beyond the local machine.</div>
+
+<h3>All service environment variables</h3>
+<div class="table-wrap"><table><thead><tr><th>Variable</th><th>Default</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>MATH2_SERVER_ADDRESS</code></td><td><code>127.0.0.1</code></td><td>Bind address (loopback by default)</td></tr>
+<tr><td><code>MATH2_SERVER_PORT</code></td><td><code>8080</code></td><td>HTTP port</td></tr>
+<tr><td><code>MATH2_MAX_LENGTH</code></td><td><code>1000</code></td><td>Maximum significant digits</td></tr>
+<tr><td><code>MATH2_CACHE_ENABLED</code></td><td><code>true</code></td><td>Enable or disable the H2 result cache</td></tr>
+<tr><td><code>MATH2_CACHE_MAX_ENTRIES</code></td><td><code>100</code></td><td>LRU eviction threshold</td></tr>
+<tr><td><code>MATH2_MAX_BATCH_SIZE</code></td><td><code>100</code></td><td>Maximum equations per batch request</td></tr>
+<tr><td><code>MATH2_MAX_EXPRESSION_LENGTH</code></td><td><code>10000</code></td><td>Maximum characters per expression</td></tr>
+<tr><td><code>MATH2_DATASOURCE_URL</code></td><td><code>jdbc:h2:file:./.math2/cache</code></td><td>H2 database path</td></tr>
+</tbody></table></div>
+
+<!-- ── Swagger ── -->
+<h2 id="swagger">Swagger UI</h2>
+<p>The running service exposes an interactive API browser powered by <a href="https://swagger.io/tools/swagger-ui/">Swagger UI</a> and generated from the OpenAPI 3 specification embedded in the service.</p>
+<pre><code># Start the service, then open in a browser:
+http://127.0.0.1:8080/swagger-ui.html</code></pre>
+<p>From Swagger UI you can:</p>
+<ul>
+<li>Browse every endpoint with its parameter descriptions and response schemas.</li>
+<li>Enter an equation and precision directly in the browser and execute the call — no curl or client code needed.</li>
+<li>Copy the <em>curl</em> command that Swagger generates to reproduce the request from a terminal.</li>
+<li>Inspect the exact JSON response format and error shapes.</li>
+</ul>
+<p>The raw OpenAPI specification is available as JSON:</p>
+<pre><code>http://127.0.0.1:8080/v3/api-docs</code></pre>
+<p>Import that URL into <a href="https://www.postman.com">Postman</a>, <a href="https://insomnia.rest">Insomnia</a>, or any tool that understands OpenAPI 3 to generate a ready-to-use client collection.</p>
+<div class="note"><strong>H2 console.</strong> The embedded H2 database management console is disabled. Manage the calculation cache through the application endpoints only.</div>
+
+<div class="next-links"><a href="getting-started.html"><span>Back</span>← Quick start</a><a href="architecture.html"><span>Next chapter</span>Architecture →</a></div>
+</article></div></main>
+<footer class="site-footer">Math2 installation · local-first by default</footer>
+</body>
+</html>
