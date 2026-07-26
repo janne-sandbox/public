@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Architecture · Math2</title><link rel="stylesheet" href="styles.css"><script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{primaryColor:'#d9ff57',primaryTextColor:'#151515',primaryBorderColor:'#151515',lineColor:'#68665f',secondaryColor:'#f2efe7',tertiaryColor:'#fffef9'}});</script></head>
 <body><nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a aria-current="page" href="architecture.html">Architecture</a><a href="api.html">REST API</a><a href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
 <main><header class="page-header"><p class="eyebrow">Chapter 02 · Architecture</p><h1>One engine. Two ways in. Six language surfaces.</h1><p class="lede">The Java API owns calculation. The REST service adds validation, persistence, caching, and a stable string-based boundary.</p></header>
-<div class="page-layout"><aside class="chapter-nav"><strong>Architecture</strong><a aria-current="page" href="architecture.html">System view</a><a href="architecture-engine.html">Calculation engine</a><a href="architecture-service.html">REST and cache</a></aside><article class="prose">
+<div class="page-layout"><aside class="chapter-nav"><strong>Architecture</strong><a aria-current="page" href="architecture.html">System view</a><a href="architecture-engine.html">Calculation engine</a><a href="architecture-service.html">REST and cache</a><a href="gpu-and-udp.html">GPU and UDP target</a></aside><article class="prose">
 <h2>System context</h2><pre class="mermaid">flowchart LR
   JVM[Java application] --> API[java-api]
   JS[JavaScript / TypeScript] --> REST
@@ -33,5 +33,5 @@
     S->>D: evict least recently used excess
   end
   S-->>C: JSON string result</pre>
-<div class="next-links"><a href="architecture-engine.html"><span>Subtopic</span>Calculation engine →</a><a href="architecture-service.html"><span>Subtopic</span>REST and cache →</a></div>
+<div class="next-links"><a href="architecture-engine.html"><span>Subtopic</span>Calculation engine →</a><a href="gpu-and-udp.html"><span>Target architecture</span>GPU and UDP →</a></div>
 </article></div></main><footer class="site-footer">Architecture diagrams use Mermaid 11 source embedded in each page.</footer></body></html>

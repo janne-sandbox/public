@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 
-using namespace nologo2::math2;
+using namespace nologo::math2;
 
 int main() {
     assert(Number::from_string("001.2300e2").str() == "123");

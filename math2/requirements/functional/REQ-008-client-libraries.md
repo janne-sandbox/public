@@ -8,3 +8,6 @@
 4. Clients distinguish validation responses, service failures, transport failures, and malformed responses.
 5. Each client documents installation and includes unit tests plus a runnable integration example.
 6. Client implementation begins only after the complete Java reactor test suite passes.
+7. Published identities use `nologo` consistently: npm scopes are
+   `@nologo/...`, the C++ namespace is `nologo::math2`, and the Rust crate is
+   `nologo-math2` with import name `nologo_math2`.

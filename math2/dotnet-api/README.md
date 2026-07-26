@@ -3,7 +3,7 @@
 .NET 8 client with immutable `Number` and `Equation` classes and async single/batch REST methods.
 
 ```csharp
-using Nologo2.Math2;
+using Nologo.Math2;
 
 using var client = new Math2Client();
 var equation = Equation.Of(Number.FromInteger(9)).Sqrt();

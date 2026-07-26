@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Nologo2.Math2;
+namespace Nologo.Math2;
 
 public sealed partial class Number : IEquatable<Number>, IComparable<Number>
 {

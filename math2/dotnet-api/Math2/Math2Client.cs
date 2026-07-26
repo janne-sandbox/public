@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace Nologo2.Math2;
+namespace Nologo.Math2;
 
 public sealed class Math2Client : IDisposable
 {

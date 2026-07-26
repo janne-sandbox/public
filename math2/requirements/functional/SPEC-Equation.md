@@ -1,3 +1,10 @@
 # Class specification — Equation
 
 `Equation` is the immutable expression tree specified by REG-004. It supports parsing and fluent programmatic composition beginning from either `Number` or `Equation`, accepts `Number` operands directly in its binary methods, provides deterministic canonical output, and supports repeatable evaluation at an explicit precision.
+
+`calculate()`, `calculate(int)`, and `calculate(CalculationContext)` all create a
+versioned execution plan and pass it through `ExecutionPlanner`. The first two
+overloads preserve their existing behavior by constructing a context with GPU
+disabled. A package-private reference method is available only to
+`ReferenceCpuBackend` so backend execution cannot recursively re-enter the
+planner.

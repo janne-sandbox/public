@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CUDA simulation · Math2</title><link rel="stylesheet" href="styles.css"></head>
+<body><nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a aria-current="page" href="architecture.html">Architecture</a><a href="api.html">REST API</a><a href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 02.5 · Development tooling</p><h1>Run CUDA simulation without claiming a physical GPU.</h1><p class="lede">Math2 provides a reproducible Docker installer for a pinned GPGPU-Sim and CUDA 11.7 development environment. It is an intermediate kernel-verification lane, not hardware release evidence.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Architecture</strong><a href="architecture.html">System view</a><a href="architecture-engine.html">Calculation engine</a><a href="architecture-service.html">REST and cache</a><a href="gpu-and-udp.html">GPU and UDP target</a><a href="metal-backend.html">Metal backend</a><a aria-current="page" href="cuda-simulation.html">CUDA simulation</a></aside><article class="prose">
+<div class="callout"><strong>Status boundary</strong><p>The installer and smoke check are implemented. Exact Math2 CUDA kernels and simulator conformance are not implemented yet. A passing installation proves only that the compiler and simulator runtime were built from the pinned inputs.</p></div>
+<h2>Install</h2><p>Requirements are Docker with network access and enough storage for multi-gigabyte CUDA layers. Run from any directory:</p>
+<pre><code>/path/to/math2/install-cuda-simulator.sh</code></pre>
+<p>The script builds <code>math2-gpgpu-sim:cuda-11.7</code> from the digest-pinned upstream CI toolchain, checks out the pinned GPGPU-Sim revision, compiles it, and runs a smoke check for the expected revision, <code>nvcc</code>, and simulated <code>libcudart</code>.</p>
+<h2>Architecture and storage</h2><p>Upstream images are <code>linux/amd64</code>. The installer selects that platform explicitly. Docker Desktop can emulate it on ARM hosts, but download, unpack, compile, and simulation are substantially slower. The pinned base image has roughly 5.5 GB of compressed layers; allow considerably more space after extraction and compilation.</p>
+<h2>Rebuild and overrides</h2><pre><code># Ignore Docker build cache
+./install-cuda-simulator.sh --no-cache
+
+# Choose a local tag
+MATH2_CUDA_SIMULATOR_IMAGE=sample-gpgpu-sim:dev \
+  ./install-cuda-simulator.sh
+
+# Inspect options without downloading
+./install-cuda-simulator.sh --help</code></pre>
+<p>The platform, base image, and GPGPU-Sim commit also have environment overrides. Changing pins makes the result a different, locally selected environment; record those values with any evidence.</p>
+<h2>What simulation can verify</h2><ul><li>CUDA source compilation to PTX with the pinned toolkit.</li><li>Functional execution of supported PTX instructions through GPGPU-Sim.</li><li>Exact canonical output comparisons against the CPU reference once Math2 kernels exist.</li><li>Deterministic error and ordered-batch fixtures supported by the simulator.</li></ul>
+<h2>What it cannot verify</h2><ul><li>The shipped JNI bridge against a production NVIDIA driver.</li><li>Physical allocation, synchronization, instruction, or device-failure behavior.</li><li>Performance, transfer cost, or suitability thresholds on release hardware.</li><li>The mandatory CUDA hardware conformance gate.</li></ul>
+<h2>Troubleshooting and cleanup</h2><p>If an ARM-host pull repeatedly stalls, use an AMD64 CI runner with the pinned image pre-cached. Docker retains successfully built images; remove the local image only when its cache is no longer needed:</p>
+<pre><code>docker image rm math2-gpgpu-sim:cuda-11.7</code></pre>
+<p>Do not use broad Docker pruning commands: other projects may share the same Docker daemon and caches.</p>
+<div class="next-links"><a href="gpu-and-udp.html"><span>Contract</span>← GPU and UDP architecture</a><a href="deployment.html"><span>Operations</span>Configuration and Docker →</a></div>
+</article></div></main><footer class="site-footer">Pinned simulator environment · simulation is not hardware evidence</footer></body></html>

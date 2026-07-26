@@ -25,6 +25,8 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
 math2:
+  gpu:
+    mode: ${MATH2_GPU_MODE:DISABLED}
   precision:
     max-length: ${MATH2_MAX_LENGTH:1000}
   cache:

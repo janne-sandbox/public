@@ -3,7 +3,7 @@
 Zero-dependency ES module client for the Math2 REST API. Requires Node.js 18+ or a browser with `fetch`.
 
 ```js
-import { Equation, Math2Client, Number } from "@nologo2/math2";
+import { Equation, Math2Client, Number } from "@nologo/math2";
 
 const equation = Equation.of(Number.fromInteger(9)).sqrt();
 const result = await new Math2Client().calculate(equation);

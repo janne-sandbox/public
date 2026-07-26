@@ -3,7 +3,7 @@
 <main><header class="page-header"><p class="eyebrow">Chapter 05.5 · C++</p><h1>C++20 values with a libcurl transport.</h1><p class="lede">The native API uses immutable-style value returns and keeps every decimal in <code>std::string</code>.</p></header>
 <div class="page-layout"><aside class="chapter-nav"><strong>Libraries</strong><a href="clients.html">Overview</a><a href="client-java.html">Java</a><a href="client-javascript.html">JavaScript</a><a href="client-typescript.html">TypeScript</a><a href="client-dotnet.html">.NET</a><a aria-current="page" href="client-cpp.html">C++</a><a href="client-rust.html">Rust</a></aside><article class="prose">
 <h2>Usage</h2><pre><code>#include "math2/math2.hpp"
-using namespace nologo2::math2;
+using namespace nologo::math2;
 
 auto equation = Equation::parse("sqrt(2)+pi");
 auto result = Client("http://127.0.0.1:8080", 30000)

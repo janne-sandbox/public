@@ -11,6 +11,10 @@
 7. Empty input, missing operands, unmatched parentheses, unknown operators/functions, extra tokens, and invalid numbers throw `UncalculableException` with a useful input position when available.
 8. The canonical expression representation is deterministic and suitable as a cache-key input.
 9. The canonical `pi` node is retained until evaluation so its value uses the precision requested by `calculate(int)`.
+10. `calculate(CalculationContext)` evaluates through the versioned execution
+    planner using the context precision, limits, rounding metadata, and GPU
+    mode. Existing `calculate()` and `calculate(int)` use GPU-disabled contexts
+    and remain behavior-compatible.
 
 ## Acceptance examples
 

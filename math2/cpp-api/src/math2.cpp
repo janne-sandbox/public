@@ -5,7 +5,7 @@
 #include <regex>
 #include <sstream>
 
-namespace nologo2::math2 {
+namespace nologo::math2 {
 namespace {
 std::string canonical(std::string input) {
     static const std::regex pattern(R"(^([+-]?)(\d*)(?:\.(\d*))?(?:[eE]([+-]?\d+))?$)");

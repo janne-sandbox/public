@@ -2,7 +2,7 @@
 <nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a aria-current="page" href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
 <main><header class="page-header"><p class="eyebrow">Chapter 05.4 · .NET</p><h1>Async REST calculation for .NET 8.</h1><p class="lede">The client supports cancellation, configurable timeout/base URL, and injection of an application-owned <code>HttpClient</code>.</p></header>
 <div class="page-layout"><aside class="chapter-nav"><strong>Libraries</strong><a href="clients.html">Overview</a><a href="client-java.html">Java</a><a href="client-javascript.html">JavaScript</a><a href="client-typescript.html">TypeScript</a><a aria-current="page" href="client-dotnet.html">.NET</a><a href="client-cpp.html">C++</a><a href="client-rust.html">Rust</a></aside><article class="prose">
-<h2>Calculate asynchronously</h2><pre><code>using Nologo2.Math2;
+<h2>Calculate asynchronously</h2><pre><code>using Nologo.Math2;
 
 using var client = new Math2Client(timeout: TimeSpan.FromSeconds(30));
 var equation = Equation.Parse("sqrt(2)+pi");

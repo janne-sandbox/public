@@ -16,8 +16,8 @@ curl --get --data-urlencode 'equation=sqrt(9)+2^3' --data-urlencode 'precision=1
 ./stop-dev-local.sh</code></pre>
 <p>The service binds to <code>127.0.0.1</code>. OpenAPI is available at <code>/v3/api-docs</code> and Swagger UI at <code>/swagger-ui.html</code>.</p>
 <h2 id="java">Calculate inside Java</h2>
-<pre><code>import com.nologo2.math2.Equation;
-import com.nologo2.math2.Number;
+<pre><code>import com.nologo.math2.Equation;
+import com.nologo.math2.Number;
 
 Equation equation = Number.fromInteger(9).sqrt()
     .add(Number.fromInteger(2).power(Number.fromInteger(3)));

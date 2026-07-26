@@ -1,4 +1,4 @@
-using Nologo2.Math2;
+using Nologo.Math2;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

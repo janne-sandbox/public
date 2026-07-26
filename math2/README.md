@@ -41,7 +41,7 @@ Number result = equation.calculate(100);
 
 The batch splitter preserves commas inside nested functions such as `max(2,3)`. Success values are decimal strings so JSON parsers cannot lose precision.
 
-Configuration uses environment variables including `MATH2_SERVER_ADDRESS`, `MATH2_SERVER_PORT`, `MATH2_DATASOURCE_URL`, `MATH2_CACHE_MAX_ENTRIES`, `MATH2_MAX_BATCH_SIZE`, `MATH2_MAX_EXPRESSION_LENGTH`, and `MATH2_MAX_LENGTH` for the maximum significant-digit precision.
+Configuration uses environment variables including `MATH2_SERVER_ADDRESS`, `MATH2_SERVER_PORT`, `MATH2_DATASOURCE_URL`, `MATH2_CACHE_MAX_ENTRIES`, `MATH2_MAX_BATCH_SIZE`, `MATH2_MAX_EXPRESSION_LENGTH`, `MATH2_MAX_LENGTH` for the maximum significant-digit precision, and `MATH2_GPU_MODE`. GPU mode defaults to `DISABLED`, which uses the reference CPU backend without probing providers.
 
 ## Verification
 
@@ -50,6 +50,7 @@ Configuration uses environment variables including `MATH2_SERVER_ADDRESS`, `MATH
 ./run-smoke-test.sh
 ./test-client-integration.sh
 ./test-all.sh
+./install-cuda-simulator.sh --help
 ```
 
 `test-client-integration.sh` starts the packaged service on isolated loopback port 18080 with caching disabled, runs single and ordered-batch requests through the JavaScript, TypeScript, C++, .NET, and Rust clients, and stops the service afterward. `test-all.sh` runs the Java reactor followed by this live cross-language verification and explicitly reports unavailable .NET or Rust tooling. See [CONTINUE.md](CONTINUE.md) for current executed evidence and remaining blockers.
@@ -70,7 +71,7 @@ On the recorded Apple-arm64 development environment, representative 1,000-digit 
 [Math2](https://janne-sandbox.github.io/public/math2/documentation/)
 
 - [Getting started](documentation/getting-started.html)
-- [Architecture overview](documentation/architecture.html), [calculation engine](documentation/architecture-engine.html), and [REST/cache](documentation/architecture-service.html)
+- [Architecture overview](documentation/architecture.html), [calculation engine](documentation/architecture-engine.html), [REST/cache](documentation/architecture-service.html), the partially implemented [GPU/UDP target architecture](documentation/gpu-and-udp.html), [Metal backend status](documentation/metal-backend.html), and [CUDA simulation setup](documentation/cuda-simulation.html)
 - [Operations and precision](documentation/operations.html)
 - [REST reference](documentation/api.html) and [worked examples](documentation/rest-examples.html)
 - [Client library overview](documentation/clients.html): [Java](documentation/client-java.html), [JavaScript](documentation/client-javascript.html), [TypeScript](documentation/client-typescript.html), [.NET](documentation/client-dotnet.html), [C++](documentation/client-cpp.html), and [Rust](documentation/client-rust.html)
@@ -79,10 +80,23 @@ On the recorded Apple-arm64 development environment, representative 1,000-digit 
 ## Modules
 
 - `java-api`: calculation value types, operators, parser, and evaluator.
+- `java-cuda-backend`: optional guarded CUDA provider foundation; no kernels are advertised yet.
+- `java-metal-backend`: optional guarded Apple Metal provider and discovery bridge; no kernels are advertised yet.
 - `java-rest-service`: Spring Boot API, Swagger UI, H2/Hibernate/Liquibase cache, and Dockerfile.
 - `js-api`, `ts-api`, `dotnet-api`, `cpp-api`, `rust-api`: REST clients with native `Number` and `Equation` types.
 - `requirements`: normative functional, class, and non-functional specifications.
 - `documentation`: static project documentation site.
+
+The execution-backend model is specified in [GPU.md](GPU.md) and
+[REG-009](requirements/functional/REQ-009-execution-backends.md). Phases 1–3
+implement immutable context/plan values, the vendor-independent SPI, reference
+CPU routing, deterministic selection, and ordered REST batch planning. The
+optional CUDA and Metal modules now guard discovery/native lifecycle and
+supply non-hardware conformance fixtures. Metal device discovery has a native
+bridge and explicit Apple hardware smoke evidence; CUDA native code, Metal
+buffers, exact kernels, and calculation hardware evidence are still pending. The
+[REG-010](requirements/functional/REQ-010-udp-api.md) UDP transport also remains
+target work.
 
 Build the container from the repository root:
 

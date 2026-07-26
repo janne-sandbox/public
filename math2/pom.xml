@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.nologo2</groupId>
+    <groupId>com.nologo</groupId>
     <artifactId>math2-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -22,6 +22,8 @@
 
     <modules>
         <module>java-api</module>
+        <module>java-cuda-backend</module>
+        <module>java-metal-backend</module>
         <module>java-rest-service</module>
     </modules>
 

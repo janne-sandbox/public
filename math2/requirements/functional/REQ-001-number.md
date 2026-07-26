@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`com.nologo2.math2.Number` is the immutable public value type for decimal calculation results and operands.
+`com.nologo.math2.Number` is the immutable public value type for decimal calculation results and operands.
 
 ## Requirements
 

@@ -1,4 +1,4 @@
-namespace Nologo2.Math2;
+namespace Nologo.Math2;
 
 public class Math2Exception : Exception
 {

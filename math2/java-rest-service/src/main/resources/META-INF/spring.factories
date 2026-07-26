@@ -1,2 +1,2 @@
 org.springframework.boot.env.EnvironmentPostProcessor=\
-com.nologo2.math2.rest.config.OptionalCacheEnvironmentPostProcessor
+com.nologo.math2.rest.config.OptionalCacheEnvironmentPostProcessor

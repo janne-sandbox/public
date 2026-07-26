@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace nologo2::math2 {
+namespace nologo::math2 {
 
 class Error : public std::runtime_error { using std::runtime_error::runtime_error; };
 class ValidationError : public Error { using Error::Error; };
