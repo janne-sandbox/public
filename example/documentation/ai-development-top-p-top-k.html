@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top-p and Top-k - Example Project Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav-loader.js" defer></script>
+</head>
+<body>
+<aside class="sidebar" data-generated-nav="true"></aside>
+<main class="main-content">
+    <header class="header"><h2>AI DEVELOPMENT / Top-p and top-k</h2></header>
+    <div class="content">
+        <section class="content-section">
+            <h3>Two more sampling controls</h3>
+            <p>After a language model assigns probabilities to candidate next tokens, the runtime can apply additional filters before sampling. Top-p and top-k are two common filters. They work alongside temperature — temperature reshapes the distribution; top-p and top-k then limit which tokens are eligible for selection.</p>
+            <table>
+                <thead><tr><th>Parameter</th><th>What it does</th><th>Common default</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Top-k</strong></td><td>Keeps only the <em>k</em> highest-probability tokens as candidates. All others are excluded from sampling regardless of their probability.</td><td>Provider-specific; often 40–50 or disabled (k = all).</td></tr>
+                    <tr><td><strong>Top-p</strong> (nucleus sampling)</td><td>Keeps the smallest set of tokens whose cumulative probability meets or exceeds <em>p</em>. The cutoff shifts dynamically: it admits many tokens when the distribution is flat, and very few when one token is highly dominant.</td><td>Often 0.9 or 1.0 (disabled).</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box"><strong>Temperature, top-p, and top-k are complementary, not interchangeable.</strong> They are often applied together: temperature first reshapes the distribution, then top-k caps the candidate count, then top-p prunes to a cumulative probability threshold.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Top-k in detail</h3>
+            <p>With <code>top-k = 10</code>, only the 10 most probable tokens remain eligible. The model will never produce any other token at that position, even one with a small but non-zero probability.</p>
+            <table>
+                <thead><tr><th>Top-k value</th><th>Effect</th><th>When to consider it</th></tr></thead>
+                <tbody>
+                    <tr><td>Low (e.g., 1–5)</td><td>Very narrow output; highest-probability tokens almost always chosen.</td><td>Deterministic code snippets, format-constrained extraction.</td></tr>
+                    <tr><td>Moderate (e.g., 20–50)</td><td>Allows a small vocabulary of plausible alternatives.</td><td>General code generation, documentation.</td></tr>
+                    <tr><td>High / disabled</td><td>No hard vocabulary cap; relies on temperature and top-p instead.</td><td>Creative tasks, open-ended brainstorming.</td></tr>
+                </tbody>
+            </table>
+            <p>Setting <code>top-k = 1</code> is equivalent to greedy decoding: the single most probable token is always selected. This is maximally deterministic but can cause repetitive output in longer generations.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Top-p (nucleus sampling) in detail</h3>
+            <p>With <code>top-p = 0.9</code>, the model ranks all tokens by descending probability and keeps adding them to a candidate set until the cumulative probability reaches 0.9. The rest are excluded. Sampling then picks uniformly from the remaining candidates.</p>
+            <table>
+                <thead><tr><th>Top-p value</th><th>Effect</th><th>When to consider it</th></tr></thead>
+                <tbody>
+                    <tr><td>Low (e.g., 0.1–0.5)</td><td>Only the highest-confidence tokens are considered; output is focused and repeatable.</td><td>Security review, classification, precise edits.</td></tr>
+                    <tr><td>Moderate (e.g., 0.7–0.9)</td><td>Admits alternatives when the distribution is flat; prunes rare tokens when a clear winner exists.</td><td>Implementation drafts, documentation, chat.</td></tr>
+                    <tr><td>1.0 (disabled)</td><td>All tokens are eligible; filtering is handled by temperature and top-k only.</td><td>When you want the other controls to operate without a probability cap.</td></tr>
+                </tbody>
+            </table>
+            <p>The practical advantage of top-p over top-k is that the candidate set size adapts to the model's confidence: a highly confident prediction produces a small set; an ambiguous position produces a larger one. This makes top-p more portable across different tasks without re-tuning a fixed count.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>How the three controls interact</h3>
+            <p>A typical sampling pipeline applies the parameters in this order:</p>
+            <ol>
+                <li><strong>Temperature</strong> — scales the raw logits, making the distribution sharper (low) or flatter (high).</li>
+                <li><strong>Top-k</strong> — removes all tokens outside the top k by probability.</li>
+                <li><strong>Top-p</strong> — further removes tokens outside the nucleus of cumulative probability p.</li>
+                <li><strong>Sample</strong> — draws one token from the remaining candidates.</li>
+            </ol>
+            <div class="warning-box"><strong>Providers vary.</strong> Not every API or local runtime applies these filters in the same order, supports all three, or uses the same defaults. A parameter accepted by one endpoint may be silently ignored or rejected by another. Consult the specific model's current API schema.</div>
+        </section>
+
+        <section class="content-section">
+            <h3>Illustrative starting combinations</h3>
+            <table>
+                <thead><tr><th>Task</th><th>Temperature</th><th>Top-p</th><th>Top-k</th></tr></thead>
+                <tbody>
+                    <tr><td>Security review / extraction</td><td><code>0.0–0.2</code></td><td><code>0.1–0.5</code></td><td><code>10–20</code></td></tr>
+                    <tr><td>Code generation</td><td><code>0.1–0.4</code></td><td><code>0.7–0.9</code></td><td>provider default</td></tr>
+                    <tr><td>Documentation draft</td><td><code>0.3–0.7</code></td><td><code>0.9</code></td><td>provider default</td></tr>
+                    <tr><td>Open brainstorming</td><td><code>0.7–1.0</code></td><td><code>0.95–1.0</code></td><td>disabled</td></tr>
+                </tbody>
+            </table>
+            <p>These are starting points for experimentation, not universal standards. Measure actual output quality with representative prompts before changing a production setting.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>Ollama example</h3>
+            <p>Both parameters can be set in an Ollama Modelfile:</p>
+            <div class="code-block">FROM llama3.2:3b
+PARAMETER temperature 0.3
+PARAMETER top_p 0.85
+PARAMETER top_k 30
+SYSTEM You are a precise code reviewer.</div>
+            <p>Save it as <code>Modelfile.review</code>, then build and run:</p>
+            <div class="code-block">ollama create precise-reviewer -f Modelfile.review
+ollama run precise-reviewer</div>
+            <p>Ollama uses the parameter names <code>top_p</code> and <code>top_k</code>; other APIs may use camelCase or different keys. Verify the accepted parameter names in the target runtime's current documentation.</p>
+        </section>
+
+        <section class="content-section">
+            <h3>What these controls do not do</h3>
+            <div class="info-box">
+                <strong>Top-p and top-k do not add knowledge, reasoning, or accuracy.</strong> They influence token selection at generation time. They cannot fix a poorly scoped prompt, recover missing context, eliminate hallucination, or prove generated code is correct. Strong prompts, accurate context, grounding, tools, tests, and human review remain the most important factors in output quality.
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3>Related pages</h3>
+            <div class="source-links">
+                <a class="source-link" href="ai-development-temperature.html">Understand temperature</a>
+                <a class="source-link" href="ai-development-models-modes.html">Choose a model and mode</a>
+                <a class="source-link" href="https://docs.ollama.com/modelfile" target="_blank" rel="noopener">Ollama Modelfile parameters</a>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>
