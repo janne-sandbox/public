@@ -2,12 +2,12 @@
 
 ## Goal
 
-Build a Maven-based arbitrary-precision calculation library, a Spring Boot REST service with a bounded persistent H2 cache, and matching client libraries for C++, C#, JavaScript, Rust, and TypeScript.
+Build a Maven-based arbitrary-precision calculation library, a Spring Boot REST service with a bounded persistent H2 cache, and matching client libraries for C++, C#, JavaScript, Python, Rust, and TypeScript.
 
 ## Working decisions
 
 - Java 21 and Maven are the baseline.
-- Maven coordinates use group `com.nologo`, Java packages use root `com.nologo.math2`, npm packages use scope `@nologo`, C++ uses namespace `nologo::math2`, and the Rust crate/import use `nologo-math2` / `nologo_math2`.
+- Maven coordinates use group `com.nologo`, Java packages use root `com.nologo.math2`, npm packages use scope `@nologo`, C++ uses namespace `nologo::math2`, and the Rust and Python distribution/import names use `nologo-math2` / `nologo_math2`.
 - `com.nologo.math2.Number` is an immutable decimal value. Its default maximum precision is 1000 significant decimal digits and is globally configurable.
 - Operators are represented by library types and composed in `Equation`; raw expression parsing is supported at system boundaries.
 - Transcendental functions use a precision-aware decimal implementation rather than `double` internally.
@@ -79,6 +79,7 @@ Build a Maven-based arbitrary-precision calculation library, a Spring Boot REST 
 - [x] C# client and tests.
 - [x] C++ client and tests.
 - [x] Rust client and tests.
+- [x] Python client, examples, packaging, and tests.
 - [x] Complete each client README.
 - [x] Verify every REST client against one live packaged Math2 service, including single and ordered batch calculations.
 
@@ -183,6 +184,8 @@ or Metal.
 - 2026-07-26: Added strict `build-metal-native.sh` and the Objective-C `math2_metal` JNI discovery bridge. The script passes `bash -n`, runs successfully from `/private/tmp`, and builds an arm64 Mach-O dynamic library with Java 21.0.9 headers, Xcode 16.1, and the macOS 15.1 SDK. The first sandboxed hardware run compiled but returned `Metal bridge returned no device`; the identical approved run outside the restricted sandbox passed `MetalHardwareIT` 1/1 with 0 failures/errors/skips on macOS 26.5.2 and the built-in Apple M3 Pro 14-core GPU reported as Metal-supported. This is device discovery/lifecycle evidence only: no buffer, shader, Math2 operation, performance, or CPU/Metal calculation conformance was tested.
 - 2026-07-26: Final post-bridge verification rebuilt from clean state. `mvn clean verify -Ddebug=false` passes the five-module reactor with 149 tests (107 API, 10 CUDA, 12 Metal, 20 REST), 0 failures, 0 errors, and 0 skips; the explicitly named `MetalHardwareIT` remains outside normal Surefire patterns rather than becoming a hidden skip. After rebuilding `libmath2_metal.dylib`, the approved explicit hardware command again passes 1/1. Static audits resolve 306 relative links across 23 documentation HTML files, find 0 unbalanced fences across 56 tracked Markdown files, match all 5 Metal production classes to class specifications, confirm the service-provider registration in the Metal JAR, and find 0 obsolete digit-suffixed identity matches case-insensitively, including generated output.
 - 2026-07-26: A final `./test-all.sh` live cross-language rerun was requested but did not start: the approval system rejected process creation because the workspace was out of approval credits. This is an environment/authorization blocker, not a test result. The most recent live HTTP/client evidence remains the earlier passing 136-test CPU/CUDA-foundation run; the new 149-test clean reactor and explicit Metal device test are current, but there is no fresh post-Metal live transport run yet.
+- 2026-09-15: Added the zero-runtime-dependency Python 3.10+ REST client as distribution `nologo-math2` and import package `nologo_math2`, with immutable canonical `Number`, composable `Equation`, synchronous single/batch transport, four distinct failure categories, eight production-class specifications, three runnable examples, package/site documentation, wheel/build/clean wiring, and a live integration-test leg. The required precondition `mvn verify -q` completed with exit code 0 before implementation. `py -3 -m unittest discover -s python-api\tests -v` passes 13 local tests with 1 expected live-service skip; after timeout coverage was added, the final run passes 13 local tests with 1 expected live-service skip out of 14. With the packaged service healthy on `127.0.0.1:18080`, the same command with `MATH2_TEST_BASE_URL` passes all 14 tests with 0 failures/errors/skips. `py -3 -m pip wheel --no-deps --wheel-dir python-api\dist .\python-api` builds `nologo_math2-0.1.0-py3-none-any.whl`, and installation into a fresh virtual environment followed by a public-API import/canonicalization/composition smoke check passes. `bash -n build-all.sh clean-all.sh test-client-integration.sh` passes. The WSL-backed `bash ./build-all.sh python-api` path reports a deliberate skip because that separate `/usr/bin/python3` lacks pip; native Windows Python 3.14.7 performed the successful package build and tests.
+- 2026-09-15: Corrected the documentation landing-page Chapter 05 card to list Python among the client libraries. The rendered `Math2 — decimal mathematics without the ceiling` page exposes “Java, JavaScript, TypeScript, Python, .NET, C++, and Rust”; focused editor diagnostics and `git diff --check -- documentation\index.html` pass.
 
 ## Blockers
 

@@ -1,6 +1,6 @@
 # Math2 assistant instructions
 
-The project builds an arbitrary-precision Java calculation JAR, a local-first Spring Boot REST service with a bounded persistent cache, and clients in C++, C#, JavaScript, Rust, and TypeScript.
+The project builds an arbitrary-precision Java calculation JAR, a local-first Spring Boot REST service with a bounded persistent cache, and clients in C++, C#, JavaScript, Python, Rust, and TypeScript.
 
 Start by reading `CONTINUE.md`, `AGENTS.md`, and the applicable requirement files. Implement the current focus from the tracker and keep the tracker synchronized with completed work, evidence, remaining gaps, and blockers.
 

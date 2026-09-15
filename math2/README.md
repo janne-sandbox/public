@@ -1,6 +1,6 @@
 # Math2
 
-Math2 is an arbitrary-precision decimal calculation toolkit. It contains a standalone Java JAR, a local-first Spring Boot REST service with a persistent bounded cache, and client libraries for JavaScript, TypeScript, C#, C++, and Rust.
+Math2 is an arbitrary-precision decimal calculation toolkit. It contains a standalone Java JAR, a local-first Spring Boot REST service with a persistent bounded cache, and client libraries for JavaScript, TypeScript, Python, C#, C++, and Rust.
 
 The complete multi-page guide starts at [documentation/index.html](documentation/index.html). It includes Mermaid architecture diagrams, engine internals, REST examples, per-language usage, deployment configuration, and reproducible H2-backed performance samples.
 
@@ -53,7 +53,7 @@ Configuration uses environment variables including `MATH2_SERVER_ADDRESS`, `MATH
 ./install-cuda-simulator.sh --help
 ```
 
-`test-client-integration.sh` starts the packaged service on isolated loopback port 18080 with caching disabled, runs single and ordered-batch requests through the JavaScript, TypeScript, C++, .NET, and Rust clients, and stops the service afterward. `test-all.sh` runs the Java reactor followed by this live cross-language verification and explicitly reports unavailable .NET or Rust tooling. See [CONTINUE.md](CONTINUE.md) for current executed evidence and remaining blockers.
+`test-client-integration.sh` starts the packaged service on isolated loopback port 18080 with caching disabled, runs single and ordered-batch requests through the JavaScript, TypeScript, Python, C++, .NET, and Rust clients, and stops the service afterward. `test-all.sh` runs the Java reactor followed by this live cross-language verification and explicitly reports unavailable Python, .NET, or Rust tooling. See [CONTINUE.md](CONTINUE.md) for current executed evidence and remaining blockers.
 
 The documentation performance sample is produced by an H2-backed Spring integration test:
 
@@ -74,7 +74,7 @@ On the recorded Apple-arm64 development environment, representative 1,000-digit 
 - [Architecture overview](documentation/architecture.html), [calculation engine](documentation/architecture-engine.html), [REST/cache](documentation/architecture-service.html), the partially implemented [GPU/UDP target architecture](documentation/gpu-and-udp.html), [Metal backend status](documentation/metal-backend.html), and [CUDA simulation setup](documentation/cuda-simulation.html)
 - [Operations and precision](documentation/operations.html)
 - [REST reference](documentation/api.html) and [worked examples](documentation/rest-examples.html)
-- [Client library overview](documentation/clients.html): [Java](documentation/client-java.html), [JavaScript](documentation/client-javascript.html), [TypeScript](documentation/client-typescript.html), [.NET](documentation/client-dotnet.html), [C++](documentation/client-cpp.html), and [Rust](documentation/client-rust.html)
+- [Client library overview](documentation/clients.html): [Java](documentation/client-java.html), [JavaScript](documentation/client-javascript.html), [TypeScript](documentation/client-typescript.html), [Python](documentation/client-python.html), [.NET](documentation/client-dotnet.html), [C++](documentation/client-cpp.html), and [Rust](documentation/client-rust.html)
 - [Performance](documentation/performance.html) and [configuration/Docker](documentation/deployment.html)
 
 ## Modules
@@ -83,7 +83,7 @@ On the recorded Apple-arm64 development environment, representative 1,000-digit 
 - `java-cuda-backend`: optional guarded CUDA provider foundation; no kernels are advertised yet.
 - `java-metal-backend`: optional guarded Apple Metal provider and discovery bridge; no kernels are advertised yet.
 - `java-rest-service`: Spring Boot API, Swagger UI, H2/Hibernate/Liquibase cache, and Dockerfile.
-- `js-api`, `ts-api`, `dotnet-api`, `cpp-api`, `rust-api`: REST clients with native `Number` and `Equation` types.
+- `js-api`, `ts-api`, `python-api`, `dotnet-api`, `cpp-api`, `rust-api`: REST clients with native `Number` and `Equation` types.
 - `requirements`: normative functional, class, and non-functional specifications.
 - `documentation`: static project documentation site.
 

@@ -29,6 +29,10 @@ fi
 echo "=== JavaScript / TypeScript (npm) ==="
 rm -rf js-api/node_modules ts-api/node_modules
 
+echo "=== Python ==="
+find python-api -type d -name __pycache__ -prune -exec rm -rf {} +
+rm -rf python-api/build/ python-api/dist/ python-api/src/*.egg-info/
+
 echo "=== Runtime state (.math2 H2 cache) ==="
 rm -rf .math2/
 

@@ -15,6 +15,7 @@
 #   dotnet-api        .NET client library (requires dotnet)
 #   js-api            Install JavaScript client dependencies (requires npm)
 #   ts-api            Install TypeScript client dependencies (requires npm)
+#   python-api        Build the Python client wheel (requires Python 3 and pip)
 #   all               Explicit alias for building everything
 
 set -euo pipefail
@@ -95,15 +96,34 @@ build_ts_api() {
     (cd "$SCRIPT_DIR/ts-api" && npm install --silent)
 }
 
+build_python_api() {
+    echo "=== python-api ==="
+    local python_command
+    if command -v python3 &>/dev/null; then
+        python_command=python3
+    elif command -v python &>/dev/null; then
+        python_command=python
+    else
+        echo "  SKIPPED: Python 3 not found"
+        return
+    fi
+    if ! "$python_command" -m pip --version >/dev/null 2>&1; then
+        echo "  SKIPPED: pip is not available for $python_command"
+        return
+    fi
+    "$python_command" -m pip wheel --no-deps \
+        --wheel-dir "$SCRIPT_DIR/python-api/dist" "$SCRIPT_DIR/python-api"
+}
+
 # ---- argument parsing ----
 
 usage() {
     sed -n '2,/^set -euo/p' "$0" | grep '^#' | sed 's/^# \{0,1\}//'
 }
 
-VALID_TARGETS=(java java-api java-rest-service cpp-api rust-api dotnet-api js-api ts-api all)
+VALID_TARGETS=(java java-api java-rest-service cpp-api rust-api dotnet-api js-api ts-api python-api all)
 # Default order when building everything (java builds both Java modules at once)
-DEFAULT_ORDER=(java cpp-api rust-api dotnet-api js-api ts-api)
+DEFAULT_ORDER=(java cpp-api rust-api dotnet-api js-api ts-api python-api)
 
 if [[ $# -eq 0 ]]; then
     REQUESTED=("${DEFAULT_ORDER[@]}")
@@ -119,7 +139,7 @@ else
                 REQUESTED=("${DEFAULT_ORDER[@]}")
                 break
                 ;;
-            java|java-api|java-rest-service|cpp-api|rust-api|dotnet-api|js-api|ts-api)
+            java|java-api|java-rest-service|cpp-api|rust-api|dotnet-api|js-api|ts-api|python-api)
                 REQUESTED+=("$arg")
                 ;;
             *)
@@ -143,6 +163,7 @@ for target in "${REQUESTED[@]}"; do
         dotnet-api)        build_dotnet_api ;;
         js-api)            build_js_api ;;
         ts-api)            build_ts_api ;;
+        python-api)        build_python_api ;;
     esac
 done
 

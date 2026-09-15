@@ -49,6 +49,16 @@ export MATH2_TEST_BASE_URL="$BASE_URL"
 (cd "$SCRIPT_DIR/js-api" && npm test)
 (cd "$SCRIPT_DIR/ts-api" && npm test)
 
+if command -v python3 >/dev/null 2>&1; then
+  PYTHONPATH="$SCRIPT_DIR/python-api/src" \
+    python3 -m unittest discover -s "$SCRIPT_DIR/python-api/tests" -v
+elif command -v python >/dev/null 2>&1; then
+  PYTHONPATH="$SCRIPT_DIR/python-api/src" \
+    python -m unittest discover -s "$SCRIPT_DIR/python-api/tests" -v
+else
+  echo "SKIPPED: Python live client test (Python 3 is not installed)"
+fi
+
 cmake -S "$SCRIPT_DIR/cpp-api" -B "$SCRIPT_DIR/cpp-api/build"
 cmake --build "$SCRIPT_DIR/cpp-api/build"
 ctest --test-dir "$SCRIPT_DIR/cpp-api/build" --output-on-failure

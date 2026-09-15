@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Python client · Math2</title><link rel="stylesheet" href="styles.css"></head><body>
+<nav class="site-nav"><a class="brand" href="index.html">Math2</a><div class="nav-links"><a href="getting-started.html">Guide</a><a href="architecture.html">Architecture</a><a href="api.html">REST API</a><a aria-current="page" href="clients.html">Libraries</a><a href="performance.html">Performance</a></div></nav>
+<main><header class="page-header"><p class="eyebrow">Chapter 05.4 · Python</p><h1>A zero-runtime-dependency Python client.</h1><p class="lede">The synchronous Python 3.10+ package uses the standard library for HTTP, immutable values for composition, and strings for every arbitrary-precision result.</p></header>
+<div class="page-layout"><aside class="chapter-nav"><strong>Libraries</strong><a href="clients.html">Overview</a><a href="client-java.html">Java</a><a href="client-javascript.html">JavaScript</a><a href="client-typescript.html">TypeScript</a><a aria-current="page" href="client-python.html">Python</a><a href="client-dotnet.html">.NET</a><a href="client-cpp.html">C++</a><a href="client-rust.html">Rust</a></aside><article class="prose">
+<h2>Install</h2><pre><code>python -m venv .venv
+source .venv/bin/activate
+python -m pip install ./python-api</code></pre><p>On Windows PowerShell, activate with <code>.venv\Scripts\Activate.ps1</code>. The distribution is <code>nologo-math2</code> and the import package is <code>nologo_math2</code>.</p>
+<h2>Compose and calculate</h2><pre><code>from nologo_math2 import Equation, Math2Client, Number
+
+client = Math2Client()
+two = Equation.of(Number.from_integer(2))
+three = Equation.of(Number.from_integer(3))
+equation = three.sqrt().add(two.power(three))
+result = client.calculate(equation, precision=100)
+print(result)</code></pre>
+<h2>Ordered batches</h2><pre><code>equations = (
+    Equation.parse("1+1"),
+    Equation.parse("max(2,3)"),
+    Equation.parse("sqrt(16)"),
+)
+results = client.calculate_batch(equations, precision=1000)
+assert tuple(map(str, results)) == ("2", "3", "4")</code></pre><p>Batch results are returned as an immutable tuple with the request's order and cardinality.</p>
+<h2>Configuration and errors</h2><pre><code>client = Math2Client(
+    base_url="https://math2.example.test",
+    timeout_seconds=30,
+)</code></pre><p><code>ValidationError</code>, <code>TransportError</code>, <code>ProtocolError</code>, and <code>ServiceError</code> keep local input, network, malformed-response, and structured HTTP failures distinct. A service error retains <code>status</code>, <code>code</code>, and optional <code>position</code>.</p>
+<h2>Examples and tests</h2><pre><code>PYTHONPATH=python-api/src python python-api/examples/single_calculation.py
+PYTHONPATH=python-api/src python -m unittest discover -s python-api/tests -v</code></pre><p>See the package README for canonical decimal behavior, every equation operation, detailed error handling, and all runnable examples.</p>
+<div class="next-links"><a href="client-typescript.html"><span>Previous library</span>← TypeScript</a><a href="client-dotnet.html"><span>Next library</span>.NET →</a></div>
+</article></div></main><footer class="site-footer">Package · nologo-math2 · Python 3.10+</footer></body></html>

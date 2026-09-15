@@ -15,6 +15,13 @@ cpp-api/build/
 # JavaScript / TypeScript
 node_modules/
 
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+
 # Runtime state (H2 database, PID, logs)
 *.mv.db
 *.trace.db
