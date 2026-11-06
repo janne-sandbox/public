@@ -4,6 +4,7 @@ target/
 
 # IDE
 .idea/
+.settings/
 *.iml
 .vscode/
 *.swp
